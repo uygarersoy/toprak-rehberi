@@ -21,6 +21,11 @@ public class HarvestServiceImp implements HarvestService {
     }
 
     @Override
+    public Harvest findHarvestById(Long harvestId) {
+        return harvestRepository.findById(harvestId).orElse(null);
+    }
+
+    @Override
     public Harvest findHarvest(Harvest harvest) {
         return harvestRepository.findById(harvest.getId()).orElse(null);
     }
@@ -34,5 +39,4 @@ public class HarvestServiceImp implements HarvestService {
     public List<Harvest> findAll() {
         return harvestRepository.findAll();
     }
-
 }

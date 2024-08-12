@@ -6,6 +6,7 @@ const harvestApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:8080/api/harvest"
     }),
+    tagTypes: ["Harvest"],
     endpoints(builder) {
         return {
             addHarvest: builder.mutation({
@@ -15,7 +16,10 @@ const harvestApi = createApi({
                         method: "POST",
                         body: harvest
                     };
-                }
+                },
+                invalidatesTags: (result, error, harvest) => [
+                    {type: "Harvest", id: harvest.field_id}
+                ]
             }),
             fetchHarvests: builder.query({
                 query: (field) => {
@@ -24,7 +28,10 @@ const harvestApi = createApi({
                         method: "POST",
                         body: field
                     };
-                }
+                },
+                providesTags: (result, error, field) => [
+                    {type: "Harvest", id: field.id}
+                ]
             }),
             removeHarvest: builder.mutation({
                 query: (harvest) => {
@@ -32,7 +39,10 @@ const harvestApi = createApi({
                         url: `/delete/${harvest.id}`,
                         method: "DELETE"
                     };
-                }
+                },
+                invalidatesTags: (result, error, harvest) => [
+                    {type: "Harvest", id: harvest.field_id}
+                ]
             })
         }
     }

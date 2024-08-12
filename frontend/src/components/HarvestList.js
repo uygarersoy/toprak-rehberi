@@ -6,10 +6,10 @@ import HarvestListItem from "./HarvestListItem";
 function HarvestList({ field }) {
     //const dispatch = useDispatch();
     //const { data, isLoading, error } = useSelector((state) => state.harvests);
-    const { data, isFetching, error } = useFetchHarvestsQuery(field);
+    const { data, isFetching, isLoading, error } = useFetchHarvestsQuery(field);
     const [ addHarvest, resultsHarvest ] = useAddHarvestMutation();
     const user = useSelector((state) => state.user);
-    const { fieldData, isFetchingFields, errorFields } = useFetchFieldsQuery(user.data);
+    //const { fieldData, isFetchingFields, errorFields } = useFetchFieldsQuery(user.data);
     const [visible, setVisible] = useState(false);
     const [formState, setFormState] = useState({
         product: "",

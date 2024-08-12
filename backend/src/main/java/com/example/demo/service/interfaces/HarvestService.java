@@ -10,4 +10,5 @@ public interface HarvestService {
     Harvest findHarvest(Harvest harvest);
     void deleteHarvest(Long harvestId);
     List<Harvest> findAll();
+    Harvest findHarvestById(Long harvestId);
 }

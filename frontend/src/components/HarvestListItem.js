@@ -8,11 +8,9 @@ function HarvestListItem({ harvest }) {
     //const dispatch = useDispatch();
 
     const handleRemoveHarvest = () => {
-        console.log(field);
         removeHarvest(harvest);
         //dispatch(removeHarvest(harvest));
-//        dispatch(fetchHarvests(field));
-        console.log(field);
+        //dispatch(fetchHarvests(field));
 };
 
     return (

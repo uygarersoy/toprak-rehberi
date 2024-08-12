@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,7 +31,8 @@ public class HarvestController {
 
     @PostMapping("/fetch-field-harvest")
     public ResponseEntity<List<Harvest>> getHarvestOfField(@RequestBody Field field){
-        List<Harvest> harvests = field.getHarvests();
+        Field fetchedField = fieldService.findField(field.getId());
+        List<Harvest> harvests = fetchedField.getHarvests();
         return new ResponseEntity<>(harvests, HttpStatus.OK);
     }
     
@@ -41,11 +41,17 @@ public class HarvestController {
         Field field = fieldService.findField(harvest.getField().getId());
         harvest.setField(field);
         Harvest newHarvest = harvestService.saveHarvest(harvest);
+        field.getHarvests().add(harvest);
+        fieldService.saveField(field);
         return new ResponseEntity<>(newHarvest, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{harvest-id}")
     public void deleteHarvest(@PathVariable("harvest-id") Long harvestId) {
+        Harvest harvest = harvestService.findHarvestById(harvestId);
+        Field field = fieldService.findField(harvest.getField().getId());
+        field.getHarvests().removeIf(h -> h.getId().equals(harvestId));
+        fieldService.saveField(field);
         harvestService.deleteHarvest(harvestId);
     }
 }
