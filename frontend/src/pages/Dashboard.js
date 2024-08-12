@@ -10,17 +10,11 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     const [visibleForm, setVisibleForm] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
-    //const {data, isLoading, error } = useSelector((state) => state.fields);
     const { data, isFetching, isLoading, error } = useFetchFieldsQuery(user.data);
 
-    /*useEffect(() => {
-        dispatch(fetchFields(user.data));
-    },[dispatch])*/
-    
     const handleLogOut = () => {
         setIsLoggedIn(!isLoggedIn);
         dispatch(removeUser());
-        //dispatch(resetFields());
         navigate("/");
     };  
     
@@ -39,7 +33,7 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     }
     else {
         content = data.map((field) => {
-            return <FieldItem field={field}/>;
+            return <FieldItem key={field.id} field={field}/>;
         });
     }
     return (
@@ -58,17 +52,3 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
 }
 
 export default DashBoard;
-
-/*
-<div>
-                <h1>FIELDS</h1>
-            </div>
-            <div>
-                <button onClick={handleFieldCreation}>+ Add New Field</button>
-            </div>
-                {visibleForm && <FieldForm setVisibleForm={setVisibleForm}/>}
-                {content}
-            </div>
-            <button onClick={handleLogOut}>Log out</button>
-        </div>
-*/

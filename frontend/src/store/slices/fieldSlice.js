@@ -65,4 +65,3 @@ const fieldsSlice = createSlice({
 });
 
 export const fieldsReducer = fieldsSlice.reducer;
-//export const { resetFields } = fieldsSlice.actions;

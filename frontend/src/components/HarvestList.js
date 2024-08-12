@@ -1,15 +1,12 @@
 import { useSelector } from "react-redux";
 import { useState } from "react";
-import { useAddHarvestMutation, useFetchFieldsQuery, useFetchHarvestsQuery } from "../store";
+import { useAddHarvestMutation, useFetchHarvestsQuery } from "../store";
 import HarvestListItem from "./HarvestListItem";
 
 function HarvestList({ field }) {
-    //const dispatch = useDispatch();
-    //const { data, isLoading, error } = useSelector((state) => state.harvests);
     const { data, isFetching, isLoading, error } = useFetchHarvestsQuery(field);
     const [ addHarvest, resultsHarvest ] = useAddHarvestMutation();
     const user = useSelector((state) => state.user);
-    //const { fieldData, isFetchingFields, errorFields } = useFetchFieldsQuery(user.data);
     const [visible, setVisible] = useState(false);
     const [formState, setFormState] = useState({
         product: "",
@@ -24,16 +21,8 @@ function HarvestList({ field }) {
         event.preventDefault();
         const harvest = {...formState, field: field};
         addHarvest(harvest);
-        //fetchFields(user.data);
-        //dispatch(addHarvest(harvest));
-        //dispatch(fetchFields(user.data));
         setVisible(false);
     };
-
-    /*useEffect(() => {
-        dispatch(fetchHarvests(field));
-        console.log(field.harvest);
-    }, [dispatch, data.length]);*/
 
     const handleAddHarvest = () => {
         setVisible(true);
@@ -47,7 +36,7 @@ function HarvestList({ field }) {
 			</div>
 			<div>
 				<label>Area:</label>
-				<input type="text" name="area" value={formState.area} onChange={handleChange}/>
+				<input type="number" name="area" value={formState.area} onChange={handleChange}/>
 			</div>
 			<button type="submit">Submit</button>
 		</form>

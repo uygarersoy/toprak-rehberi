@@ -35,7 +35,6 @@ const userSlice = createSlice({
             state.error = null;
         });
         builder.addCase(updateUser.fulfilled, (state, action) => {
-            //state.data = action.payload;
             state.isLoading = false;
             state.error = null;
         });
@@ -48,7 +47,6 @@ const userSlice = createSlice({
             state.error = null;
         });
         builder.addCase(registerUser.fulfilled, (state, action) => {
-            //state.data = action.payload;
             state.isLoading = false;
             state.error = null;
         });

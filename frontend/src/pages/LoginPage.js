@@ -1,9 +1,7 @@
 import { useState } from 'react';
-//import axios from 'axios';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '../store';
-//import { useFetchUserMutation } from '../store';
 
 const LoginPage = ({ isLoggedIn, setIsLoggedIn}) => {
 	const [email, setEmail] = useState('');
@@ -11,9 +9,6 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn}) => {
   	const [message, setMessage] = useState("");
   	const navigate = useNavigate();
 	const dispatch = useDispatch();
-	//const user = useSelector((state) => state.user);
-  	//const {data, isLoading, error} = useFetchUserQuery({email, password}, {skip: !email || ! password});
-	//const [fetchUser, { isLoading, error, data }] = useFetchUserMutation();
 	const handleSubmit = async (event) => {
         event.preventDefault();
 		if (!email || !password) {
@@ -21,9 +16,6 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn}) => {
 			return;
 		}        
 		const response = await dispatch(fetchUser({ email, password }));
-		//console.log(response);
-		//console.log(response.type);
-		//console.log(response.type === fetchUser.rejected);
 		if (response.type === "user/fetch/fulfilled") {
 			setMessage("Success!");
 			setIsLoggedIn(!isLoggedIn);
@@ -32,57 +24,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn}) => {
 		else {
             setMessage("Invalid email or password!");
 		}
-			/*if (error.status === 401) {
-            } else {
-                setMessage("An error occurred. Please try again.");
-            }*/
     };
-
-		//fetchData();
-
-		/*if (!email || !password) {
-			setMessage("Please enter both fields");
-			return;
-		}
-
-		try {
-			const response = await fetchUser({ email, password });
-
-			setMessage("Success!");
-			setIsLoggedIn(!isLoggedIn);
-			navigate("/dashboard");
-		} catch (err) {
-			console.log("RTK Query error:", err);
-			if (err.status === 401) {
-				setMessage("Invalid email or password.");
-			} else {
-				setMessage("An error occurred. Please try again.");
-			}
-		}*/
-	//};
-	
-
-		/*if (!email || ! password) {
-		setMessage("Please enter both fields");
-		return;
-		}
-		if (data) {
-			setMessage("Success");
-			setIsLoggedIn(!isLoggedIn);
-			navigate("/dashboard");
-		}
-		else if (error) {
-			if (error.status === 401) {
-				setMessage("Invalid email or password.");
-			}
-			else{
-				setMessage("An error occurred. Please try again.");
-			}
-		}
-	}
-		*/
-		/*
-	};*/
 	return (
 		<div className="login-page">
 		<form onSubmit={handleSubmit}>

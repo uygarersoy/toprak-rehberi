@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import { useAddFieldMutation } from "../store";
 
 function FieldForm({ setVisibleForm }) {
-	//const dispatch = useDispatch();
 	const [addField, results] = useAddFieldMutation();
 	const user = useSelector((state) => state.user);
 	const [formState, setFormState] = useState({
@@ -20,15 +19,7 @@ function FieldForm({ setVisibleForm }) {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		const field = {...formState, user: {id: user.data.id}};
-		//console.log(field);
-		//dispatch(addField(field));
 		addField(field);
-		/*console.log("Form data submitted:", {
-			type: event.target.type.value,
-			city: event.target.city.value,
-			state: event.target.state.value,
-			street: event.target.street.value
-		});*/
 		setVisibleForm(false);
 	};
 
