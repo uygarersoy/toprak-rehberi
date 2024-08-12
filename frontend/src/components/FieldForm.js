@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { addField } from "../store";
+import { useSelector } from "react-redux";
+import { useAddFieldMutation } from "../store";
 
 function FieldForm({ setVisibleForm }) {
-	const dispatch = useDispatch();
+	//const dispatch = useDispatch();
+	const [addField, results] = useAddFieldMutation();
 	const user = useSelector((state) => state.user);
 	const [formState, setFormState] = useState({
 		type: "",
@@ -20,7 +21,8 @@ function FieldForm({ setVisibleForm }) {
 		event.preventDefault();
 		const field = {...formState, user: {id: user.data.id}};
 		//console.log(field);
-		dispatch(addField(field));
+		//dispatch(addField(field));
+		addField(field);
 		/*console.log("Form data submitted:", {
 			type: event.target.type.value,
 			city: event.target.city.value,

@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FieldForm from "../components/FieldForm";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchFields, removeUser } from "../store";
+import { removeUser, useFetchFieldsQuery } from "../store";
 import FieldItem from "../components/FieldItem";
 
 function DashBoard({ isLoggedIn, setIsLoggedIn }) {
@@ -10,11 +10,12 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     const [visibleForm, setVisibleForm] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
-    const {data, isLoading, error } = useSelector((state) => state.fields);
+    //const {data, isLoading, error } = useSelector((state) => state.fields);
+    const { data, isFetching, isLoading, error } = useFetchFieldsQuery(user.data);
 
-    useEffect(() => {
+    /*useEffect(() => {
         dispatch(fetchFields(user.data));
-    },[dispatch])
+    },[dispatch])*/
     
     const handleLogOut = () => {
         setIsLoggedIn(!isLoggedIn);
@@ -27,11 +28,14 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
         setVisibleForm(true);
     }
     let content;
-    if (isLoading) {
+    if (isFetching || isLoading) {
         content = <div>Loading the list of fields.</div>;
     }
-    if (error) {
+    else if (error) {
         content = <div>An error occurred trying to fetch the fields.</div>;
+    }
+    else if (!data) {
+        content = <div>Empty data.</div>;
     }
     else {
         content = data.map((field) => {

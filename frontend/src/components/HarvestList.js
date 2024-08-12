@@ -1,12 +1,15 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect, useState } from "react";
-import { addHarvest, fetchFields, fetchHarvests } from "../store";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useAddHarvestMutation, useFetchFieldsQuery, useFetchHarvestsQuery } from "../store";
 import HarvestListItem from "./HarvestListItem";
 
 function HarvestList({ field }) {
-    const dispatch = useDispatch();
-    const { data, isLoading, error } = useSelector((state) => state.harvests);
+    //const dispatch = useDispatch();
+    //const { data, isLoading, error } = useSelector((state) => state.harvests);
+    const { data, isFetching, error } = useFetchHarvestsQuery(field);
+    const [ addHarvest, resultsHarvest ] = useAddHarvestMutation();
     const user = useSelector((state) => state.user);
+    const { fieldData, isFetchingFields, errorFields } = useFetchFieldsQuery(user.data);
     const [visible, setVisible] = useState(false);
     const [formState, setFormState] = useState({
         product: "",
@@ -20,15 +23,17 @@ function HarvestList({ field }) {
     const handleSubmit = (event) => {
         event.preventDefault();
         const harvest = {...formState, field: field};
-        dispatch(addHarvest(harvest));
-        dispatch(fetchFields(user.data));
+        addHarvest(harvest);
+        //fetchFields(user.data);
+        //dispatch(addHarvest(harvest));
+        //dispatch(fetchFields(user.data));
         setVisible(false);
     };
 
-    useEffect(() => {
+    /*useEffect(() => {
         dispatch(fetchHarvests(field));
         console.log(field.harvest);
-    }, [dispatch, data.length]);
+    }, [dispatch, data.length]);*/
 
     const handleAddHarvest = () => {
         setVisible(true);
@@ -49,11 +54,14 @@ function HarvestList({ field }) {
     );
 
     let content = "";
-    if (isLoading) {
+    if (isFetching) {
         content = <div>Loading harvest data...</div>;
     }
     else if (error) {
         content = <div>Error fetching harvest data...</div>;
+    }
+    else if (!data) {
+        content = <div>no data at the moment</div>;
     }
     else {
         content = data.map((harvest) => {

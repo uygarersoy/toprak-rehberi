@@ -1,14 +1,16 @@
 import { GoTrash } from "react-icons/go";
-import { useDispatch, useSelector } from "react-redux";
-import { fetchHarvests, removeHarvest } from "../store";
+import { useSelector } from "react-redux";
+import { useRemoveHarvestMutation } from "../store";
 
 function HarvestListItem({ harvest }) {
     const field = useSelector((state) => state.fields);
-    const dispatch = useDispatch();
+    const [ removeHarvest, results ] = useRemoveHarvestMutation();
+    //const dispatch = useDispatch();
 
     const handleRemoveHarvest = () => {
         console.log(field);
-        dispatch(removeHarvest(harvest));
+        removeHarvest(harvest);
+        //dispatch(removeHarvest(harvest));
 //        dispatch(fetchHarvests(field));
         console.log(field);
 };

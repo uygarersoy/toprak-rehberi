@@ -1,17 +1,20 @@
-import { useDispatch } from "react-redux";
-import { removeField } from "../store/thunks/removeField";
+//import { useDispatch } from "react-redux";
+//import { removeField } from "../store/thunks/removeField";
 //import { useState } from "react";
 import { GoTrash } from "react-icons/go";
 import ExpandablePanel from "./ExpandablePanel";
 import HarvestList from "./HarvestList";
+import { useRemoveFieldMutation } from "../store";
 
 
 function FieldItem({ field }) {
-    const dispatch = useDispatch();
+    //const dispatch = useDispatch();
+    const [removeField, results] = useRemoveFieldMutation();
     //const [isExpanded, setIsExpanded] = useState(false);
 
     const handleRemoveField = () => {
-        dispatch(removeField(field.id));
+        removeField(field.id);
+        //dispatch(removeField(field.id));
     };
 
     /*const handleShow = () => {
