@@ -1,7 +1,7 @@
 /* index.css */
 
 
-.dashboard, .field, .expandable-panel-items, .expandable-panel-header {
+.dashboard, .field, .expandable-panel-items, .expandable-panel-header, .harvest, .harvest-item{
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;

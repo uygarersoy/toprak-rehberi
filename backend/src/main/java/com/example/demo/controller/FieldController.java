@@ -60,9 +60,6 @@ public class FieldController {
                 userFields.add(field);
             }
         }
-        if (userFields.size() != 0) {
-            return new ResponseEntity<>(userFields, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(userFields, HttpStatus.OK);
     }
 }

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { GoChevronDown, GoChevronLeft } from "react-icons/go";
 
 
-function ExpandablePanel( { header, field }) {
+function ExpandablePanel( { header, children }) {
     const [isExpanded, setIsExpanded] = useState(false);
     
 
@@ -20,7 +20,7 @@ function ExpandablePanel( { header, field }) {
                     {isExpanded ? <GoChevronDown /> : <GoChevronLeft />}
                 </div>
             </div>
-            {isExpanded && <div>{field.id}</div>}
+            {isExpanded && children}
         </div>
     );
 }

@@ -31,6 +31,6 @@ public class FieldServiceImp implements FieldService {
     
     @Override
     public void deleteField(Long id) {
-        fieldRepository.deleteById(id);;
+        fieldRepository.deleteById(id);
     }
 }
