@@ -1,24 +1,91 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { useAddFieldMutation } from "../store";
+import { useAddFieldMutation, useFetchDistrictsQuery, useFetchNeighborhoodsQuery, useFetchProvincesQuery } from "../store";
 
 function FieldForm({ setVisibleForm }) {
 	const [addField, results] = useAddFieldMutation();
 	const user = useSelector((state) => state.user);
 	const [formState, setFormState] = useState({
 		type: "",
-		city: "",
-		street: "",
-		state: ""
+		province: "",
+		provinceId: "",
+		district: "",
+		districtId: "",
+		neighborhood: "",
+		neighborhoodId: ""
 	});
+	
+	const { data: provinceData, isLoading: pIsLoading, error: pError } = useFetchProvincesQuery();
+	const { data: districtData, isLoading: dIsloading, error: dError } = useFetchDistrictsQuery(formState.provinceId, {skip: !formState.provinceId});
+	const {data: neighborhoodData, isLoading: nIsLoading, error: nError} = useFetchNeighborhoodsQuery(formState.district, {skip: !formState.districtId});
+	let pContent, dContent, nContent;
 
-	const handlechange = (event) => {
-		setFormState({...formState, [event.target.name]: event.target.value})
+	if (provinceData) {
+		pContent = provinceData.map((province) => {
+			return <option key={province.id} value={province.id}>{province.provinceName}</option>;
+		})
+	}
+
+	if (districtData) {
+		dContent = districtData.map((district) => {
+			return <option key={district.id} value={district.id}>{district.districtName}</option>;
+		})
+	}
+
+
+	if (neighborhoodData) {
+		nContent = neighborhoodData.map((neighborhood) => {
+			return <option key={neighborhood.id} value={neighborhood.id}>{neighborhood.neighborhoodName}</option>;
+		})
+	}
+
+	const handleChange = (event) => {
+		const { name, value } = event.target; 
+		let updatedFields = {[name]: value};
+		if (name === "province") {
+//			const selectedProvince = provinceData.find(province => province.id === value);
+			updatedFields = {
+				...updatedFields,
+				provinceId: value,
+//				province: selectedProvince?.province || "",
+				districtId: "",
+				district: "",
+				neighborhoodId: "",
+				neighborhood: ""
+			};
+		}
+		else if (name === "district") {
+//			const selectedDistrict = districtData.find(district => district.id === value);
+			updatedFields = {
+				...updatedFields,
+				districtId: value,
+				//district: selectedDistrict?.district || "",*/
+				neighborhoodId: "",
+				neighborhood: ""
+			};
+		}
+		else if (name === "neighborhood") {
+		//	const selectedNeighborhood = neighborhoodData.find(neighborhood => neighborhood.id === value);
+			updatedFields = {
+				...updatedFields,
+				neighborhoodId: value,
+				//neighborhood: selectedNeighborhood?.neighborhood || ""
+			};
+		}
+		setFormState((previousState) => ({
+			...previousState,
+			...updatedFields
+		}));
 	};
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		const field = {...formState, user: {id: user.data.id}};
+		const field = {type: formState.type, 
+			province: formState.province, 
+			district: formState.district, 
+			neighborhood: formState.neighborhood,
+			user: {id: user.data.id}};
+
 		addField(field);
 		setVisibleForm(false);
 	};
@@ -28,19 +95,28 @@ function FieldForm({ setVisibleForm }) {
 		<form className="new-field-form" onSubmit={handleSubmit}>
 			<div>
 				<label>Type:</label>
-				<input type="text" name="type" value={formState.type} onChange={handlechange}/>
+				<input type="text" name="type" value={formState.type} onChange={handleChange}/>
 			</div>
 			<div>
-				<label>City:</label>
-				<input type="text" name="city" value={formState.city} onChange={handlechange}/>
+				<label>Province:</label>
+				<select name="province" value={formState.province} onChange={handleChange}>
+					<option value="">Select a Province</option>
+					{pContent}
+				</select>				
 			</div>
 			<div>
-				<label>State:</label>
-				<input type="text" name="state" value={formState.state} onChange={handlechange}/>
+				<label>District:</label>
+				<select name="district" value={formState.district} onChange={handleChange} disabled={!formState.province}>
+					<option value="">Select a District</option>
+					{dContent}
+				</select>
 			</div>
 			<div>
-				<label>Street:</label>
-				<input type="text" name="street" value={formState.street} onChange={handlechange}/>
+				<label>Neighborhood:</label>
+				<select name="neighborhood" value={formState.neighborhood} onChange={handleChange} disabled={!formState.district}>
+					<option value="">Select a Neighborhood</option>
+					{nContent}
+				</select>
 			</div>
 			<button type="submit">Submit</button>
 		</form>

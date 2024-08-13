@@ -24,8 +24,8 @@ public class Result {
 
     @Enumerated(EnumType.STRING)
     private Product product;
-    private String city;
-    private String state;
-    private String street;
+    private String province;
+    private String district;
+    private String neighborhood;
     private Long yield;
 }

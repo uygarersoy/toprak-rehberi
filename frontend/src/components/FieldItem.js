@@ -15,8 +15,9 @@ function FieldItem({ field }) {
                 <button onClick={handleRemoveField}><GoTrash /></button>
             </div>
             <div>
-                {field.type} \/ in {field.city} - {field.state} - {field.street}
+                {field.type} \/ in {field.province} - {field.district} - {field.neighborhood}
             </div>
+            <button>PRODUCT RECOMMENDATION</button>
         </div>
     </>
 
