@@ -8,84 +8,76 @@ function FieldForm({ setVisibleForm }) {
 	const [formState, setFormState] = useState({
 		type: "",
 		province: "",
-		provinceId: "",
 		district: "",
-		districtId: "",
 		neighborhood: "",
-		neighborhoodId: ""
 	});
 	
+	
 	const { data: provinceData, isLoading: pIsLoading, error: pError } = useFetchProvincesQuery();
-	const { data: districtData, isLoading: dIsloading, error: dError } = useFetchDistrictsQuery(formState.provinceId, {skip: !formState.provinceId});
-	const {data: neighborhoodData, isLoading: nIsLoading, error: nError} = useFetchNeighborhoodsQuery(formState.district, {skip: !formState.districtId});
+	const selectedProvince = provinceData?.find(p => p.provinceName === formState.province);
+	const { data: districtData, isLoading: dIsloading, error: dError } = useFetchDistrictsQuery(selectedProvince?.id, {skip: !selectedProvince});
+	const selectedDistrict = districtData?.find(d => d.districtName === formState.district);
+	const {data: neighborhoodData, isLoading: nIsLoading, error: nError} = useFetchNeighborhoodsQuery(selectedDistrict?.id, {skip: !selectedDistrict});
 	let pContent, dContent, nContent;
 
 	if (provinceData) {
 		pContent = provinceData.map((province) => {
-			return <option key={province.id} value={province.id}>{province.provinceName}</option>;
+			return <option key={province.id} value={province.provinceName}>{province.provinceName}</option>;
 		})
 	}
 
 	if (districtData) {
 		dContent = districtData.map((district) => {
-			return <option key={district.id} value={district.id}>{district.districtName}</option>;
+			return <option key={district.id} value={district.districtName}>{district.districtName}</option>;
 		})
 	}
 
 
 	if (neighborhoodData) {
 		nContent = neighborhoodData.map((neighborhood) => {
-			return <option key={neighborhood.id} value={neighborhood.id}>{neighborhood.neighborhoodName}</option>;
+			return <option key={neighborhood.id} value={neighborhood.neighborhoodName}>{neighborhood.neighborhoodName}</option>;
 		})
 	}
 
 	const handleChange = (event) => {
-		const { name, value } = event.target; 
-		let updatedFields = {[name]: value};
+		const { name, value } = event.target;
+		let updatedFields = {};
+	
 		if (name === "province") {
-//			const selectedProvince = provinceData.find(province => province.id === value);
 			updatedFields = {
-				...updatedFields,
-				provinceId: value,
-//				province: selectedProvince?.province || "",
-				districtId: "",
+				province: value,
 				district: "",
-				neighborhoodId: "",
 				neighborhood: ""
 			};
-		}
-		else if (name === "district") {
-//			const selectedDistrict = districtData.find(district => district.id === value);
+		} else if (name === "district") {
 			updatedFields = {
-				...updatedFields,
-				districtId: value,
-				//district: selectedDistrict?.district || "",*/
-				neighborhoodId: "",
+				district: value,
 				neighborhood: ""
 			};
-		}
-		else if (name === "neighborhood") {
-		//	const selectedNeighborhood = neighborhoodData.find(neighborhood => neighborhood.id === value);
+		} else if (name === "neighborhood") {
 			updatedFields = {
-				...updatedFields,
-				neighborhoodId: value,
-				//neighborhood: selectedNeighborhood?.neighborhood || ""
+				neighborhood: value
 			};
+		} else {
+			updatedFields = { [name]: value };
 		}
+	
 		setFormState((previousState) => ({
 			...previousState,
 			...updatedFields
 		}));
 	};
+	
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		const field = {type: formState.type, 
+		const field = {
+			type: formState.type, 
 			province: formState.province, 
 			district: formState.district, 
 			neighborhood: formState.neighborhood,
-			user: {id: user.data.id}};
-
+			user: {id: user.data.id}
+		};
 		addField(field);
 		setVisibleForm(false);
 	};
