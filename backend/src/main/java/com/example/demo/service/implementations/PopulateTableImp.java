@@ -11,10 +11,10 @@ import com.example.demo.entity.District;
 import com.example.demo.entity.Neighborhood;
 import com.example.demo.entity.Province;
 import com.example.demo.repository.ProvinceRepository;
-import com.example.demo.service.interfaces.PopulateTable;
+import com.example.demo.service.interfaces.PopulateTableService;
 
 @Service
-public class PopulateTableImp implements PopulateTable{
+public class PopulateTableImp implements PopulateTableService{
 
     @Autowired
     private ProvinceRepository repository;

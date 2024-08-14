@@ -110,7 +110,7 @@ function FieldForm({ setVisibleForm }) {
 					{nContent}
 				</select>
 			</div>
-			<button type="submit">Submit</button>
+			<button type="submit" disabled={!(formState.type && formState.province && formState.district && formState.neighborhood)}>Submit</button>
 		</form>
 	)
 }

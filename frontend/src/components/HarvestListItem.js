@@ -4,7 +4,7 @@ import { useState } from "react";
 //import { useNavigate } from "react-router-dom";
 
 function HarvestListItem({ harvest }) {
-    const [ removeHarvest, results ] = useRemoveHarvestMutation();
+    const [ removeHarvest ] = useRemoveHarvestMutation();
     //const navigate = useNavigate();
     const [satisfaction, setSatisfaction] = useState("");
     const [amount, setAmount] = useState(0);
@@ -28,6 +28,7 @@ function HarvestListItem({ harvest }) {
         setAmount(0);
         setSatisfaction("");
         setVisible(false);
+        removeHarvest(harvest);
     };
     
 
@@ -54,7 +55,7 @@ function HarvestListItem({ harvest }) {
         <div className="harvest-item">
             <div><button onClick={handleRemoveHarvest}><GoTrash /></button></div>
             <div><button onClick={handleHarvest}>Harvest the product</button></div>
-            <div>Product: {harvest.product} - Area: {harvest.area}</div>      
+            <div>Product: {harvest.product.productName} - Area: {harvest.area}</div>      
             {visible && feedback}     
         </div>   
     )
