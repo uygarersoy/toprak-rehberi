@@ -32,9 +32,10 @@ public class FractionController {
         @RequestParam Long neighborhoodId,
         @RequestParam Long productId,
         @RequestParam Integer satisfaction,
-        @RequestParam Long area ) {
+        @RequestParam Long area,
+        @RequestParam String productName ) {
         
-        Fraction fraction = fractionService.calculateFractionVal(neighborhoodId, productId, satisfaction, area);
+        Fraction fraction = fractionService.calculateFractionVal(neighborhoodId, productId, satisfaction, area, productName);
         return new ResponseEntity<>(fraction, HttpStatus.OK);
     }
 }

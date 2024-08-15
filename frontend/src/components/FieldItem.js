@@ -1,13 +1,31 @@
 import { GoTrash } from "react-icons/go";
 import ExpandablePanel from "./ExpandablePanel";
 import HarvestList from "./HarvestList";
-import { useRemoveFieldMutation } from "../store";
+import { useFetchGuidenessQuery, useRemoveFieldMutation } from "../store";
+import { useState } from "react";
 
 
 function FieldItem({ field }) {
-    const [removeField, results] = useRemoveFieldMutation();
+    const [ removeField ] = useRemoveFieldMutation();
     const handleRemoveField = () => {
         removeField(field.id);
+    };
+
+    const [show, setShow] = useState(false);
+
+    const { data } = useFetchGuidenessQuery(field?.neighborhoodId);
+    let content;
+    if (data) {
+        console.log(data);
+        content = data.map((guide) => {
+            return (                
+                <li key={guide.id}>{guide.productName} - %{guide.percentage}</li>
+            );
+        })
+    }
+
+    const handleClick = () => {
+        setShow(!show);
     };
     const header = <>
         <div className="field">
@@ -17,14 +35,17 @@ function FieldItem({ field }) {
             <div>
                 {field.type} \/ in {field.provinceName} - {field.districtName} - {field.neighborhoodName}
             </div>
-            <button>PRODUCT RECOMMENDATION</button>
+            <button onClick={handleClick}>PRODUCT RECOMMENDATION</button>
         </div>
     </>
 
     return (
-        <ExpandablePanel header={header}>
-            <HarvestList field={field}/>
-        </ExpandablePanel>
+        <>
+            {show && <ol>{content}</ol>}
+            <ExpandablePanel header={header}>
+                <HarvestList field={field} />
+            </ExpandablePanel>
+        </>
     );
 }
 

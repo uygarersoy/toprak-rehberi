@@ -5,6 +5,7 @@ const fractionApi = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: "http://localhost:8080/api/fraction"
     }),
+    tagTypes: ["Guideness"],
     endpoints(builder) {
         return {
             fetchGuideness: builder.query({
@@ -16,7 +17,8 @@ const fractionApi = createApi({
                             neighborhoodId: neighborhoodId
                         }
                     };
-                }
+                },
+                providesTags: (result, error, neighborhoodId) => [{type: "Guideness", id: neighborhoodId}]
             }),
             updateFractions: builder.mutation({
                 query: (parameters) => {
@@ -27,10 +29,12 @@ const fractionApi = createApi({
                             neighborhoodId: parameters.neighborhoodId,
                             productId: parameters.productId,
                             satisfaction: parameters.satisfaction,
-                            area: parameters.area
+                            area: parameters.area,
+                            productName: parameters.productName
                         }                           
                     };
-                }
+                },
+                invalidatesTags: (result, error, parameters) => [{type: "Guideness", id: parameters.neighborhoodId}]
             })
         };
     }

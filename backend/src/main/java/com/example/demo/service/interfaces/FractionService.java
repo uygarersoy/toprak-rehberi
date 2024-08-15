@@ -8,5 +8,5 @@ public interface FractionService {
     void updateFractionTable(Double increase, Fraction fraction);
     List<Fraction> fetchFractions(Long neighborhoodId);
     Fraction getFraction(Long neighborhoodId, Long productId);
-    Fraction calculateFractionVal(Long neighborhoodId, Long productId, Integer satisfaction, Long area);
+    Fraction calculateFractionVal(Long neighborhoodId, Long productId, Integer satisfaction, Long area, String productName);
 }

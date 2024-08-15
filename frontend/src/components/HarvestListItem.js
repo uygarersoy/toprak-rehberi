@@ -36,8 +36,10 @@ function HarvestListItem({ harvest }) {
             neighborhoodId: harvest.field.neighborhoodId,
             productId: harvest.product.id,
             satisfaction: satisfaction,
-            area: amount
+            area: amount,
+            productName: harvest.product.productName
         };
+        console.log(fraction);
         /*console.log(fraction);
         console.log(result);*/
         addFeedback(result);

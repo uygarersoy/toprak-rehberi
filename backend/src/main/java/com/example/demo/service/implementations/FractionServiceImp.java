@@ -22,7 +22,14 @@ public class FractionServiceImp implements FractionService{
 
     @Override
     public void updateFractionTable(Double increase, Fraction fraction) {
-        fraction.setPercentage(fraction.getPercentage() + increase);
+        Double newPercentage = fraction.getPercentage() + increase;
+        if (newPercentage >= 95) {
+            newPercentage = 95.0;
+        }
+        else if (newPercentage <= 5) {
+            newPercentage = 5.0;
+        }
+        fraction.setPercentage(newPercentage);
         this.saveFraction(fraction);
     }
 
@@ -37,7 +44,7 @@ public class FractionServiceImp implements FractionService{
     }
 
     @Override
-    public Fraction calculateFractionVal(Long neighborhoodId, Long productId, Integer satisfaction, Long area) {
+    public Fraction calculateFractionVal(Long neighborhoodId, Long productId, Integer satisfaction, Long area, String productName) {
         Fraction fraction = this.getFraction(neighborhoodId, productId);
         if (fraction == null) {
             Double percentage = (satisfaction == 3) ? 80.0 : ((satisfaction == 2) ? 60.0 : 30.0);
@@ -45,6 +52,7 @@ public class FractionServiceImp implements FractionService{
             newFraction.setNeighborhoodId(neighborhoodId);
             newFraction.setProductId(productId);
             newFraction.setPercentage(percentage);
+            newFraction.setProductName(productName);
             this.saveFraction(newFraction);
             return newFraction;
         }
