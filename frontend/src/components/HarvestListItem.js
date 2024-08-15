@@ -1,5 +1,5 @@
 import { GoTrash } from "react-icons/go";
-import { useRemoveHarvestMutation } from "../store";
+import { useAddFeedBackMutation, useRemoveHarvestMutation } from "../store";
 import { useState } from "react";
 //import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,7 @@ function HarvestListItem({ harvest }) {
     const [satisfaction, setSatisfaction] = useState("");
     const [amount, setAmount] = useState(0);
     const [visible, setVisible] = useState(false);
+    const [ addFeedback ] = useAddFeedBackMutation();
 
     //console.log("Satisfaction: ", satisfaction);
 
@@ -25,6 +26,14 @@ function HarvestListItem({ harvest }) {
         event.preventDefault();
         console.log(satisfaction);
         console.log(amount);
+        console.log(harvest.field);
+        const result = {
+            neighborhoodId: harvest.field.neighborhoodId,
+            yield: amount,
+            product: harvest.product
+        };
+        console.log(result);
+        addFeedback(result);
         setAmount(0);
         setSatisfaction("");
         setVisible(false);

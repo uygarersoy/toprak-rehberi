@@ -9,6 +9,15 @@ const harvestApi = createApi({
     tagTypes: ["Harvest"],
     endpoints(builder) {
         return {
+            addFeedBack: builder.mutation({
+                query: (result) => {
+                    return {
+                        url: "/feedback",
+                        method: "POST",
+                        body: result
+                    };
+                }
+            }),
             addHarvest: builder.mutation({
                 query: (harvest) => {
                     return {
@@ -48,5 +57,5 @@ const harvestApi = createApi({
     }
 });
 
-export const { useFetchHarvestsQuery, useAddHarvestMutation, useRemoveHarvestMutation } = harvestApi;
+export const { useFetchHarvestsQuery, useAddHarvestMutation, useRemoveHarvestMutation, useAddFeedBackMutation } = harvestApi;
 export { harvestApi };

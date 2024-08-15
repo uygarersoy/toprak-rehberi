@@ -18,6 +18,7 @@ function FieldForm({ setVisibleForm }) {
 	const { data: districtData, isLoading: dIsloading, error: dError } = useFetchDistrictsQuery(selectedProvince?.id, {skip: !selectedProvince});
 	const selectedDistrict = districtData?.find(d => d.districtName === formState.district);
 	const {data: neighborhoodData, isLoading: nIsLoading, error: nError} = useFetchNeighborhoodsQuery(selectedDistrict?.id, {skip: !selectedDistrict});
+	const selectedNeighborhood = neighborhoodData?.find(n => n.neighborhoodName === formState.neighborhood);
 	let pContent, dContent, nContent;
 
 	if (provinceData) {
@@ -73,9 +74,12 @@ function FieldForm({ setVisibleForm }) {
 		event.preventDefault();
 		const field = {
 			type: formState.type, 
-			province: formState.province, 
-			district: formState.district, 
-			neighborhood: formState.neighborhood,
+			provinceName: formState.province, 
+			districtName: formState.district, 
+			neighborhoodName: formState.neighborhood,
+			provinceId: selectedProvince.id, 
+			districtId: selectedDistrict.id, 
+			neighborhoodId: selectedNeighborhood.id,
 			user: {id: user.data.id}
 		};
 		addField(field);

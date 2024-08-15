@@ -22,11 +22,26 @@ public class Result {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    private String neighborhood;
+    //private String neighborhood;
     private Long yield;
 
+
     @OneToOne
+    @JoinColumn(name="product_id")
+    @JsonIgnoreProperties("result")
+    private Product product;
+
+    /*@OneToOne
+    @JoinColumn(name="neighborhood_id")
+    @JsonIgnoreProperties("result")
+    private Neighborhood neighborhood;*/
+
+    private Long neighborhoodId;
+
+    //Instead of harvest, result shoudl be mapped to Product. FIX IT
+    //Also neighborhood should be entity instead of string. FIX IT
+    /*@OneToOne
     @JoinColumn(name="harvest_id")
     @JsonIgnoreProperties("result")
-    private Harvest harvest;
+    private Harvest harvest;*/
 }

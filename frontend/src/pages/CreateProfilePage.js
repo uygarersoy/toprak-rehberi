@@ -25,7 +25,7 @@ const CreateProfilePage = () => {
 
 		const response = await dispatch(registerUser({email, password}));
 
-		console.log(response);
+		//console.log(response);
 		if (response.type === "user/register/fulfilled") {
 			setMessage("Account created successfully!");
 			navigate('/');

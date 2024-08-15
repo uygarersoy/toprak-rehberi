@@ -9,8 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import com.example.demo.entity.Harvest;
+import com.example.demo.entity.Result;
 import com.example.demo.service.interfaces.FieldService;
 import com.example.demo.service.interfaces.HarvestService;
+import com.example.demo.service.interfaces.ResultService;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +31,16 @@ public class HarvestController {
 
     @Autowired
     private FieldService fieldService;
+
+    @Autowired
+    private ResultService resultService;
+
+    @PostMapping("/feedback")
+    public ResponseEntity<Result> feedbackOfHarvest(@RequestBody Result result) {
+        resultService.saveResult(result);
+        return new ResponseEntity<>(result, HttpStatus.OK);        
+    }
+    
 
     @PostMapping("/fetch-field-harvest")
     public ResponseEntity<List<Harvest>> getHarvestOfField(@RequestBody Field field){
