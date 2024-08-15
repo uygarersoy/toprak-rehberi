@@ -5,6 +5,7 @@ import { fieldsApi } from "./apis/fieldApi";
 import { harvestApi } from "./apis/harvestApi";
 import { locationApi } from "./apis/locationApi";
 import { productApi } from "./apis/productApi";
+import { fractionApi } from "./apis/fractionApi";
 
 const store = configureStore({
     reducer: {
@@ -12,11 +13,12 @@ const store = configureStore({
         [fieldsApi.reducerPath]: fieldsApi.reducer,
         [harvestApi.reducerPath]: harvestApi.reducer,
         [locationApi.reducerPath]: locationApi.reducer,
-        [productApi.reducerPath]: productApi.reducer
+        [productApi.reducerPath]: productApi.reducer,
+        [fractionApi.reducerPath]: fractionApi.reducer
     },
     middleware: (getDefaultMiddleware) => {
         return getDefaultMiddleware().concat(fieldsApi.middleware).concat(harvestApi.middleware)
-            .concat(locationApi.middleware).concat(productApi.middleware);
+            .concat(locationApi.middleware).concat(productApi.middleware).concat(fractionApi.middleware);
     }
 });
 
@@ -31,3 +33,4 @@ export { useAddFieldMutation, useFetchFieldsQuery, useRemoveFieldMutation } from
 export { useFetchHarvestsQuery, useAddHarvestMutation, useRemoveHarvestMutation, useAddFeedBackMutation } from "./apis/harvestApi";
 export { useFetchProvincesQuery, useFetchDistrictsQuery, useFetchNeighborhoodsQuery } from "./apis/locationApi";
 export { useFetchProductsQuery } from "./apis/productApi";
+export { useFetchGuidenessQuery, useUpdateFractionsMutation }from "./apis/fractionApi";

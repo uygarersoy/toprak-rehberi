@@ -1,5 +1,5 @@
 import { GoTrash } from "react-icons/go";
-import { useAddFeedBackMutation, useRemoveHarvestMutation } from "../store";
+import { useAddFeedBackMutation, useRemoveHarvestMutation, useUpdateFractionsMutation } from "../store";
 import { useState } from "react";
 //import { useNavigate } from "react-router-dom";
 
@@ -10,7 +10,7 @@ function HarvestListItem({ harvest }) {
     const [amount, setAmount] = useState(0);
     const [visible, setVisible] = useState(false);
     const [ addFeedback ] = useAddFeedBackMutation();
-
+    const [ updateFraction ] = useUpdateFractionsMutation();
     //console.log("Satisfaction: ", satisfaction);
 
     const handleRemoveHarvest = () => {
@@ -24,16 +24,24 @@ function HarvestListItem({ harvest }) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(satisfaction);
+        /*console.log(satisfaction);
         console.log(amount);
-        console.log(harvest.field);
+        console.log(harvest.field);*/
         const result = {
             neighborhoodId: harvest.field.neighborhoodId,
             yield: amount,
-            product: harvest.product
+            productId: harvest.product.id
         };
-        console.log(result);
+        const fraction = {
+            neighborhoodId: harvest.field.neighborhoodId,
+            productId: harvest.product.id,
+            satisfaction: satisfaction,
+            area: amount
+        };
+        /*console.log(fraction);
+        console.log(result);*/
         addFeedback(result);
+        updateFraction(fraction);
         setAmount(0);
         setSatisfaction("");
         setVisible(false);
@@ -45,18 +53,18 @@ function HarvestListItem({ harvest }) {
         <form onSubmit={handleSubmit}>
             <div>
 				<label>Satisfaction:</label>
-				<select id="res" onChange={(event) => setSatisfaction(event.target.value)} value={satisfaction}>
+				<select id="res" onChange={(event) => setSatisfaction(parseInt(event.target.value))} value={satisfaction}>
                     <option value="">Select Satisfaction</option>
-                    <option value="Very Good">Very Good</option>
-                    <option value="Not bad, Not good">Not bad, Not good</option>
-                    <option value="Very Bad">Very Bad</option>
+                    <option value={3}>Very Good</option>
+                    <option value={2}>Not bad, Not good</option>
+                    <option value={1}>Very Bad</option>
                 </select>
 			</div>
             <div>
                 <label>Amoun of the harvest</label>
                 <input type="number" onChange={(event) => setAmount(parseInt(event.target.value))} value={amount || ""}></input>
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit" disabled={!(satisfaction && amount)}>Submit</button>
         </form>
     );
 

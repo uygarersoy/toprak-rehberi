@@ -37,8 +37,20 @@ public class HarvestController {
 
     @PostMapping("/feedback")
     public ResponseEntity<Result> feedbackOfHarvest(@RequestBody Result result) {
+        /*if (resultService.checkExists(result.getNeighborhoodId(), result.getProduct().getId())) {
+            Result newResult = new Result();
+            newResult.setNeighborhoodId(result.getNeighborhoodId());
+            newResult.setProduct(result.getProduct());
+            newResult.setYield(result.getYield());
+            resultService.saveResult(newResult);
+            return new ResponseEntity<>(newResult, HttpStatus.OK);
+        }
+        else {
+            resultService.saveResult(result);
+            return new ResponseEntity<>(result, HttpStatus.OK);            
+        }*/
         resultService.saveResult(result);
-        return new ResponseEntity<>(result, HttpStatus.OK);        
+        return new ResponseEntity<>(result, HttpStatus.OK);   
     }
     
 
