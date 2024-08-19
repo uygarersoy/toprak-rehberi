@@ -53,8 +53,8 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
         </div>*/
         <Box sx={{ padding: 2, minHeight: '100vh', position: 'relative' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-                <YardIcon sx={{height: "40px", width: "auto"}}/>                
-                <Typography variant="h4" component="h1">
+                <YardIcon sx={{height: "40px", width: "auto", color: "green"}}/>                
+                <Typography variant="h4" component="h1" sx={{color: "green"}}>
                     FIELDS
                 </Typography>
                 <Button variant="contained" color="primary" onClick={handleFieldCreation}>

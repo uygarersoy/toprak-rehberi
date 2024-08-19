@@ -126,7 +126,7 @@ function HarvestListItem({ harvest }) {
                         <DeleteIcon />
                     </IconButton>
                     <Typography variant="body1">
-                        Product: {harvest.product.productName} - Area: {harvest.area}
+                        Product: {harvest.product.productName} Area: {harvest.area}
                     </Typography>
                     <Button variant="contained" color="primary" onClick={handleOpenModal}>
                         Harvest the Product
@@ -157,7 +157,7 @@ function HarvestListItem({ harvest }) {
                 </Box>
             </Modal>
         </Card>
-    )
+    );
 }
 
 export default HarvestListItem;
