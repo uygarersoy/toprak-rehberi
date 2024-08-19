@@ -57,7 +57,7 @@ public class FractionServiceImp implements FractionService{
             return newFraction;
         }
         else {
-            int flag = area == 1 ? -1 : 1;
+            int flag = (satisfaction == 1) ? -1 : 1;
             Double increase = (area / 2000.0) * (flag * satisfaction / 6.0);
             this.updateFractionTable(increase, fraction);
             return fraction;
