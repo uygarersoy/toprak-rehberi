@@ -1,5 +1,6 @@
 //import { useSelector } from "react-redux";
 import { useState } from "react";
+import { Button, Box, Typography, Modal, Grid, CircularProgress, Alert, Select, MenuItem, TextField } from '@mui/material';
 import { useAddHarvestMutation, useFetchHarvestsQuery, useFetchProductsQuery } from "../store";
 import HarvestListItem from "./HarvestListItem";
 
@@ -19,7 +20,11 @@ function HarvestList({ field }) {
 
     if (productData) {
         pContent = productData.map((product) => {
-            return <option key={product.id} value={product.productName}>{product.productName}</option>;
+            return (
+                <MenuItem key={product.id} value={product.productName}>
+                    {product.productName}
+                </MenuItem>
+            );
         });
     }
 
@@ -44,58 +49,123 @@ function HarvestList({ field }) {
     };
 
     const harvestForm = (
-        <form className="new-field-form" onSubmit={handleSubmit}>
-            <div>
-				<label>Product Type:</label>
-				<select name="type" value={formState.type} onChange={handleChange}>
-					<option value="">Select a Type</option>
-					<option value="MEYVE">Meyve</option>
-					<option value="SEBZE">Sebze</option>
-					<option value="SÜS BİTKİSİ">Süs Bitkileri</option>
-					<option value="TAHIL">Tahıl</option>
-				</select>				
-			</div>
-			<div>
-				<label>Product:</label>
-                <select name="product" value={formState.product} onChange={handleChange} disabled={!formState.type}>
-                    <option value="">Select a Product</option>
+        <Box
+            component="form"
+            onSubmit={handleSubmit}
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                width: '100%',
+                gap: 2
+            }}
+        >
+            <Typography variant="h6" mb={2}>Add New Harvest</Typography>
+            <Box>
+                <Typography variant="body1">Product Type:</Typography>
+                <Select
+                    name="type"
+                    value={formState.type}
+                    onChange={handleChange}
+                    fullWidth
+                    label="Type"
+                >
+                    <MenuItem value="">Select a Type</MenuItem>
+                    <MenuItem value="MEYVE">Meyve</MenuItem>
+                    <MenuItem value="SEBZE">Sebze</MenuItem>
+                    <MenuItem value="SÜS BİTKİSİ">Süs Bitkileri</MenuItem>
+                    <MenuItem value="TAHIL">Tahıl</MenuItem>
+                </Select>
+            </Box>
+            <Box>
+                <Typography variant="body1">Product:</Typography>
+                <Select
+                    name="product"
+                    value={formState.product}
+                    onChange={handleChange}
+                    fullWidth
+                    disabled={!formState.type}
+                >
+                    <MenuItem value="">Select a Product</MenuItem>
                     {pContent}
-                </select>
-			</div>
-			<div>
-				<label>Area:</label>
-				<input type="number" name="area" value={formState.area} onChange={handleChange} disabled={!formState.product}/>
-			</div>
-			<button type="submit" disabled={!(formState.type && formState.product && formState.area)}>Submit</button>
-		</form>
+                </Select>
+            </Box>
+            <Box>
+                <Typography variant="body1">Area:</Typography>
+                <TextField
+                    type="number"
+                    name="area"
+                    value={formState.area}
+                    onChange={handleChange}
+                    fullWidth
+                    variant="outlined"
+                    disabled={!formState.product}
+                    InputProps={{ inputProps: { min: 0 } }}
+                />
+            </Box>
+            <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                fullWidth
+                disabled={!(formState.type && formState.product && formState.area)}
+            >
+                Submit
+            </Button>
+        </Box>
     );
 
     let content = "";
     if (isFetching) {
-        content = <div>Loading harvest data...</div>;
+        content = <CircularProgress />;
     }
     else if (error) {
-        content = <div>Error fetching harvest data...</div>;
+        content = <Alert severity="error" >Error fetching harvest data...</Alert>;
     }
     else if (!harvestData) {
-        content = <div>no data at the moment</div>;
+        content = <Typography>no data at the moment</Typography>;
     }
     else {
-        content = harvestData.map((harvest) => {
-            return <HarvestListItem key={harvest.id} harvest={harvest}/>;
-        });    
+        content = (
+            <Grid container spacing={2}>
+                {harvestData.map((harvest) => (
+                <Grid item key={harvest.id} xs={12} sm={6} md={4}>
+                    <HarvestListItem harvest={harvest} />
+                </Grid>
+                ))}
+            </Grid>
+        );    
     }
 
     return (
-        <div className="harvest-item">
-            <div>
-                <button onClick={handleAddHarvest}>Add a harvest</button>
-            </div>
-            <div>
-                {visible && harvestForm}
-            </div>
-                {content}
-        </div>
+        <Box>
+            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+                <Button variant="contained" color="primary" onClick={handleAddHarvest}>
+                    Add a Harvest
+                </Button>
+            </Box>
+            <Modal
+                open={visible}
+                onClose={() => setVisible(false)}
+                aria-labelledby="add-harvest-form"
+            >
+                <Box
+                    sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: { xs: '90%', sm: '80%', md: 400 },
+                        bgcolor: 'background.paper',
+                        borderRadius: 1,
+                        boxShadow: 24,
+                        p: 4
+                    }}
+                >
+                    {harvestForm}
+                </Box>
+            </Modal>
+            {content}
+        </Box>
     )
 }
 

@@ -1,6 +1,6 @@
 /* index.css */
 
-
+/*
 .dashboard, .field, .expandable-panel-items, .expandable-panel-header, .harvest, .harvest-item{
 	display: flex;
 	flex-direction: row;
@@ -75,7 +75,7 @@ button:hover {
 p {
 	margin-top: 20px;
 	font-size: 14px;
-	color: #0c00af; /* Red color for error messages */
+	color: #0c00af; 
 }
 
 .profile-page {
@@ -117,7 +117,7 @@ p {
 	padding: 10px;
 	border: none;
 	border-radius: 4px;
-	background-color: #28a745; /* Green color for the button */
+	background-color: #28a745;
 	color: #fff;
 	font-size: 16px;
 	cursor: pointer;
@@ -130,7 +130,7 @@ p {
 .profile-page p {
 	margin-top: 20px;
 	font-size: 14px;
-	color: #d9534f; /* Red color for error messages */
+	color: #d9534f;
 }
 
 a {
@@ -140,4 +140,4 @@ a {
 
 a:hover {
 	text-decoration: underline;
-}
+}*/
