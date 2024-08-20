@@ -107,11 +107,10 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
             {content}
             <Box 
                 sx={{
-                    position: 'fixed',
-                    bottom: 16,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    textAlign: 'center'
+                    display: 'flex',
+                    justifyContent: 'center',
+                    py: 2, // Padding to give space around the button
+                    backgroundColor: 'background.paper', // Optional: background color for better visibility
                 }}
             >
                 <Button variant="outlined" color="secondary" onClick={handleLogOut}>

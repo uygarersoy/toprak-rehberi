@@ -14,6 +14,13 @@ function HarvestListItem({ harvest }) {
     const [ updateFraction ] = useUpdateFractionsMutation();
     //console.log("Satisfaction: ", satisfaction);
     const [open, setOpen] = useState(false);
+    const images = {
+        MEYVE: "fruits.png",
+        SEBZE: "vegetable.png",
+        TAHIL: "barley.png",
+        "SÜS BİTKİSİ": "plant.png"
+    };
+    const imageSrc = images[harvest.product.type];
 
     const handleRemoveHarvest = () => {
         removeHarvest(harvest);
@@ -59,7 +66,6 @@ function HarvestListItem({ harvest }) {
         setVisible(false);
         removeHarvest(harvest);
     };
-    
 
     /*const feedback = (
         <form onSubmit={handleSubmit}>
@@ -119,20 +125,43 @@ function HarvestListItem({ harvest }) {
     );
 
     return (
-        <Card sx={{ mb: 2 }}>
-            <CardContent>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <IconButton onClick={handleRemoveHarvest} color="error">
-                        <DeleteIcon />
-                    </IconButton>
-                    <Typography variant="body1">
+        <Card sx={{ mb: 2, height: '100%', maxWidth: '300px', mx: "auto" }}>
+            <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
+                {/* Responsive Image */}
+                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+                    <img 
+                        src={imageSrc} 
+                        alt={harvest.product.type} 
+                        style={{ 
+                            width: '30%',   // Smaller width, adjusts based on the container size
+                            maxWidth: '80px',  // Reduced maximum width
+                            height: 'auto'     // Maintain aspect ratio
+                        }} 
+                    />
+                </Box>
+
+                {/* Typography */}
+                <Box sx={{ textAlign: 'center', width: '100%', minHeight: '40px' }}>
+                    <Typography variant="body1" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         Product: {harvest.product.productName} Area: {harvest.area}
                     </Typography>
+                </Box>
+
+                {/* Centered Button */}
+                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                     <Button variant="contained" color="primary" onClick={handleOpenModal}>
                         Harvest the Product
                     </Button>
                 </Box>
+
+                {/* Centered Delete Icon */}
+                <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 1 }}>
+                    <IconButton onClick={handleRemoveHarvest} color="error">
+                        <DeleteIcon />
+                    </IconButton>
+                </Box>
             </CardContent>
+
             <Modal
                 open={open}
                 onClose={handleCloseModal}
