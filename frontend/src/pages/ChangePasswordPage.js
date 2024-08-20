@@ -7,6 +7,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { NavLink } from 'react-router-dom';
 
 const ChangePasswordPage = () => {
+    const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -18,6 +19,7 @@ const ChangePasswordPage = () => {
         event.preventDefault();
 
         const response = await dispatch(updateUser({
+            userName,
             email,
             currentPassword,
             newPassword
@@ -74,6 +76,15 @@ const ChangePasswordPage = () => {
                 >
                     <TextField
                         fullWidth
+                        label="UserName"
+                        type="text"
+                        value={userName}
+                        onChange={(event) => setUserName(event.target.value)}
+                        margin="normal"
+                        required
+                    />
+                    <TextField
+                        fullWidth
                         label="Email"
                         type="email"
                         value={email}
@@ -104,7 +115,7 @@ const ChangePasswordPage = () => {
                         variant="contained"
                         fullWidth
                         sx={{ marginTop: 2 }}
-                        disabled={!email || !currentPassword || !newPassword}
+                        disabled={!userName || !email || !currentPassword || !newPassword}
                     >
                         Change Password
                     </Button>

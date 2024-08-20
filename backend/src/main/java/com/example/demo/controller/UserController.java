@@ -41,23 +41,22 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> loginControl(@RequestBody User user) {
-        List<User> allUsers = userService.fetchAllUsers();
-        for (User userDb : allUsers) {
-            if (userDb.getEmail().equals(user.getEmail()) && userDb.getPassword().equals(user.getPassword())) {
-                return new ResponseEntity<>(userDb, HttpStatus.OK); // User found, return 200 OK
-            }
+    public ResponseEntity<User> loginControl(@RequestParam String userName, @RequestParam String password) {
+        User user = userService.loginCredentials(userName, password);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); // User not found, return 401 Unauthorized
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("/register")
     public ResponseEntity<String> createUser(@RequestBody User user) {
-        List<User> allUsers = userService.fetchAllUsers();
-        for (User userDb : allUsers) {
-            if (userDb.getEmail().equals(user.getEmail())) {
-                return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
-            }
+        int check = userService.registerCredentials(user);
+        if (check == -1) {
+            return new ResponseEntity<>("UserName Exists", HttpStatus.CONFLICT);
+        }
+        else if (check == 1) {
+            return new ResponseEntity<>("Email Exists", HttpStatus.CONFLICT);
         }
         userService.saveUser(user);
         return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
@@ -65,20 +64,19 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<User> updatePassword(
+        @RequestParam String userName,
         @RequestParam String email,
         @RequestParam String currentPassword,
         @RequestParam String newPassword ) {
         
-        List<User> allUsers = userService.fetchAllUsers();
-        for (User userDb : allUsers) {
-            if (userDb.getEmail().equals(email) && userDb.getPassword().equals(currentPassword)) {
-                User user = userService.findUser(userDb.getId());
-                user.setPassword(newPassword);
-                userService.saveUser(user);
-                return new ResponseEntity<>(user, HttpStatus.OK);
-            }
+        User user = userService.updateUser(userName, currentPassword);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        user.setPassword(newPassword);
+        userService.saveUser(user);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 }

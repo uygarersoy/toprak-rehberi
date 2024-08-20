@@ -6,7 +6,7 @@ import { Box, Button, TextField, Typography, Link, Alert, Grid } from '@mui/mate
 import LockIcon from '@mui/icons-material/Lock';
 
 const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
-    const [email, setEmail] = useState('');
+    const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
     const [message, setMessage] = useState("");
     const [messageType, setMessageType] = useState("error");
@@ -15,14 +15,14 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const response = await dispatch(fetchUser({ email, password }));
+        const response = await dispatch(fetchUser({ userName, password }));
         if (response.type === "user/fetch/fulfilled") {
             setMessage("Success!");
             setMessageType("success");
             setIsLoggedIn(!isLoggedIn);
             navigate("/dashboard")
         } else {
-            setMessage("Invalid email or password!");
+            setMessage("Wrong user name or password!");
             setMessageType("error");
         }
     };
@@ -70,10 +70,10 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                 >
                     <TextField
                         fullWidth
-                        label="Email"
-                        type="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
+                        label="UserName"
+                        type="text"
+                        value={userName}
+                        onChange={(event) => setUserName(event.target.value)}
                         margin="normal"
                         required
                     />
@@ -91,7 +91,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                         variant="contained"
                         fullWidth
                         sx={{ marginTop: 2 }}
-                        disabled={!email || !password}
+                        disabled={!userName || !password}
                     >
                         Login
                     </Button>
@@ -108,7 +108,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                         </Grid>
                         <Grid item>
                             <Link component={NavLink} to="/change-password">
-                                Forgot Password?
+                                Change Password?
                             </Link>
                         </Grid>
                     </Grid>

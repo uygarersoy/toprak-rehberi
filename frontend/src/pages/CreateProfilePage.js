@@ -7,6 +7,7 @@ import LockIcon from '@mui/icons-material/Lock';
 import { NavLink } from 'react-router-dom';
 
 const CreateProfilePage = () => {
+	const [userName, setUserName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [confirmPassword, setConfirmPassword] = useState('');
@@ -29,7 +30,7 @@ const CreateProfilePage = () => {
 			return;
 		}
 
-		const response = await dispatch(registerUser({ email, password }));
+		const response = await dispatch(registerUser({ userName, email, password }));
 
 		if (response.type === "user/register/fulfilled") {
 			setMessageType('success');
@@ -84,6 +85,15 @@ const CreateProfilePage = () => {
 				>
 					<TextField
 						fullWidth
+						label="UserName"
+						type="text"
+						value={userName}
+						onChange={(event) => setUserName(event.target.value)}
+						margin="normal"
+						required
+					/>
+					<TextField
+						fullWidth
 						label="Email"
 						type="email"
 						value={email}
@@ -114,7 +124,7 @@ const CreateProfilePage = () => {
 						variant="contained"
 						fullWidth
 						sx={{ marginTop: 2 }}
-						disabled={!email || !password || !confirmPassword}
+						disabled={!userName || !email || !password || !confirmPassword}
 					>
 						Create Account
 					</Button>
