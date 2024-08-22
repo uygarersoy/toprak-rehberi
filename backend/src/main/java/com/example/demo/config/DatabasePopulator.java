@@ -27,7 +27,7 @@ public class DatabasePopulator implements CommandLineRunner{
     
     @Override
 	public void run(String... args) throws Exception {
-		String path = "C:\\Users\\UYGAR ERSOY\\Desktop\\data.json";
+		String path = "src/main/java/com/example/demo/config/locationData/data.json";
 		ObjectMapper mapper = new ObjectMapper();
 		try {
 			Map<String, Map<String, List<String>>> data = mapper.readValue(new File(path), new TypeReference<Map<String, Map<String, List<String>>>>(){});
@@ -37,13 +37,13 @@ public class DatabasePopulator implements CommandLineRunner{
 			err.printStackTrace();
 		}
 
-		List<String> fruit = readLines("C:\\Users\\UYGAR ERSOY\\Desktop\\meyve.txt");
+		List<String> fruit = readLines("src/main/java/com/example/demo/config/products/meyve.txt");
 		productService.populateProductTable("MEYVE", fruit);
-		List<String> vegetables = readLines("C:\\Users\\UYGAR ERSOY\\Desktop\\sebze.txt");
+		List<String> vegetables = readLines("src/main/java/com/example/demo/config/products/sebze.txt");
 		productService.populateProductTable("SEBZE", vegetables);
-		List<String> cereal = readLines("C:\\Users\\UYGAR ERSOY\\Desktop\\tahil.txt");
+		List<String> cereal = readLines("src/main/java/com/example/demo/config/products/tahil.txt");
 		productService.populateProductTable("TAHIL", cereal);
-		List<String> ornamental = readLines("C:\\Users\\UYGAR ERSOY\\Desktop\\sus_bitkileri.txt");
+		List<String> ornamental = readLines("src/main/java/com/example/demo/config/products/sus_bitkileri.txt");
 		productService.populateProductTable("SÜS BİTKİSİ", ornamental);
 	}
 

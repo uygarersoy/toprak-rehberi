@@ -89,41 +89,12 @@ function FieldForm({ setVisibleForm }) {
 
 
 	return (
-		/*<form className="new-field-form" onSubmit={handleSubmit}>
-			<div>
-				<label>Type:</label>
-				<input type="text" name="type" value={formState.type} onChange={handleChange}/>
-			</div>
-			<div>
-				<label>Province:</label>
-				<select name="province" value={formState.province} onChange={handleChange}>
-					<option value="">Select a Province</option>
-					{pContent}
-				</select>				
-			</div>
-			<div>
-				<label>District:</label>
-				<select name="district" value={formState.district} onChange={handleChange} disabled={!formState.province}>
-					<option value="">Select a District</option>
-					{dContent}
-				</select>
-			</div>
-			<div>
-				<label>Neighborhood:</label>
-				<select name="neighborhood" value={formState.neighborhood} onChange={handleChange} disabled={!formState.district}>
-					<option value="">Select a Neighborhood</option>
-					{nContent}
-				</select>
-			</div>
-			<button type="submit" disabled={!(formState.type && formState.province && formState.district && formState.neighborhood)}>Submit</button>
-		</form>*/
 		<Box
             component="form"
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 gap: 2,
-                width: '100%', 
 				width: { xs: '90%', sm: '80%', md: 400 },
                 margin: '0 auto',
             }}

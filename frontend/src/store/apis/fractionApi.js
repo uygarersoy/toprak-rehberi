@@ -35,10 +35,22 @@ const fractionApi = createApi({
                     };
                 },
                 invalidatesTags: (result, error, parameters) => [{type: "Guideness", id: parameters.neighborhoodId}]
+            }),
+            getFraction: builder.query({
+                query: ({ neighborhoodId, productId }) => {
+                    return {
+                        url: "/get-fraction",
+                        method: "GET",
+                        params: {
+                            neighborhoodId,
+                            productId
+                        }
+                    };
+                }
             })
         };
     }
 })
 
-export const { useFetchGuidenessQuery, useUpdateFractionsMutation } = fractionApi;
+export const { useFetchGuidenessQuery, useUpdateFractionsMutation, useGetFractionQuery } = fractionApi;
 export { fractionApi };

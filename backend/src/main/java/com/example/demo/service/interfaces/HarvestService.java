@@ -1,9 +1,8 @@
 package com.example.demo.service.interfaces;
 
 import java.util.List;
-
 import com.example.demo.entity.Harvest;
-
+import com.example.demo.entity.Field;
 public interface HarvestService {
 
     Harvest saveHarvest(Harvest harvest);
@@ -11,4 +10,6 @@ public interface HarvestService {
     void deleteHarvest(Long harvestId);
     List<Harvest> findAll();
     Harvest findHarvestById(Long harvestId);
+    List<Harvest> getHarvestOfField(Field field);
+    Harvest addNewHarvestToField(Harvest harvest);
 }

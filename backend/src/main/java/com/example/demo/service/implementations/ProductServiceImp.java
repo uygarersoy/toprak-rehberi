@@ -1,11 +1,8 @@
 package com.example.demo.service.implementations;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.example.demo.entity.Product;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.interfaces.ProductService;
@@ -42,14 +39,6 @@ public class ProductServiceImp implements ProductService{
 
     @Override
     public List<Product> fetchByType(String type) {
-        List<Product> allProducts = productRepository.findAll();
-        List<Product> res = new ArrayList<>();
-
-        for (Product product : allProducts) {
-            if (product.getType().equals(type)) {
-                res.add(product);
-            }
-        }
-        return res;
+        return productRepository.fetchByTpe(type);
     }
 }

@@ -10,14 +10,11 @@ function FieldItem({ field }) {
     const handleRemoveField = () => {
         removeField(field.id);
     };
-
-    //const [show, setShow] = useState(false);
     const [open, setOpen] = useState(false);
 
     const { data } = useFetchGuidenessQuery(field?.neighborhoodId);
     let content = [];
     if (data) {
-        //console.log(data);
         content = data.map((guide) => {
             return (                
                 <TableRow key={guide.id}>
@@ -28,10 +25,6 @@ function FieldItem({ field }) {
         });
     }
 
-    /*const handleClick = () => {
-        setShow(!show);
-    };*/
-
     const handleOpenModal = () => {
         setOpen(true);
     };
@@ -40,17 +33,6 @@ function FieldItem({ field }) {
         setOpen(false);
     };
 
-    /*const header = <>
-        <div className="field">
-            <div>
-                <button onClick={handleRemoveField}><GoTrash /></button>
-            </div>
-            <div>
-                {field.type} \/ in {field.provinceName} - {field.districtName} - {field.neighborhoodName}
-            </div>
-            <button onClick={handleClick}>PRODUCT RECOMMENDATION</button>
-        </div>
-    </>*/
     const header = (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "100%" }}>
             <IconButton onClick={handleRemoveField}>

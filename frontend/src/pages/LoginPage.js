@@ -22,7 +22,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
             setIsLoggedIn(!isLoggedIn);
             navigate("/dashboard")
         } else {
-            setMessage("Wrong user name or password!");
+            setMessage("Wrong username or password!");
             setMessageType("error");
         }
     };

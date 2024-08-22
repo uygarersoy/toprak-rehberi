@@ -58,25 +58,19 @@ public class UserController {
         else if (check == 1) {
             return new ResponseEntity<>("Email Exists", HttpStatus.CONFLICT);
         }
-        userService.saveUser(user);
         return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
     public ResponseEntity<User> updatePassword(
         @RequestParam String userName,
-        @RequestParam String email,
         @RequestParam String currentPassword,
         @RequestParam String newPassword ) {
         
-        User user = userService.updateUser(userName, currentPassword);
+        User user = userService.updateUser(userName, currentPassword, newPassword);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_GATEWAY);
         }
-
-        user.setPassword(newPassword);
-        userService.saveUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
-
 }

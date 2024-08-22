@@ -17,10 +17,4 @@ public class ResultServiceImp implements ResultService {
     public void saveResult(Result result) {
         resultRepository.save(result);
     }
-
-    /*@Override
-    public boolean checkExists(Long neighborhoodId, Long productId) {
-        Result result = resultRepository.checkExists(neighborhoodId, productId);
-        return result != null;
-    }*/
 }

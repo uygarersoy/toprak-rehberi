@@ -44,19 +44,17 @@ public class UserServiceImp implements UserService{
         if (checkEmail != null) {
             return 1; //email exists
         }
+        this.saveUser(user);
         return 0; //we are good
     }
 
     @Override
-    public User updateUser(String userName, String password) {
-        return userRepository.updateUser(userName, password);
+    public User updateUser(String userName, String password, String newPassword) {
+        User user =  userRepository.updateUser(userName, password);
+        if (user != null) {
+            user.setPassword(newPassword);
+            this.saveUser(user);
+        }
+        return user;
     }
-
-
-
-
-    /*@Override
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }*/
 }

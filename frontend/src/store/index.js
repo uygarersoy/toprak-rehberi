@@ -33,4 +33,4 @@ export { useAddFieldMutation, useFetchFieldsQuery, useRemoveFieldMutation } from
 export { useFetchHarvestsQuery, useAddHarvestMutation, useRemoveHarvestMutation, useAddFeedBackMutation } from "./apis/harvestApi";
 export { useFetchProvincesQuery, useFetchDistrictsQuery, useFetchNeighborhoodsQuery } from "./apis/locationApi";
 export { useFetchProductsQuery } from "./apis/productApi";
-export { useFetchGuidenessQuery, useUpdateFractionsMutation }from "./apis/fractionApi";
+export { useFetchGuidenessQuery, useUpdateFractionsMutation, useGetFractionQuery }from "./apis/fractionApi";

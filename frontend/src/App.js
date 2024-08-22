@@ -4,7 +4,6 @@ import CreateProfilePage from "./pages/CreateProfilePage";
 import ChangePasswordPage from "./pages/ChangePasswordPage";
 import { Routes, Route } from "react-router-dom";
 import { useState } from "react";
-import HarvestProductPage from "./pages/HarvestProductPage";
 
 function App() {
 
@@ -16,7 +15,6 @@ function App() {
             <Route path="/dashboard" element={<DashBoard isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>}/>
             <Route path="/create-account" element={<CreateProfilePage />} />
             <Route path="/change-password" element={<ChangePasswordPage />} />
-            <Route path="/harvest/:harvestId" element={<HarvestProductPage />}/>
         </Routes>        
     );
 }

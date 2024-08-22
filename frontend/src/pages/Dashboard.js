@@ -40,17 +40,6 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
         });
     }
     return (
-        /*<div>
-            <div className="dashboard">
-                <h1 className="dashboard-title">FIELDS</h1>
-                <button onClick={handleFieldCreation}>+ Add New Field</button>
-            </div>
-            {visibleForm && <FieldForm setVisibleForm={setVisibleForm}/>}
-            {content}
-            <div>
-                <button onClick={handleLogOut}>Log out</button>
-            </div>
-        </div>*/
         <Box sx={{ padding: 2, minHeight: '100vh', position: 'relative' }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
                 <YardIcon sx={{height: "40px", width: "auto", color: "green"}}/>                
@@ -71,7 +60,6 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
             >
                 <Box 
                     sx={{
-                        //position: 'absolute',
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
@@ -84,7 +72,7 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                         flexDirection: 'column',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        position: 'relative', // Needed for absolute positioning of the close button
+                        position: 'relative',
                     }}
                 >
                     <Typography variant="h6" component="h1" sx={{ mb: 2 }}>
@@ -109,8 +97,8 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                 sx={{
                     display: 'flex',
                     justifyContent: 'center',
-                    py: 2, // Padding to give space around the button
-                    backgroundColor: 'background.paper', // Optional: background color for better visibility
+                    py: 2,
+                    backgroundColor: 'background.paper',
                 }}
             >
                 <Button variant="outlined" color="secondary" onClick={handleLogOut}>

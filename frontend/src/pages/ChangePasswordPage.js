@@ -8,28 +8,35 @@ import { NavLink } from 'react-router-dom';
 
 const ChangePasswordPage = () => {
     const [userName, setUserName] = useState('');
-    const [email, setEmail] = useState('');
     const [currentPassword, setCurrentPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [message, setMessage] = useState('');
+    const [messageType, setMessageType] = useState('error');
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
+        if (currentPassword === newPassword) {
+            setMessage("New password cannot be same as the current password!");
+            setMessageType("error");
+            return;
+        }
+
         const response = await dispatch(updateUser({
             userName,
-            email,
             currentPassword,
             newPassword
         }));
         
         if (response.type === "user/update/fulfilled") {
             setMessage("Password changed successfully!");
+            setMessageType("success");
             navigate('/');
         } else {
-            setMessage("Error changing password. Please try again.");
+            setMessage("Wrong username or password!");
+            setMessageType("error");
         }
     };
 
@@ -85,15 +92,6 @@ const ChangePasswordPage = () => {
                     />
                     <TextField
                         fullWidth
-                        label="Email"
-                        type="email"
-                        value={email}
-                        onChange={(event) => setEmail(event.target.value)}
-                        margin="normal"
-                        required
-                    />
-                    <TextField
-                        fullWidth
                         label="Current Password"
                         type="password"
                         value={currentPassword}
@@ -115,12 +113,12 @@ const ChangePasswordPage = () => {
                         variant="contained"
                         fullWidth
                         sx={{ marginTop: 2 }}
-                        disabled={!userName || !email || !currentPassword || !newPassword}
+                        disabled={!userName || !currentPassword || !newPassword}
                     >
                         Change Password
                     </Button>
                     {message && (
-                        <Alert severity={message.includes("Error") ? "error" : "success"} sx={{ marginTop: 2 }}>
+                        <Alert severity={messageType} sx={{ marginTop: 2 }}>
                             {message}
                         </Alert>
                     )}

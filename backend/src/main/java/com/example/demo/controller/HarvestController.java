@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import com.example.demo.entity.Harvest;
 import com.example.demo.entity.Result;
-import com.example.demo.service.interfaces.FieldService;
 import com.example.demo.service.interfaces.HarvestService;
 import com.example.demo.service.interfaces.ResultService;
 
@@ -30,25 +29,10 @@ public class HarvestController {
     private HarvestService harvestService;
 
     @Autowired
-    private FieldService fieldService;
-
-    @Autowired
     private ResultService resultService;
 
     @PostMapping("/feedback")
     public ResponseEntity<Result> feedbackOfHarvest(@RequestBody Result result) {
-        /*if (resultService.checkExists(result.getNeighborhoodId(), result.getProduct().getId())) {
-            Result newResult = new Result();
-            newResult.setNeighborhoodId(result.getNeighborhoodId());
-            newResult.setProduct(result.getProduct());
-            newResult.setYield(result.getYield());
-            resultService.saveResult(newResult);
-            return new ResponseEntity<>(newResult, HttpStatus.OK);
-        }
-        else {
-            resultService.saveResult(result);
-            return new ResponseEntity<>(result, HttpStatus.OK);            
-        }*/
         resultService.saveResult(result);
         return new ResponseEntity<>(result, HttpStatus.OK);   
     }
@@ -56,27 +40,16 @@ public class HarvestController {
 
     @PostMapping("/fetch-field-harvest")
     public ResponseEntity<List<Harvest>> getHarvestOfField(@RequestBody Field field){
-        Field fetchedField = fieldService.findField(field.getId());
-        List<Harvest> harvests = fetchedField.getHarvests();
-        return new ResponseEntity<>(harvests, HttpStatus.OK);
+        return new ResponseEntity<>(harvestService.getHarvestOfField(field), HttpStatus.OK);
     }
     
     @PostMapping("/add")
     public ResponseEntity<Harvest> addHarvest(@RequestBody Harvest harvest) {
-        Field field = fieldService.findField(harvest.getField().getId());
-        harvest.setField(field);
-        Harvest newHarvest = harvestService.saveHarvest(harvest);
-        field.getHarvests().add(harvest);
-        fieldService.saveField(field);
-        return new ResponseEntity<>(newHarvest, HttpStatus.CREATED);
+        return new ResponseEntity<>(harvestService.addNewHarvestToField(harvest), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{harvest-id}")
     public void deleteHarvest(@PathVariable("harvest-id") Long harvestId) {
-        Harvest harvest = harvestService.findHarvestById(harvestId);
-        Field field = fieldService.findField(harvest.getField().getId());
-        field.getHarvests().removeIf(h -> h.getId().equals(harvestId));
-        fieldService.saveField(field);
         harvestService.deleteHarvest(harvestId);
     }
 }

@@ -1,4 +1,3 @@
-//import { useSelector } from "react-redux";
 import { useState } from "react";
 import { Button, Box, Typography, Modal, Grid, CircularProgress, Alert, Select, MenuItem, TextField } from '@mui/material';
 import { useAddHarvestMutation, useFetchHarvestsQuery, useFetchProductsQuery } from "../store";
@@ -7,7 +6,6 @@ import HarvestListItem from "./HarvestListItem";
 function HarvestList({ field }) {
     const { data: harvestData, isFetching, error } = useFetchHarvestsQuery(field);
     const [ addHarvest ] = useAddHarvestMutation();
-    //const user = useSelector((state) => state.user);
     const [visible, setVisible] = useState(false);
     const [formState, setFormState] = useState({
         type: "",

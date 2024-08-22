@@ -38,4 +38,13 @@ public class FractionController {
         Fraction fraction = fractionService.calculateFractionVal(neighborhoodId, productId, satisfaction, area, productName);
         return new ResponseEntity<>(fraction, HttpStatus.OK);
     }
+
+    @GetMapping("/get-fraction")
+    public ResponseEntity<Fraction> getFractionForNeighborhood(@RequestParam Long neighborhoodId, @RequestParam Long productId) {
+        Fraction fraction = fractionService.getFraction(neighborhoodId, productId);
+        if (fraction != null) {
+            return new ResponseEntity<>(fraction, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
 }
