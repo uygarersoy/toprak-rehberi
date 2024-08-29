@@ -7,7 +7,7 @@ public interface UserService {
     User saveUser(User user);
     List<User> fetchAllUsers();
     User findUser(Long id);
-    User loginCredentials(String userName, String password);
+    User loginCredentials(String userName);
     int registerCredentials(User user);
     User updateUser(String userName, String password, String newPassword);
 }

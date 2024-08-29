@@ -3,7 +3,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const fractionApi = createApi({
     reducerPath: "fraction",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8080/api/fraction"
+        baseUrl: "http://localhost:8080/api/fraction",
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+            return headers;
+        }
     }),
     tagTypes: ["Guideness"],
     endpoints(builder) {

@@ -4,7 +4,14 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const harvestApi = createApi({
     reducerPath: "harvests",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8080/api/harvest"
+        baseUrl: "http://localhost:8080/api/harvest",
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem("token");
+            if (token) {
+                headers.set("Authorization", `Bearer ${token}`);
+            }
+            return headers;
+        }
     }),
     tagTypes: ["Harvest"],
     endpoints(builder) {

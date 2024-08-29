@@ -8,6 +8,7 @@ const fetchUser = createAsyncThunk("user/fetch", async ({ userName, password }) 
             password
         }}
     );
+    localStorage.setItem("token", response.data.token);
     return response.data;
 });
 

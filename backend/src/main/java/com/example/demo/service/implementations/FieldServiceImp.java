@@ -2,10 +2,10 @@ package com.example.demo.service.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.example.demo.entity.User;
+//import com.example.demo.entity.User;
 import com.example.demo.entity.Field;
 import com.example.demo.repository.FieldRepository;
-import com.example.demo.repository.UserRepository;
+//import com.example.demo.repository.UserRepository;
 import com.example.demo.service.interfaces.FieldService;
 import java.util.List;
 
@@ -15,9 +15,9 @@ public class FieldServiceImp implements FieldService {
     @Autowired
     private FieldRepository fieldRepository;
 
-    @Autowired
+    /*@Autowired
     private UserRepository userRepository;
-
+*/
     @Override
     public Field saveField(Field field) {
         return fieldRepository.save(field);
@@ -40,8 +40,8 @@ public class FieldServiceImp implements FieldService {
 
     @Override
     public Field addField(Field field) {
-        User user = userRepository.findById(field.getUser().getId()).orElse(null);
-        field.setUser(user);
+        //userRepository.findById(field.getUser().getId()).orElse(null);
+        //field.setUser(user);
         return this.saveField(field);
     }
 

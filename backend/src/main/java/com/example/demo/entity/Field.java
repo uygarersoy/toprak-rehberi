@@ -25,9 +25,7 @@ public class Field {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private String type;
-    private Long provinceId;
     private String provinceName;
-    private Long districtId;
     private String districtName;
     private Long neighborhoodId;
     private String neighborhoodName;

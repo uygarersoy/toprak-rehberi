@@ -9,6 +9,7 @@ const updateUser = createAsyncThunk("user/update", async ({userName, currentPass
             newPassword
         }
     });
+    localStorage.setItem("token", response.data.token);
     return response.data;
 });
 

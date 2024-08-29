@@ -14,10 +14,10 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
     const { data, isFetching, isLoading, error } = useFetchFieldsQuery(user.data);
-
     const handleLogOut = () => {
         setIsLoggedIn(!isLoggedIn);
         dispatch(removeUser());
+        localStorage.removeItem("token");
         navigate("/");
     };  
     
