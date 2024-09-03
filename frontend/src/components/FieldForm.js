@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddFieldMutation, useFetchDistrictsQuery, useFetchNeighborhoodsQuery, useFetchProvincesQuery } from "../store";
-import { Box, TextField, Button, MenuItem, FormControl, InputLabel, Select } from '@mui/material';
+import { Box, TextField, Button, MenuItem } from '@mui/material';
+import FieldFormController from "./FieldFormController";
 
 function FieldForm({ setVisibleForm }) {
 	const [ addField ] = useAddFieldMutation();
@@ -102,58 +103,10 @@ function FieldForm({ setVisibleForm }) {
                 onChange={handleChange}
                 fullWidth
             />
-
-            <FormControl fullWidth disabled={!formState.type}>
-                <InputLabel id="province-label">Province</InputLabel>
-                <Select
-                    labelId="province-label"
-                    id="province-select"
-                    name="province"
-                    value={formState.province}
-                    onChange={handleChange}
-                    label="Province"
-                >
-                    <MenuItem value="">
-                        <em>Select a Province</em>
-                    </MenuItem>
-                    {pContent}
-                </Select>
-            </FormControl>
-
-            <FormControl fullWidth disabled={!formState.province}>
-                <InputLabel id="district-label">District</InputLabel>
-                <Select
-                    labelId="district-label"
-                    id="district-select"
-                    name="district"
-                    value={formState.district}
-                    onChange={handleChange}
-                    label="District"
-                >
-                    <MenuItem value="">
-                        <em>Select a District</em>
-                    </MenuItem>
-                    {dContent}
-                </Select>
-            </FormControl>
-
-            <FormControl fullWidth disabled={!formState.district}>
-                <InputLabel id="neighborhood-label">Neighborhood</InputLabel>
-                <Select
-                    labelId="neighborhood-label"
-                    id="neighborhood-select"
-                    name="neighborhood"
-                    value={formState.neighborhood}
-                    onChange={handleChange}
-                    label="Neighborhood"
-                >
-                    <MenuItem value="">
-                        <em>Select a Neighborhood</em>
-                    </MenuItem>
-                    {nContent}
-                </Select>
-            </FormControl>
-
+            <FieldFormController disabled={formState.type} label="Province" value={formState.province} handleChange={handleChange} content={pContent}/>
+            <FieldFormController disabled={formState.province} label="District" value={formState.district} handleChange={handleChange} content={dContent}/>
+            <FieldFormController disabled={formState.district} label="Neighborhood" value={formState.neighborhood} handleChange={handleChange} content={nContent}/>
+            
             <Button
                 type="submit"
                 variant="contained"

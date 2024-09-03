@@ -1,8 +1,9 @@
-import { Box, Card, CardContent, Typography, IconButton, Button, TextField, Select, MenuItem, Modal, Link } from "@mui/material";
+import { Box, Card, CardContent, Typography, IconButton, Button, Modal, Link } from "@mui/material";
 import { useAddFeedBackMutation, useGetFractionQuery, useRemoveHarvestMutation, useUpdateFractionsMutation } from "../store";
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import HelpCenterRoundedIcon from '@mui/icons-material/HelpCenterRounded';
+import HarvestFeedback from "./HarvestFeedback";
 
 function HarvestListItem({ harvest }) {
     const [removeHarvest] = useRemoveHarvestMutation();
@@ -47,7 +48,7 @@ function HarvestListItem({ harvest }) {
 
     const handleCloseInformationModal = () => {
         setFormSubmitted(false);
-        handleRemoveHarvest(); // Remove the harvest after closing the second modal
+        handleRemoveHarvest();
     };
 
     const handleSubmit = (event) => {
@@ -77,45 +78,6 @@ function HarvestListItem({ harvest }) {
         setSatisfaction("");
         setOpen(false);
     };
-
-    const feedback = (
-        <Box
-            component="form"
-            onSubmit={handleSubmit}
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-        >
-            <Typography variant="h6">Provide Feedback</Typography>
-            
-            <Box>
-                <Typography variant="body1">Satisfaction:</Typography>
-                <Select
-                    value={satisfaction}
-                    onChange={(event) => setSatisfaction(parseInt(event.target.value))}
-                    displayEmpty
-                    fullWidth
-                >
-                    <MenuItem value=""><em>Select Satisfaction</em></MenuItem>
-                    <MenuItem value={3}>Very Good</MenuItem>
-                    <MenuItem value={2}>Not Bad, Not Good</MenuItem>
-                    <MenuItem value={1}>Very Bad</MenuItem>
-                </Select>
-            </Box>
-            
-            <Box>
-                <Typography variant="body1">Amount of Harvest:</Typography>
-                <TextField
-                    type="number"
-                    value={amount || ""}
-                    onChange={(event) => setAmount(parseInt(event.target.value))}
-                    fullWidth
-                />
-            </Box>
-            
-            <Button type="submit" variant="contained" color="primary" disabled={!(satisfaction && amount)}>
-                Submit
-            </Button>
-        </Box>
-    );
 
     return (
         <>
@@ -169,7 +131,13 @@ function HarvestListItem({ harvest }) {
                         flexDirection: 'column',
                         gap: 2
                     }}>
-                        {feedback}
+                        <HarvestFeedback
+                            handleSubmit={handleSubmit}
+                            satisfaction={satisfaction}
+                            setSatisfaction={setSatisfaction}
+                            amount={amount}
+                            setAmount={setAmount}
+                        />
                     </Box>
                 </Modal>
                 <Modal
