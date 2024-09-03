@@ -1,7 +1,6 @@
 package com.example.demo.config.jwt;
 
 import java.io.IOException;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,7 +40,13 @@ public class JwtFilter extends OncePerRequestFilter{
         userName = jwtService.extractUsername(jwt);
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(userName);
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            if (jwtService.isTokenExpired(jwt)) {
+                System.out.println("expired");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().write("Token expired!");
+                return;
+            }
+            else if (jwtService.isTokenValid(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
@@ -50,6 +55,11 @@ public class JwtFilter extends OncePerRequestFilter{
                     new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+            else {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("Unauthorized token!");
+                return;
             }
         }
         filterChain.doFilter(request, response);

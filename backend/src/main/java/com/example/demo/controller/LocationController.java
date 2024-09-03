@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -67,4 +69,16 @@ public class LocationController {
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
+
+    @GetMapping("/location-info")
+    public Map<String, String> getLocationNames(@RequestParam Long neighborhoodId) {
+        Map<String, String> locationInfo = new HashMap<>();
+        Neighborhood neighborhood = nRepo.findById(neighborhoodId).orElse(null);
+        locationInfo.put("neighborhood", neighborhood.getNeigborhoodName());
+        District district = dRepo.findById(neighborhood.getDistrict().getId()).orElse(null);
+        locationInfo.put("district", district.getDistrictName());
+        Province province = pRepo.findById(district.getProvince().getId()).orElse(null);
+        locationInfo.put("province", province.getProvinceName());
+        return locationInfo;
+    }    
 }

@@ -2,9 +2,14 @@ package com.example.demo.service.implementations;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.example.demo.dto.FractionDTO;
 import com.example.demo.entity.Fraction;
 import com.example.demo.repository.FractionRepository;
+import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.interfaces.FractionService;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -12,6 +17,8 @@ public class FractionServiceImp implements FractionService{
     
     @Autowired
     private FractionRepository fractionRepository;
+    @Autowired
+    private ProductRepository productRepository;
 
 
     @Override
@@ -34,8 +41,14 @@ public class FractionServiceImp implements FractionService{
     }
 
     @Override
-    public List<Fraction> fetchFractions(Long neighborhoodId) {
-        return fractionRepository.fetchFractions(neighborhoodId);
+    public List<FractionDTO> fetchFractions(Long neighborhoodId) {
+        List<FractionDTO> fractionDTOs = new ArrayList<>();
+        List<Fraction> fractions = fractionRepository.fetchFractions(neighborhoodId);
+        for (Fraction fraction : fractions) {
+            String productName = productRepository.findById(fraction.getProductId()).orElse(null).getProductName();
+            fractionDTOs.add(new FractionDTO(fraction.getId(), fraction.getProductId(), productName, fraction.getPercentage()));
+        }
+        return fractionDTOs;
     }
 
     @Override
@@ -52,7 +65,6 @@ public class FractionServiceImp implements FractionService{
             newFraction.setNeighborhoodId(neighborhoodId);
             newFraction.setProductId(productId);
             newFraction.setPercentage(percentage);
-            newFraction.setProductName(productName);
             this.saveFraction(newFraction);
             return newFraction;
         }

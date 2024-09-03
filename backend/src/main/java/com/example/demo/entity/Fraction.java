@@ -21,6 +21,5 @@ public class Fraction {
     private Long id;
     private Long neighborhoodId;
     private Long productId;
-    private String productName;
     private Double percentage;
 }

@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.demo.dto.FractionDTO;
 import com.example.demo.entity.Fraction;
 import com.example.demo.service.interfaces.FractionService;
 import java.util.List;
@@ -21,7 +22,7 @@ public class FractionController {
 
 
     @GetMapping("/guide")
-    public ResponseEntity<List<Fraction>> getGuidenceForField(@RequestParam Long neighborhoodId) {
+    public ResponseEntity<List<FractionDTO>> getGuidenceForField(@RequestParam Long neighborhoodId) {
         return new ResponseEntity<>(fractionService.fetchFractions(neighborhoodId), HttpStatus.OK);
     }
     
@@ -38,11 +39,13 @@ public class FractionController {
     }
 
     @GetMapping("/get-fraction")
-    public ResponseEntity<Fraction> getFractionForNeighborhood(@RequestParam Long neighborhoodId, @RequestParam Long productId) {
+    public ResponseEntity<?> getFractionForNeighborhood(@RequestParam Long neighborhoodId, @RequestParam Long productId) {
+        System.out.println(neighborhoodId);
+        System.out.println(productId);
         Fraction fraction = fractionService.getFraction(neighborhoodId, productId);
         if (fraction != null) {
             return new ResponseEntity<>(fraction, HttpStatus.OK);
         }
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("There is no record for this product.", HttpStatus.OK);
     }
 }

@@ -43,10 +43,26 @@ const locationApi = createApi({
                         }
                     };
                 }
+            }),
+            getLocationInformation: builder.query({
+                query: (neighborhoodId) => {
+                    return {
+                        url: "/location-info",
+                        method: "GET",
+                        params: {
+                            neighborhoodId
+                        }
+                    };
+                }
             })
         };
     }
 });
 
-export const { useFetchProvincesQuery, useFetchDistrictsQuery, useFetchNeighborhoodsQuery } = locationApi;
+export const { 
+    useFetchProvincesQuery,
+    useFetchDistrictsQuery,
+    useFetchNeighborhoodsQuery,
+    useGetLocationInformationQuery
+    } = locationApi;
 export { locationApi };

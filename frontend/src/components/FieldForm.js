@@ -74,12 +74,7 @@ function FieldForm({ setVisibleForm }) {
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		const field = {
-			type: formState.type, 
-			provinceName: formState.province, 
-			districtName: formState.district, 
-			neighborhoodName: formState.neighborhood,
-			provinceId: selectedProvince.id, 
-			districtId: selectedDistrict.id, 
+			type: formState.type,
 			neighborhoodId: selectedNeighborhood.id,
 			user: {id: user.data.id}
 		};

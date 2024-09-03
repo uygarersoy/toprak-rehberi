@@ -1,18 +1,27 @@
-import { Box, Card, CardContent, Typography, IconButton, Button, TextField, Select, MenuItem, Modal, Snackbar, Slide } from "@mui/material";
+import { Box, Card, CardContent, Typography, IconButton, Button, TextField, Select, MenuItem, Modal, Link } from "@mui/material";
 import { useAddFeedBackMutation, useGetFractionQuery, useRemoveHarvestMutation, useUpdateFractionsMutation } from "../store";
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Link as MuiLink} from "@mui/material";
+import HelpCenterRoundedIcon from '@mui/icons-material/HelpCenterRounded';
 
 function HarvestListItem({ harvest }) {
-    const [ removeHarvest ] = useRemoveHarvestMutation();
+    const [removeHarvest] = useRemoveHarvestMutation();
     const [satisfaction, setSatisfaction] = useState("");
     const [amount, setAmount] = useState(0);
-    const [ addFeedback ] = useAddFeedBackMutation();
-    const [ updateFraction ] = useUpdateFractionsMutation();
+    const [addFeedback] = useAddFeedBackMutation();
+    const [updateFraction] = useUpdateFractionsMutation();
     const [open, setOpen] = useState(false);
-    /*const { data } = useGetFractionQuery(harvest.field.neighborhoodId, harvest.product.id);
-    const [snackOpen, setSnackOpen] = useState(false);*/
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [harvestToRemove, setHarvestToRemove] = useState(null);
+
+    const { data } = useGetFractionQuery({
+        neighborhoodId: harvest.field.neighborhoodId,
+        productId: harvest.product.id
+    });
+
+    const baseURL = "https://tr.wikipedia.org/w/index.php?search=";
+    const fullURL = `${baseURL}${encodeURIComponent(harvest.product.productName)}`;
+
     const images = {
         MEYVE: "fruits.png",
         SEBZE: "vegetable.png",
@@ -22,7 +31,10 @@ function HarvestListItem({ harvest }) {
     const imageSrc = images[harvest.product.type];
 
     const handleRemoveHarvest = () => {
-        removeHarvest(harvest);
+        if (harvestToRemove) {
+            removeHarvest(harvestToRemove);
+            setHarvestToRemove(null);
+        }
     };
 
     const handleOpenModal = () => {
@@ -33,6 +45,10 @@ function HarvestListItem({ harvest }) {
         setOpen(false);
     };
 
+    const handleCloseInformationModal = () => {
+        setFormSubmitted(false);
+        handleRemoveHarvest(); // Remove the harvest after closing the second modal
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -50,15 +66,17 @@ function HarvestListItem({ harvest }) {
         };
         addFeedback(result);
         updateFraction(fraction);
-        //setSnackOpen(true);
+
+        if (data && data.percentage >= 70 && satisfaction === 1) {
+            setHarvestToRemove(harvest);
+            setFormSubmitted(true);
+        } else {
+            removeHarvest(harvest);
+        }
         setAmount(0);
         setSatisfaction("");
-        removeHarvest(harvest);
+        setOpen(false);
     };
-
-    /*const handleSnack = () => {
-        setSnackOpen(false);
-    };*/
 
     const feedback = (
         <Box
@@ -98,38 +116,7 @@ function HarvestListItem({ harvest }) {
             </Button>
         </Box>
     );
-    /*const link = (
-        <MuiLink
-            href={'https://tr.wikipedia.org/w/index.php?search=${harvest.product.productName}&title=%C3%96zel%3AAra&ns0=1'}
-            target="_blank"
-            rel="noopener noreferrer"
-        >
-            Here
-        </MuiLink>
-    )*/
 
-    /*let snackContent;
-    if (data && data.percentage >= 70 && satisfaction && satisfaction === 1) {
-        setSnackOpen(true);
-        snackContent = (
-            <Snackbar
-                open={snackOpen}
-                onClose={handleSnack}
-                TransitionComponent={(props) => <Slide {...props} direction="down"/>}
-                message={
-                    <>
-                        This product can be harvested in this region. Click {link} for more info!
-                    </>
-                }
-                action={
-                    <IconButton onClick={handleSnack} color="error">
-                        <DeleteIcon />
-                    </IconButton>
-                }
-                anchorOrigin={{vertical: "top", horizontal: "center"}}
-            />
-        );
-    }*/
     return (
         <>
             <Card sx={{ mb: 2, height: '100%', maxWidth: '300px', mx: "auto" }}>
@@ -156,7 +143,7 @@ function HarvestListItem({ harvest }) {
                         </Button>
                     </Box>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 1 }}>
-                        <IconButton onClick={handleRemoveHarvest} color="error">
+                        <IconButton onClick={() => removeHarvest(harvest)} color="error">
                             <DeleteIcon />
                         </IconButton>
                     </Box>
@@ -183,6 +170,46 @@ function HarvestListItem({ harvest }) {
                         gap: 2
                     }}>
                         {feedback}
+                    </Box>
+                </Modal>
+                <Modal
+                    open={formSubmitted}
+                    onClose={handleCloseInformationModal}
+                    aria-labelledby="feedback-modal-title"
+                    aria-describedby="feedback-modal-description"
+                >
+                    <Box sx={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: { xs: '90%', sm: '80%', md: 400 },
+                        bgcolor: 'background.paper',
+                        borderRadius: 1,
+                        boxShadow: 24,
+                        p: 4,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: 2
+                    }}>
+                        <Box
+                            sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                mb: 2,
+                                width: "%100"
+                            }}
+                        >
+                            <HelpCenterRoundedIcon sx={{ color: "#077437", width: '30%', height: 'auto' }}/>
+                        </Box>
+                        <Typography variant="body1">
+                            This product can be harvested here. If you need help, click{" "}
+                            <Link href={fullURL} target="_blank" rel="noopener noreferrer" onClick={handleCloseInformationModal}>
+                                here
+                            </Link>
+                            {" "}for more information.
+                        </Typography>
                     </Box>
                 </Modal>
             </Card>

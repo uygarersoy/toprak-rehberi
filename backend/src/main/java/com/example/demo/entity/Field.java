@@ -25,11 +25,7 @@ public class Field {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private String type;
-    private String provinceName;
-    private String districtName;
     private Long neighborhoodId;
-    private String neighborhoodName;
-
 
     @ManyToOne
     @JoinColumn(name="user_id")
