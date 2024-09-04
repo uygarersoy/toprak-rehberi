@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Button, Box, Typography, Modal, Grid, CircularProgress, Alert, MenuItem } from '@mui/material';
+import { Button, Box, Typography, Grid, CircularProgress, Alert, MenuItem } from '@mui/material';
 import { useAddHarvestMutation, useFetchHarvestsQuery, useFetchProductsQuery } from "../store";
 import HarvestListItem from "./HarvestListItem";
 import HarvestForm from "./HarvestForm";
+import CustomModal from "./CustomModal";
 
 function HarvestList({ field }) {
     const { data: harvestData, isFetching, error } = useFetchHarvestsQuery(field);
@@ -47,6 +48,10 @@ function HarvestList({ field }) {
         setVisible(true);
     };
 
+    const handleHarvestModal = () => {
+        setVisible(false);
+    };
+
     let content = "";
     if (isFetching) {
         content = <CircularProgress />;
@@ -76,27 +81,9 @@ function HarvestList({ field }) {
                     Add a Harvest
                 </Button>
             </Box>
-            <Modal
-                open={visible}
-                onClose={() => setVisible(false)}
-                aria-labelledby="add-harvest-form"
-            >
-                <Box
-                    sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: { xs: '90%', sm: '80%', md: 400 },
-                        bgcolor: 'background.paper',
-                        borderRadius: 1,
-                        boxShadow: 24,
-                        p: 4
-                    }}
-                >
-                    <HarvestForm handleSubmit={handleSubmit} formState={formState} handleChange={handleChange} pContent={pContent}/>
-                </Box>
-            </Modal>
+            <CustomModal text="Add New Harvest" open={visible} close={handleHarvestModal}>
+                <HarvestForm handleSubmit={handleSubmit} formState={formState} handleChange={handleChange} pContent={pContent}/>
+            </CustomModal>
             {content}
         </Box>
     )

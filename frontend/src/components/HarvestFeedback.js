@@ -6,10 +6,14 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
             <Box
                 component="form"
                 onSubmit={handleSubmit}
-                sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-            >
-                <Typography variant="h6">Provide Feedback</Typography>
-                
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 2,
+                    width: { xs: '90%', sm: '80%', md: 400 },
+                    margin: '0 auto',
+                }}
+            >                
                 <Box>
                     <Typography variant="body1">Satisfaction:</Typography>
                     <Select
@@ -17,6 +21,7 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                         onChange={(event) => setSatisfaction(parseInt(event.target.value))}
                         displayEmpty
                         fullWidth
+                        autoFocus
                     >
                         <MenuItem value=""><em>Select Satisfaction</em></MenuItem>
                         <MenuItem value={3}>Very Good</MenuItem>
@@ -32,6 +37,7 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                         value={amount || ""}
                         onChange={(event) => setAmount(parseInt(event.target.value))}
                         fullWidth
+                        InputProps={{ inputProps: { min: 0 } }}
                     />
                 </Box>
                 

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '../store';
@@ -12,6 +12,17 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
     const [messageType, setMessageType] = useState("error");
     const navigate = useNavigate();
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        //const currentUrl = window.location.pathname;
+        const handlePopState = () => {
+            window.history.pushState(null, "", "/");
+        };
+        window.addEventListener("popstate", handlePopState);
+        return () => {
+            window.removeEventListener("popstate", handlePopState);
+        };
+    }, []);
 
     const handleSubmit = async (event) => {
         event.preventDefault();

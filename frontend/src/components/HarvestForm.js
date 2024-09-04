@@ -1,4 +1,5 @@
 import { Box, Typography, Select, MenuItem, TextField, Button} from "@mui/material";
+
 function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
     return (
         <>
@@ -12,7 +13,6 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                 gap: 2
             }}
         >
-            <Typography variant="h6" mb={2}>Add New Harvest</Typography>
             <Box>
                 <Typography variant="body1">Product Type:</Typography>
                 <Select
@@ -20,9 +20,11 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                     value={formState.type}
                     onChange={handleChange}
                     fullWidth
+                    displayEmpty
                     label="Type"
+                    autoFocus
                 >
-                    <MenuItem value="">Select a Type</MenuItem>
+                    <MenuItem value=""><em>Select Type</em></MenuItem>
                     <MenuItem value="MEYVE">Meyve</MenuItem>
                     <MenuItem value="SEBZE">Sebze</MenuItem>
                     <MenuItem value="SÜS BİTKİSİ">Süs Bitkileri</MenuItem>
@@ -37,8 +39,10 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                     onChange={handleChange}
                     fullWidth
                     disabled={!formState.type}
+                    displayEmpty
+                    autoFocus={formState.type}
                 >
-                    <MenuItem value="">Select a Product</MenuItem>
+                    <MenuItem value=""><em>Select Product</em></MenuItem>
                     {pContent}
                 </Select>
             </Box>
@@ -47,6 +51,7 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                 <TextField
                     type="number"
                     name="area"
+                    label="Enter Area"
                     value={formState.area}
                     onChange={handleChange}
                     fullWidth

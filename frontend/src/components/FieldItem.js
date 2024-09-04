@@ -10,7 +10,8 @@ import { Box,
 
 function FieldItem({ field }) {
     const [ removeField ] = useRemoveFieldMutation();
-    const handleRemoveField = () => {
+    const handleRemoveField = (event) => {
+        event.stopPropagation();
         removeField(field.id);
     };
     const { data: locationData } = useGetLocationInformationQuery(field?.neighborhoodId);

@@ -102,6 +102,7 @@ function FieldForm({ setVisibleForm }) {
                 value={formState.type}
                 onChange={handleChange}
                 fullWidth
+				autoFocus
             />
             <FieldFormController disabled={formState.type} label="Province" value={formState.province} handleChange={handleChange} content={pContent}/>
             <FieldFormController disabled={formState.province} label="District" value={formState.district} handleChange={handleChange} content={dContent}/>

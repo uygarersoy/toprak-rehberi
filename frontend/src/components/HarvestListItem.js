@@ -1,9 +1,10 @@
-import { Box, Card, CardContent, Typography, IconButton, Button, Modal, Link } from "@mui/material";
+import { Box, Card, CardContent, Typography, IconButton, Button, Link } from "@mui/material";
 import { useAddFeedBackMutation, useGetFractionQuery, useRemoveHarvestMutation, useUpdateFractionsMutation } from "../store";
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import HelpCenterRoundedIcon from '@mui/icons-material/HelpCenterRounded';
 import HarvestFeedback from "./HarvestFeedback";
+import CustomModal from "./CustomModal";
 
 function HarvestListItem({ harvest }) {
     const [removeHarvest] = useRemoveHarvestMutation();
@@ -110,76 +111,35 @@ function HarvestListItem({ harvest }) {
                         </IconButton>
                     </Box>
                 </CardContent>
-
-                <Modal
-                    open={open}
-                    onClose={handleCloseModal}
-                    aria-labelledby="feedback-modal-title"
-                    aria-describedby="feedback-modal-description"
-                >
-                    <Box sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: { xs: '90%', sm: '80%', md: 400 },
-                        bgcolor: 'background.paper',
-                        borderRadius: 1,
-                        boxShadow: 24,
-                        p: 4,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2
-                    }}>
-                        <HarvestFeedback
-                            handleSubmit={handleSubmit}
-                            satisfaction={satisfaction}
-                            setSatisfaction={setSatisfaction}
-                            amount={amount}
-                            setAmount={setAmount}
-                        />
+                <CustomModal text="Feedback" open={open} close={handleCloseModal}>
+                    <HarvestFeedback
+                        handleSubmit={handleSubmit}
+                        satisfaction={satisfaction}
+                        setSatisfaction={setSatisfaction}
+                        amount={amount}
+                        setAmount={setAmount}
+                    />
+                </CustomModal>
+                <CustomModal text="Suggestion" open={formSubmitted} close={handleCloseInformationModal}>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            mb: 2,
+                            width: "%100"
+                        }}
+                    >
+                        <HelpCenterRoundedIcon sx={{ color: "#077437", width: '30%', height: 'auto' }}/>
                     </Box>
-                </Modal>
-                <Modal
-                    open={formSubmitted}
-                    onClose={handleCloseInformationModal}
-                    aria-labelledby="feedback-modal-title"
-                    aria-describedby="feedback-modal-description"
-                >
-                    <Box sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        transform: 'translate(-50%, -50%)',
-                        width: { xs: '90%', sm: '80%', md: 400 },
-                        bgcolor: 'background.paper',
-                        borderRadius: 1,
-                        boxShadow: 24,
-                        p: 4,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: 2
-                    }}>
-                        <Box
-                            sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                mb: 2,
-                                width: "%100"
-                            }}
-                        >
-                            <HelpCenterRoundedIcon sx={{ color: "#077437", width: '30%', height: 'auto' }}/>
-                        </Box>
-                        <Typography variant="body1">
-                            This product can be harvested here. If you need help, click{" "}
-                            <Link href={fullURL} target="_blank" rel="noopener noreferrer" onClick={handleCloseInformationModal}>
-                                here
-                            </Link>
-                            {" "}for more information.
-                        </Typography>
-                    </Box>
-                </Modal>
+                    <Typography variant="body1">
+                        This product can be harvested here. If you need help, click{" "}
+                        <Link href={fullURL} target="_blank" rel="noopener noreferrer" onClick={handleCloseInformationModal}>
+                            here
+                        </Link>
+                        {" "}for more information.
+                    </Typography>
+                </CustomModal>
             </Card>
         </>
     );

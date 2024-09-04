@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FieldForm from "../components/FieldForm";
 import { useDispatch, useSelector } from "react-redux";
 import { removeUser, useFetchFieldsQuery } from "../store";
 import FieldItem from "../components/FieldItem";
 import { useFetchGuidenessQuery } from "../store";
+import CustomModal from "../components/CustomModal";
+import DashboardLogicButtons from "../components/DashboardLogicButtons";
+import DashboardHeader from "../components/DashboardHeader";
 import { 
         Skeleton,
         Alert,
@@ -19,10 +22,8 @@ import {
         TableBody,
         Paper, 
         FormControl,
-        FormGroup} from '@mui/material';
-import DashboardHeader from "../components/DashboardHeader";
-import CustomModal from "../components/CustomModal";
-import DashboardLogicButtons from "../components/DashboardLogicButtons";
+        FormGroup } from '@mui/material';
+
 
 function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     const navigate = useNavigate();
@@ -35,6 +36,18 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     const user = useSelector((state) => state.user);
     const { data, isFetching, isLoading, error } = useFetchFieldsQuery(user.data);
     const { data: guideData } = useFetchGuidenessQuery(neighborhoodId, {skip: !neighborhoodId});
+    const [ errorModalOpen, setErrorModalOpen ] = useState(false);
+    useEffect(() => {
+        if (error && (error.status === 403 || error.status === 401)) {
+            dispatch(removeUser());
+            localStorage.removeItem("token");
+            setErrorModalOpen(true);
+            setTimeout(() => {
+            setIsLoggedIn(false);
+            navigate("/");
+            }, 3000);
+        }
+    }, [error, dispatch, navigate, setIsLoggedIn]);
 
     let guideContent = [];
     if (guideData) {
@@ -66,16 +79,29 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
         setGuidanceModal(false);
         setOpen(true);
     }
+
+    const handleFieldAdditionModal = () => {
+        setVisibleForm(false);
+    };
+
+    const handleGuidanceModal = () => {
+        setGuidanceModal(false);
+    };
+
+    const handleRecommendationModal = () => {
+        setOpen(false);
+    };
+
     let content;
     if (isFetching || isLoading) {
         content = <Skeleton variant="rounded" width="100vw" height={30}/>;
     }
     else if (error) {
-        content = <Alert severity="error">An error occurred while loading data.</Alert>;
+        /*content = <Alert severity="error">An error occurred while loading data.</Alert>;
         if (error.status === 403 || error.status === 401 ){
             setIsLoggedIn(false);
             navigate("/");
-        }
+        }*/
     }
     else {
         content = data.map((field) => {
@@ -85,10 +111,10 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     return (
         <Box sx={{ padding: 2, minHeight: '100vh', position: 'relative' }}>
             <DashboardHeader />
-            <CustomModal text="Add a New Field" open={visibleForm} close={setVisibleForm}>
+            <CustomModal text="Add a New Field" open={visibleForm} close={handleFieldAdditionModal}>
                 <FieldForm setVisibleForm={setVisibleForm}/>
             </CustomModal>
-            <CustomModal text="Enter Neighborhood ID" open={guidanceModal} close={setGuidanceModal}>
+            <CustomModal text="Enter Neighborhood ID" open={guidanceModal} close={handleGuidanceModal}>
                 <FormControl fullWidth component="form" onSubmit={handleGuidanceSubmit}>
                     <FormGroup>
                         <TextField 
@@ -98,6 +124,7 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                         type="number"
                         onChange={(event) => setInput(parseInt(event.target.value))}
                         fullWidth
+                        autoFocus
                         sx={{ mb: 2 }}
                         />
                         <Button variant="contained" color="primary" type="submit" fullWidth disabled={!input}>
@@ -106,8 +133,8 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                     </FormGroup>
                 </FormControl>
             </CustomModal>
-            <CustomModal title="Product Recommendations" open={open} close={setOpen}>
-                <TableContainer component={Paper} sx={{maxHeight: "70vh"}}>
+            <CustomModal text="Product Recommendations" open={open} close={handleRecommendationModal}>
+                <TableContainer component={Paper} sx={{maxHeight: "50vh", boxShadow: "none", borderRadius: 0, overflowY: "auto"}}>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>
@@ -120,6 +147,9 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                         </TableBody>
                     </Table>
                 </TableContainer>
+            </CustomModal>
+            <CustomModal text="ERROR" open={errorModalOpen} close={() => {}}>
+                <Alert severity="error">Your token has expired. You are being redirected. Please login again!</Alert>
             </CustomModal>
             {content}
             <DashboardLogicButtons

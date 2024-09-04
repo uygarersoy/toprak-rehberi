@@ -6,7 +6,7 @@ function CustomModal({ text, open, close, children }) {
         <>
             <Modal
                 open={open}
-                onClose={() => close(false)}
+                onClose={close}
                 disableEscapeKeyDown
                 hideBackdrop
             >
