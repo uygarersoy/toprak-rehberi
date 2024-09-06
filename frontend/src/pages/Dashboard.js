@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FieldForm from "../components/FieldForm";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,12 +8,11 @@ import { useFetchGuidenessQuery } from "../store";
 import CustomModal from "../components/CustomModal";
 import DashboardLogicButtons from "../components/DashboardLogicButtons";
 import DashboardHeader from "../components/DashboardHeader";
-import { 
+import {
+        Button,
         Skeleton,
         Alert,
         Box,
-        Button,
-        TextField,
         TableRow,
         TableCell,
         TableContainer,
@@ -22,7 +21,9 @@ import {
         TableBody,
         Paper, 
         FormControl,
-        FormGroup } from '@mui/material';
+        FormGroup,
+        TextField } from '@mui/material';
+import useTokenValidation from "../hooks/tokenValidation";
 
 
 function DashBoard({ isLoggedIn, setIsLoggedIn }) {
@@ -34,20 +35,12 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     const [ open, setOpen ] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
-    const { data, isFetching, isLoading, error } = useFetchFieldsQuery(user.data);
-    const { data: guideData } = useFetchGuidenessQuery(neighborhoodId, {skip: !neighborhoodId});
+    const { data, isFetching, isLoading, error: fetchFieldError } = useFetchFieldsQuery(user.data);
+    const { data: guideData, error: fetchGuidenessError } = useFetchGuidenessQuery(neighborhoodId, {skip: !neighborhoodId});
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
-    useEffect(() => {
-        if (error && (error.status === 403 || error.status === 401)) {
-            dispatch(removeUser());
-            localStorage.removeItem("token");
-            setErrorModalOpen(true);
-            setTimeout(() => {
-            setIsLoggedIn(false);
-            navigate("/");
-            }, 3000);
-        }
-    }, [error, dispatch, navigate, setIsLoggedIn]);
+    
+    useTokenValidation(fetchFieldError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(fetchGuidenessError, setIsLoggedIn, setErrorModalOpen);
 
     let guideContent = [];
     if (guideData) {
@@ -96,23 +89,16 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     if (isFetching || isLoading) {
         content = <Skeleton variant="rounded" width="100vw" height={30}/>;
     }
-    else if (error) {
-        /*content = <Alert severity="error">An error occurred while loading data.</Alert>;
-        if (error.status === 403 || error.status === 401 ){
-            setIsLoggedIn(false);
-            navigate("/");
-        }*/
-    }
-    else {
+    else if (data) {
         content = data.map((field) => {
-            return <FieldItem key={field.id} field={field}/>;
+            return <FieldItem key={field.id} field={field} setIsLoggedIn={setIsLoggedIn}/>;
         });
     }
     return (
-        <Box sx={{ padding: 2, minHeight: '100vh', position: 'relative' }}>
+        <Box sx={{ padding: 2, minHeight: '100vh', position: 'relative'}}>
             <DashboardHeader />
             <CustomModal text="Add a New Field" open={visibleForm} close={handleFieldAdditionModal}>
-                <FieldForm setVisibleForm={setVisibleForm}/>
+                <FieldForm setVisibleForm={setVisibleForm} setIsLoggedIn={setIsLoggedIn}/>
             </CustomModal>
             <CustomModal text="Enter Neighborhood ID" open={guidanceModal} close={handleGuidanceModal}>
                 <FormControl fullWidth component="form" onSubmit={handleGuidanceSubmit}>

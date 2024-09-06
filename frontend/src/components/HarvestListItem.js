@@ -1,22 +1,24 @@
-import { Box, Card, CardContent, Typography, IconButton, Button, Link } from "@mui/material";
+import { Box, Card, CardContent, Typography, IconButton, Button, Link, Alert } from "@mui/material";
 import { useAddFeedBackMutation, useGetFractionQuery, useRemoveHarvestMutation, useUpdateFractionsMutation } from "../store";
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import HelpCenterRoundedIcon from '@mui/icons-material/HelpCenterRounded';
 import HarvestFeedback from "./HarvestFeedback";
 import CustomModal from "./CustomModal";
+import useTokenValidation from "../hooks/tokenValidation";
 
-function HarvestListItem({ harvest }) {
-    const [removeHarvest] = useRemoveHarvestMutation();
+function HarvestListItem({ harvest, setIsLoggedIn }) {
+    const [ errorModalOpen, setErrorModalOpen ] = useState(false);
+    const [removeHarvest, {error: removeHarvestError}] = useRemoveHarvestMutation();
     const [satisfaction, setSatisfaction] = useState("");
     const [amount, setAmount] = useState(0);
-    const [addFeedback] = useAddFeedBackMutation();
-    const [updateFraction] = useUpdateFractionsMutation();
+    const [addFeedback, {error: addFeedbackError}] = useAddFeedBackMutation();
+    const [updateFraction, {error: updateFractionError}] = useUpdateFractionsMutation();
     const [open, setOpen] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [harvestToRemove, setHarvestToRemove] = useState(null);
 
-    const { data } = useGetFractionQuery({
+    const { data, error: getFractionError } = useGetFractionQuery({
         neighborhoodId: harvest.field.neighborhoodId,
         productId: harvest.product.id
     });
@@ -80,9 +82,15 @@ function HarvestListItem({ harvest }) {
         setOpen(false);
     };
 
+    useTokenValidation(removeHarvestError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(addFeedbackError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(updateFractionError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(getFractionError, setIsLoggedIn, setErrorModalOpen);
+    
+
     return (
         <>
-            <Card sx={{ mb: 2, height: '100%', maxWidth: '300px', mx: "auto" }}>
+            <Card sx={{ mb: 2, height: '100%', maxWidth: '300px', mx: "auto", boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.4)' }}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                         <img 
@@ -141,6 +149,9 @@ function HarvestListItem({ harvest }) {
                     </Typography>
                 </CustomModal>
             </Card>
+            <CustomModal text="ERROR" open={errorModalOpen} close={() => {}}>
+                <Alert severity="error">Your token has expired. You are being redirected. Please login again!</Alert>
+            </CustomModal>
         </>
     );
 }

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { updateUser } from '../store';
-import { Link, Box, Typography, TextField, Button, Alert, Grid } from '@mui/material';
+import { Link, Box, Typography, TextField, Alert, Grid, Button } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { NavLink } from 'react-router-dom';
 
@@ -83,7 +83,7 @@ const ChangePasswordPage = () => {
                 >
                     <TextField
                         fullWidth
-                        label="UserName"
+                        label="Username"
                         type="text"
                         value={userName}
                         onChange={(event) => setUserName(event.target.value)}
@@ -124,7 +124,7 @@ const ChangePasswordPage = () => {
                     )}
 					<Grid container direction="column" alignItems="center" sx={{ marginTop: 2 }}>
 						<Grid item>
-							<Link component={NavLink} to="/" sx={{textAlign: "center"}}>
+							<Link component={NavLink} to="/" sx={{textAlign: "center", color: "#077437"}}>
 								Go back to Login Page!
 							</Link>
 						</Grid>

@@ -8,10 +8,14 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                 onSubmit={handleSubmit}
                 sx={{
                     display: 'flex',
-                    flexDirection: 'column',
-                    gap: 2,
-                    width: { xs: '90%', sm: '80%', md: 400 },
-                    margin: '0 auto',
+					flexDirection: 'column',
+					gap: 2,
+					width: '100%',
+					maxWidth: 500,
+					margin: '0 auto',
+					overflow: 'auto',
+					padding: 2,
+					boxSizing: 'border-box',
                 }}
             >                
                 <Box>
@@ -37,7 +41,8 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                         value={amount || ""}
                         onChange={(event) => setAmount(parseInt(event.target.value))}
                         fullWidth
-                        InputProps={{ inputProps: { min: 0 } }}
+                        InputProps={{ inputProps: { min: 1 } }}
+                        disabled={!satisfaction}
                     />
                 </Box>
                 

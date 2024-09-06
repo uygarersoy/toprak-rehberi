@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchUser } from '../store';
-import { Box, Button, TextField, Typography, Link, Alert, Grid } from '@mui/material';
+import { Box, TextField, Typography, Button, Link, Alert, Grid } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 
 const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
@@ -14,7 +14,6 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        //const currentUrl = window.location.pathname;
         const handlePopState = () => {
             window.history.pushState(null, "", "/");
         };
@@ -31,7 +30,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
             setMessage("Success!");
             setMessageType("success");
             setIsLoggedIn(!isLoggedIn);
-            navigate("/dashboard")
+            navigate("/dashboard");
         } else {
             setMessage("Wrong username or password!");
             setMessageType("error");
@@ -81,12 +80,13 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                 >
                     <TextField
                         fullWidth
-                        label="UserName"
+                        label="Username"
                         type="text"
                         value={userName}
                         onChange={(event) => setUserName(event.target.value)}
                         margin="normal"
                         required
+                        autoFocus
                     />
                     <TextField
                         fullWidth
@@ -113,12 +113,12 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     )}
                     <Grid container justifyContent="space-between" sx={{ marginTop: 2 }}>
                         <Grid item>
-                            <Link component={NavLink} to="/create-account">
+                            <Link component={NavLink} to="/create-account" >
                                 Don't have an account?
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link component={NavLink} to="/change-password">
+                            <Link component={NavLink} to="/change-password" >
                                 Change Password?
                             </Link>
                         </Grid>

@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../store';
 import { useDispatch } from 'react-redux';
-import {Box, Typography, TextField,	Button,	Alert, Grid, Link} from '@mui/material';
+import {Box, Typography, TextField,	Alert, Grid, Link, Button} from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import { NavLink } from 'react-router-dom';
+
 
 const CreateProfilePage = () => {
 	const [userName, setUserName] = useState('');
@@ -85,7 +86,7 @@ const CreateProfilePage = () => {
 				>
 					<TextField
 						fullWidth
-						label="UserName"
+						label="Username"
 						type="text"
 						value={userName}
 						onChange={(event) => setUserName(event.target.value)}
@@ -135,7 +136,7 @@ const CreateProfilePage = () => {
 					)}
 					<Grid container direction="column" alignItems="center" sx={{ marginTop: 2 }}>
 						<Grid item>
-							<Link component={NavLink} to="/" sx={{textAlign: "center"}}>
+							<Link component={NavLink} to="/" sx={{textAlign: "center", color: "#077437"}}>
 								Already have an account?
 							</Link>
 						</Grid>

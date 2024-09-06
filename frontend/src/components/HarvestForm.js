@@ -9,8 +9,13 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
+                gap: 2,
                 width: '100%',
-                gap: 2
+                maxWidth: 500,
+                margin: '0 auto',
+                overflow: 'auto',
+                padding: 2,
+                boxSizing: 'border-box',
             }}
         >
             <Box>
@@ -57,7 +62,7 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                     fullWidth
                     variant="outlined"
                     disabled={!formState.product}
-                    InputProps={{ inputProps: { min: 0 } }}
+                    InputProps={{ inputProps: { min: 1 } }}
                 />
             </Box>
             <Button

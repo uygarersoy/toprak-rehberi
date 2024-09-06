@@ -15,7 +15,7 @@ function CustomModal({ text, open, close, children }) {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: { xs: '90%', sm: '80%', md: 400 },
+                        width: { xs: '90%', sm: '80%', md: 500 },
                         bgcolor: 'background.paper',
                         borderRadius: 1,
                         boxShadow: 24,

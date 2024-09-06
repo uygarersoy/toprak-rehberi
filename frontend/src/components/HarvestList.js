@@ -1,21 +1,23 @@
 import { useState } from "react";
-import { Button, Box, Typography, Grid, CircularProgress, Alert, MenuItem } from '@mui/material';
+import { Button, Box, Grid, CircularProgress, Alert, MenuItem } from '@mui/material';
 import { useAddHarvestMutation, useFetchHarvestsQuery, useFetchProductsQuery } from "../store";
 import HarvestListItem from "./HarvestListItem";
 import HarvestForm from "./HarvestForm";
 import CustomModal from "./CustomModal";
+import useTokenValidation from "../hooks/tokenValidation";
 
-function HarvestList({ field }) {
-    const { data: harvestData, isFetching, error } = useFetchHarvestsQuery(field);
-    const [ addHarvest ] = useAddHarvestMutation();
+function HarvestList({ field, setIsLoggedIn }) {
+    const { data: harvestData, isFetching, error: fetchHarvestError } = useFetchHarvestsQuery(field);
+    const [ addHarvest, {error: addHarvestError}] = useAddHarvestMutation();
     const [visible, setVisible] = useState(false);
     const [formState, setFormState] = useState({
         type: "",
         product: "",
         area: ""
     });
+    const [ errorModalOpen, setErrorModalOpen ] = useState(false);
 
-    const { data: productData} = useFetchProductsQuery(formState.type, {skip: !formState.type});
+    const { data: productData, error: fetchProductsError} = useFetchProductsQuery(formState.type, {skip: !formState.type});
     let pContent;
 
     if (productData) {
@@ -27,6 +29,11 @@ function HarvestList({ field }) {
             );
         });
     }
+
+    useTokenValidation(fetchHarvestError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(addHarvestError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(fetchProductsError, setIsLoggedIn, setErrorModalOpen);
+
 
     const handleChange = (event) => {
 		setFormState({...formState, [event.target.name]: event.target.value})
@@ -56,18 +63,12 @@ function HarvestList({ field }) {
     if (isFetching) {
         content = <CircularProgress />;
     }
-    else if (error) {
-        content = <Alert severity="error" >Error fetching harvest data...</Alert>;
-    }
-    else if (!harvestData) {
-        content = <Typography>no data at the moment</Typography>;
-    }
-    else {
+    else if (harvestData) {
         content = (
             <Grid container spacing={2}>
                 {harvestData.map((harvest) => (
                 <Grid item key={harvest.id} xs={12} sm={6} md={4}>
-                    <HarvestListItem harvest={harvest} />
+                    <HarvestListItem harvest={harvest} setIsLoggedIn={setIsLoggedIn}/>
                 </Grid>
                 ))}
             </Grid>
@@ -75,17 +76,22 @@ function HarvestList({ field }) {
     }
 
     return (
-        <Box>
-            <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
-                <Button variant="contained" color="primary" onClick={handleAddHarvest}>
-                    Add a Harvest
-                </Button>
+        <>        
+            <Box>
+                <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+                    <Button variant="contained" color="primary" onClick={handleAddHarvest}>
+                        Add a Harvest
+                    </Button>
+                </Box>
+                <CustomModal text="Add New Harvest" open={visible} close={handleHarvestModal}>
+                    <HarvestForm handleSubmit={handleSubmit} formState={formState} handleChange={handleChange} pContent={pContent}/>
+                </CustomModal>
+                {content}
             </Box>
-            <CustomModal text="Add New Harvest" open={visible} close={handleHarvestModal}>
-                <HarvestForm handleSubmit={handleSubmit} formState={formState} handleChange={handleChange} pContent={pContent}/>
+            <CustomModal text="ERROR" open={errorModalOpen} close={() => {}}>
+                <Alert severity="error">Your token has expired. You are being redirected. Please login again!</Alert>
             </CustomModal>
-            {content}
-        </Box>
+        </>
     )
 }
 

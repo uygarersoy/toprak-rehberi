@@ -13,8 +13,8 @@ function DashboardLogicButtons({ handleFieldCreation, handleLogOut, setGuidanceM
                     p: 2,
                     display: 'flex',
                     justifyContent: 'center',
-                    bgcolor: '#077437',
-                    boxShadow: "0 -2px 10px rgba(0,0,0,0.2)"
+                    boxShadow: "0 -2px 10px rgba(0,0,0,0.2)",
+                    backgroundColor: "#f59c17"
                 }}
             >
                  <Box sx={{ flex: '1 1 0', display: 'flex', justifyContent: 'flex-end' }}>
