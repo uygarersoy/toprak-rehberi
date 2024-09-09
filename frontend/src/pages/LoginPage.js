@@ -27,6 +27,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
         event.preventDefault();
         const response = await dispatch(fetchUser({ userName, password }));
         if (response.type === "user/fetch/fulfilled") {
+            localStorage.setItem("token", response.payload.token);
             setMessage("Success!");
             setMessageType("success");
             setIsLoggedIn(!isLoggedIn);
@@ -71,7 +72,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     <LockIcon sx={{ color: 'white' }} fontSize="large" />
                 </Box>
                 <Typography variant="h5" component="h1" gutterBottom sx={{ textAlign: 'center' }}>
-                    Login
+                    Giriş Yap
                 </Typography>
                 <Box
                     component="form"
@@ -80,7 +81,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                 >
                     <TextField
                         fullWidth
-                        label="Username"
+                        label="Kullanıcı Adı"
                         type="text"
                         value={userName}
                         onChange={(event) => setUserName(event.target.value)}
@@ -90,7 +91,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     />
                     <TextField
                         fullWidth
-                        label="Password"
+                        label="Şifre"
                         type="password"
                         value={password}
                         onChange={(event) => setPassword(event.target.value)}
@@ -104,7 +105,7 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                         sx={{ marginTop: 2 }}
                         disabled={!userName || !password}
                     >
-                        Login
+                        Giriş Yap
                     </Button>
                     {message && (
                         <Alert severity={messageType} sx={{ marginTop: 2 }}>
@@ -114,12 +115,12 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
                     <Grid container justifyContent="space-between" sx={{ marginTop: 2 }}>
                         <Grid item>
                             <Link component={NavLink} to="/create-account" >
-                                Don't have an account?
+                                Hesap Oluştur
                             </Link>
                         </Grid>
                         <Grid item>
                             <Link component={NavLink} to="/change-password" >
-                                Change Password?
+                                Şifreni Değiştir
                             </Link>
                         </Grid>
                     </Grid>

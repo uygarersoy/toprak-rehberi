@@ -74,7 +74,7 @@ const ChangePasswordPage = () => {
 					<LockIcon sx={{ color: 'white' }} fontSize="large" />
 				</Box>
                 <Typography variant="h5" component="h1" gutterBottom sx={{ textAlign: 'center' }}>
-                    Change Password
+                    Şifre Değiştir
                 </Typography>
                 <Box
                     component="form"
@@ -83,7 +83,7 @@ const ChangePasswordPage = () => {
                 >
                     <TextField
                         fullWidth
-                        label="Username"
+                        label="Kullanıcı Adı"
                         type="text"
                         value={userName}
                         onChange={(event) => setUserName(event.target.value)}
@@ -92,7 +92,7 @@ const ChangePasswordPage = () => {
                     />
                     <TextField
                         fullWidth
-                        label="Current Password"
+                        label="Şifre"
                         type="password"
                         value={currentPassword}
                         onChange={(event) => setCurrentPassword(event.target.value)}
@@ -101,7 +101,7 @@ const ChangePasswordPage = () => {
                     />
                     <TextField
                         fullWidth
-                        label="New Password"
+                        label="Yeni Şifre"
                         type="password"
                         value={newPassword}
                         onChange={(event) => setNewPassword(event.target.value)}
@@ -115,7 +115,7 @@ const ChangePasswordPage = () => {
                         sx={{ marginTop: 2 }}
                         disabled={!userName || !currentPassword || !newPassword}
                     >
-                        Change Password
+                        Şifereni Değiştir
                     </Button>
                     {message && (
                         <Alert severity={messageType} sx={{ marginTop: 2 }}>
@@ -125,7 +125,7 @@ const ChangePasswordPage = () => {
 					<Grid container direction="column" alignItems="center" sx={{ marginTop: 2 }}>
 						<Grid item>
 							<Link component={NavLink} to="/" sx={{textAlign: "center", color: "#077437"}}>
-								Go back to Login Page!
+								Giriş Ekranına Dön!
 							</Link>
 						</Grid>
 					</Grid>

@@ -9,29 +9,31 @@ function DashboardLogicButtons({ handleFieldCreation, handleLogOut, setGuidanceM
                     bottom: 0,
                     left: 0,
                     right: 0,
+                    width: "100%",
                     gap: 2,
                     p: 2,
                     display: 'flex',
                     justifyContent: 'center',
                     boxShadow: "0 -2px 10px rgba(0,0,0,0.2)",
-                    backgroundColor: "#f59c17"
+                    backgroundColor: "#f59c17",
+                    zIndex: 10
                 }}
             >
                  <Box sx={{ flex: '1 1 0', display: 'flex', justifyContent: 'flex-end' }}>
                     <Button variant="contained" color="primary" onClick={handleFieldCreation}>
-                        Add New Field
+                        Arazi Ekle
                     </Button>
                 </Box>
 
                 <Box sx={{ flex: '0 1 auto', mx: 2 }}>
                     <Button variant="contained" color="primary" onClick={handleLogOut}>
-                        Log out
+                        Çıkış Yap
                     </Button>
                 </Box>
 
                 <Box sx={{ flex: '1 1 0', display: 'flex', justifyContent: 'flex-start' }}>
                     <Button variant="contained" color="primary" onClick={() => setGuidanceModal(true)}>
-                        Product Recommendation
+                        Toprak Rehberi
                     </Button>
                 </Box>
             </Box>

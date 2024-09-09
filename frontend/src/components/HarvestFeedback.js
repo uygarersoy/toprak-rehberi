@@ -19,7 +19,7 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                 }}
             >                
                 <Box>
-                    <Typography variant="body1">Satisfaction:</Typography>
+                    <Typography variant="body1">Memnuniyet:</Typography>
                     <Select
                         value={satisfaction}
                         onChange={(event) => setSatisfaction(parseInt(event.target.value))}
@@ -27,15 +27,15 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                         fullWidth
                         autoFocus
                     >
-                        <MenuItem value=""><em>Select Satisfaction</em></MenuItem>
-                        <MenuItem value={3}>Very Good</MenuItem>
-                        <MenuItem value={2}>Not Bad, Not Good</MenuItem>
-                        <MenuItem value={1}>Very Bad</MenuItem>
+                        <MenuItem value=""><em>Hasat memnuniyetini seçiniz</em></MenuItem>
+                        <MenuItem value={3}>Çok iyi</MenuItem>
+                        <MenuItem value={2}>Ne iyi, Ne kötü</MenuItem>
+                        <MenuItem value={1}>Çok kötü</MenuItem>
                     </Select>
                 </Box>
                 
                 <Box>
-                    <Typography variant="body1">Amount of Harvest:</Typography>
+                    <Typography variant="body1">Hasat miktarı (kg)</Typography>
                     <TextField
                         type="number"
                         value={amount || ""}
@@ -47,7 +47,7 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                 </Box>
                 
                 <Button type="submit" variant="contained" color="primary" disabled={!(satisfaction && amount)}>
-                    Submit
+                    Gönder
                 </Button>
             </Box>
         </>

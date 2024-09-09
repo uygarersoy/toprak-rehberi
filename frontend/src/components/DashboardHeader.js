@@ -11,7 +11,7 @@ function DashboardHeader() {
                 </Grid>
                 <Grid item xs>
                     <Typography variant="h4" component="h1" align="center" sx={{ color: "#077437" }}>
-                        FIELDS
+                        ARAZİLERİM
                     </Typography>
                 </Grid>
                 <Grid item xs="auto">

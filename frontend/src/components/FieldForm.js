@@ -49,18 +49,18 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 		const { name, value } = event.target;
 		let updatedFields = {};
 	
-		if (name === "province") {
+		if (name === "il") {
 			updatedFields = {
 				province: value,
 				district: "",
 				neighborhood: ""
 			};
-		} else if (name === "district") {
+		} else if (name === "ilçe") {
 			updatedFields = {
 				district: value,
 				neighborhood: ""
 			};
-		} else if (name === "neighborhood") {
+		} else if (name === "mahalle") {
 			updatedFields = {
 				neighborhood: value
 			};
@@ -110,16 +110,16 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 				onSubmit={handleSubmit}
 			>
 				<TextField
-					label="Type"
+					label="Arazi Tipi"
 					name="type"
 					value={formState.type}
 					onChange={handleChange}
 					fullWidth
 					autoFocus
 				/>
-				<FieldFormController disabled={formState.type} label="Province" value={formState.province} handleChange={handleChange} content={pContent}/>
-				<FieldFormController disabled={formState.province} label="District" value={formState.district} handleChange={handleChange} content={dContent}/>
-				<FieldFormController disabled={formState.district} label="Neighborhood" value={formState.neighborhood} handleChange={handleChange} content={nContent}/>
+				<FieldFormController disabled={formState.type} label="Il" value={formState.province} handleChange={handleChange} content={pContent}/>
+				<FieldFormController disabled={formState.province} label="Ilçe" value={formState.district} handleChange={handleChange} content={dContent}/>
+				<FieldFormController disabled={formState.district} label="Mahalle" value={formState.neighborhood} handleChange={handleChange} content={nContent}/>
 				
 				<Button
 					type="submit"
@@ -127,11 +127,11 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 					color="primary"
 					disabled={!(formState.type && formState.province && formState.district && formState.neighborhood)}
 				>
-					Submit
+					Gönder
 				</Button>
 			</Box>
-			<CustomModal text="ERROR" open={errorModalOpen} close={() => {}}>
-                <Alert severity="error">Your token has expired. You are being redirected. Please login again!</Alert>
+			<CustomModal text="HATA" open={errorModalOpen} close={() => {}}>
+				<Alert severity="error">Tokeninizin süresi doldu. Giriş sayfasına yönlendiriliyorsunuz. Tekrar giriş yapın!</Alert>
             </CustomModal>
 		</>
 	)

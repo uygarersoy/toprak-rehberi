@@ -80,16 +80,16 @@ function HarvestList({ field, setIsLoggedIn }) {
             <Box>
                 <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
                     <Button variant="contained" color="primary" onClick={handleAddHarvest}>
-                        Add a Harvest
+                        Ürün Ekle
                     </Button>
                 </Box>
-                <CustomModal text="Add New Harvest" open={visible} close={handleHarvestModal}>
+                <CustomModal text="Yeni Ürün Ekle" open={visible} close={handleHarvestModal}>
                     <HarvestForm handleSubmit={handleSubmit} formState={formState} handleChange={handleChange} pContent={pContent}/>
                 </CustomModal>
                 {content}
             </Box>
-            <CustomModal text="ERROR" open={errorModalOpen} close={() => {}}>
-                <Alert severity="error">Your token has expired. You are being redirected. Please login again!</Alert>
+            <CustomModal text="HATA" open={errorModalOpen} close={() => {}}>
+                <Alert severity="error">Tokeninizin süresi doldu. Giriş sayfasına yönlendiriliyorsunuz. Tekrar giriş yapın!</Alert>
             </CustomModal>
         </>
     )

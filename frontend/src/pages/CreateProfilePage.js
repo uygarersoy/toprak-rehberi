@@ -77,7 +77,7 @@ const CreateProfilePage = () => {
 					<LockIcon sx={{ color: 'white' }} fontSize="large" />
 				</Box>
 				<Typography variant="h5" component="h1" gutterBottom sx={{ textAlign: 'center' }}>
-					Create Account
+					Hesap Oluştur
 				</Typography>
 				<Box
 					component="form"
@@ -86,7 +86,7 @@ const CreateProfilePage = () => {
 				>
 					<TextField
 						fullWidth
-						label="Username"
+						label="Kullanıcı Adı"
 						type="text"
 						value={userName}
 						onChange={(event) => setUserName(event.target.value)}
@@ -95,7 +95,7 @@ const CreateProfilePage = () => {
 					/>
 					<TextField
 						fullWidth
-						label="Email"
+						label="E-mail"
 						type="email"
 						value={email}
 						onChange={(event) => setEmail(event.target.value)}
@@ -104,7 +104,7 @@ const CreateProfilePage = () => {
 					/>
 					<TextField
 						fullWidth
-						label="Password"
+						label="Şifre"
 						type="password"
 						value={password}
 						onChange={(event) => setPassword(event.target.value)}
@@ -113,7 +113,7 @@ const CreateProfilePage = () => {
 					/>
 					<TextField
 						fullWidth
-						label="Confirm Password"
+						label="Şifreyi Doğrula"
 						type="password"
 						value={confirmPassword}
 						onChange={(event) => setConfirmPassword(event.target.value)}
@@ -127,7 +127,7 @@ const CreateProfilePage = () => {
 						sx={{ marginTop: 2 }}
 						disabled={!userName || !email || !password || !confirmPassword}
 					>
-						Create Account
+						Hesap Oluştur
 					</Button>
 					{message && (
 						<Alert severity={messageType} sx={{ marginTop: 2 }}>
@@ -137,7 +137,7 @@ const CreateProfilePage = () => {
 					<Grid container direction="column" alignItems="center" sx={{ marginTop: 2 }}>
 						<Grid item>
 							<Link component={NavLink} to="/" sx={{textAlign: "center", color: "#077437"}}>
-								Already have an account?
+								Zaten Hesabım Var?
 							</Link>
 						</Grid>
 					</Grid>

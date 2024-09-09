@@ -19,17 +19,17 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
             }}
         >
             <Box>
-                <Typography variant="body1">Product Type:</Typography>
+                <Typography variant="body1">Ürün Tipi:</Typography>
                 <Select
                     name="type"
                     value={formState.type}
                     onChange={handleChange}
                     fullWidth
                     displayEmpty
-                    label="Type"
+                    label="Ürün tipi"
                     autoFocus
                 >
-                    <MenuItem value=""><em>Select Type</em></MenuItem>
+                    <MenuItem value=""><em>Ürün Tipini Seçiniz</em></MenuItem>
                     <MenuItem value="MEYVE">Meyve</MenuItem>
                     <MenuItem value="SEBZE">Sebze</MenuItem>
                     <MenuItem value="SÜS BİTKİSİ">Süs Bitkileri</MenuItem>
@@ -37,7 +37,7 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                 </Select>
             </Box>
             <Box>
-                <Typography variant="body1">Product:</Typography>
+                <Typography variant="body1">Ürün:</Typography>
                 <Select
                     name="product"
                     value={formState.product}
@@ -47,16 +47,16 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                     displayEmpty
                     autoFocus={formState.type}
                 >
-                    <MenuItem value=""><em>Select Product</em></MenuItem>
+                    <MenuItem value=""><em>Ürün Seçiniz</em></MenuItem>
                     {pContent}
                 </Select>
             </Box>
             <Box>
-                <Typography variant="body1">Area:</Typography>
+                <Typography variant="body1">Ekim alanı (m^2):</Typography>
                 <TextField
                     type="number"
                     name="area"
-                    label="Enter Area"
+                    label="Alan"
                     value={formState.area}
                     onChange={handleChange}
                     fullWidth
@@ -72,7 +72,7 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                 fullWidth
                 disabled={!(formState.type && formState.product && formState.area)}
             >
-                Submit
+                Gönder
             </Button>
         </Box>
         </>

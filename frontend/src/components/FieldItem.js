@@ -34,7 +34,7 @@ function FieldItem({ field, setIsLoggedIn }) {
             </Box>
             <Box sx={{ flex: '1 1 0', display: 'flex', justifyContent: 'flex-end' }}>
                 <Typography variant="body1">
-                    Neighborhood ID: <b><u>{field.neighborhoodId}</u></b>
+                    Mahalle ID: <b><u>{field.neighborhoodId}</u></b>
                 </Typography>
             </Box>
         </Box>
@@ -49,8 +49,8 @@ function FieldItem({ field, setIsLoggedIn }) {
             <ExpandablePanel header={header}>
                 <HarvestList field={field} setIsLoggedIn={setIsLoggedIn}/>
             </ExpandablePanel>
-            <CustomModal text="ERROR" open={errorModalOpen} close={() => {}}>
-                <Alert severity="error">Your token has expired. You are being redirected. Please login again!</Alert>
+            <CustomModal text="HATA" open={errorModalOpen} close={() => {}}>
+                <Alert severity="error">Tokeninizin süresi doldu. Giriş sayfasına yönlendiriliyorsunuz. Tekrar giriş yapın!</Alert>
             </CustomModal>
         </>
     );

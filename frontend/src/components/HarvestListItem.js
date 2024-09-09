@@ -105,12 +105,12 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
                     </Box>
                     <Box sx={{ textAlign: 'center', width: '100%', minHeight: '40px' }}>
                         <Typography variant="body1" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            Product: {harvest.product.productName} Area: {harvest.area}
+                            ÜRÜN: {harvest.product.productName} EKİLİ ALAN: {harvest.area}
                         </Typography>
                     </Box>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                         <Button variant="contained" color="primary" onClick={handleOpenModal}>
-                            Harvest the Product
+                            HASAT ET
                         </Button>
                     </Box>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 1 }}>
@@ -119,7 +119,7 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
                         </IconButton>
                     </Box>
                 </CardContent>
-                <CustomModal text="Feedback" open={open} close={handleCloseModal}>
+                <CustomModal text="Geri Dönüş" open={open} close={handleCloseModal}>
                     <HarvestFeedback
                         handleSubmit={handleSubmit}
                         satisfaction={satisfaction}
@@ -128,7 +128,7 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
                         setAmount={setAmount}
                     />
                 </CustomModal>
-                <CustomModal text="Suggestion" open={formSubmitted} close={handleCloseInformationModal}>
+                <CustomModal text="TAVSİYE" open={formSubmitted} close={handleCloseInformationModal}>
                     <Box
                         sx={{
                             display: "flex",
@@ -141,16 +141,15 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
                         <HelpCenterRoundedIcon sx={{ color: "#077437", width: '30%', height: 'auto' }}/>
                     </Box>
                     <Typography variant="body1">
-                        This product can be harvested here. If you need help, click{" "}
+                        Bu ürün burada yetiştirilebilir. Eğer bilgi almak isterseniz, buraya{" "}
                         <Link href={fullURL} target="_blank" rel="noopener noreferrer" onClick={handleCloseInformationModal}>
-                            here
+                            tıklayın!
                         </Link>
-                        {" "}for more information.
                     </Typography>
                 </CustomModal>
             </Card>
-            <CustomModal text="ERROR" open={errorModalOpen} close={() => {}}>
-                <Alert severity="error">Your token has expired. You are being redirected. Please login again!</Alert>
+            <CustomModal text="HATA" open={errorModalOpen} close={() => {}}>
+                <Alert severity="error">Tokeninizin süresi doldu. Giriş sayfasına yönlendiriliyorsunuz. Tekrar giriş yapın!</Alert>
             </CustomModal>
         </>
     );

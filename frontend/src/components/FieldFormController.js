@@ -13,7 +13,7 @@ function FieldFormController({ disabled, label, value, handleChange, content }) 
                     label={label}
                 >
                     <MenuItem value="">
-                        <em>Select a {label}</em>
+                        <em>{label} seçin</em>
                     </MenuItem>
                     {content}
                 </Select>

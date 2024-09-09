@@ -97,14 +97,14 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     return (
         <Box sx={{ padding: 2, minHeight: '100vh', position: 'relative'}}>
             <DashboardHeader />
-            <CustomModal text="Add a New Field" open={visibleForm} close={handleFieldAdditionModal}>
+            <CustomModal text="Yeni Arazi Ekle" open={visibleForm} close={handleFieldAdditionModal}>
                 <FieldForm setVisibleForm={setVisibleForm} setIsLoggedIn={setIsLoggedIn}/>
             </CustomModal>
-            <CustomModal text="Enter Neighborhood ID" open={guidanceModal} close={handleGuidanceModal}>
+            <CustomModal text="Mahalle ID Girin" open={guidanceModal} close={handleGuidanceModal}>
                 <FormControl fullWidth component="form" onSubmit={handleGuidanceSubmit}>
                     <FormGroup>
                         <TextField 
-                        label="Neighborhood ID"
+                        label="Mahalle ID"
                         variant="outlined"
                         value={input}
                         type="number"
@@ -112,20 +112,21 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                         fullWidth
                         autoFocus
                         sx={{ mb: 2 }}
+                        InputProps={{ inputProps: { min: 1 } }}
                         />
                         <Button variant="contained" color="primary" type="submit" fullWidth disabled={!input}>
-                            Submit
+                            Gönder
                         </Button>
                     </FormGroup>
                 </FormControl>
             </CustomModal>
-            <CustomModal text="Product Recommendations" open={open} close={handleRecommendationModal}>
+            <CustomModal text="Toprak Rehberi" open={open} close={handleRecommendationModal}>
                 <TableContainer component={Paper} sx={{maxHeight: "50vh", boxShadow: "none", borderRadius: 0, overflowY: "auto"}}>
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>
-                                <TableCell>Product Name</TableCell>
-                                <TableCell>Percentage</TableCell>
+                                <TableCell>Ürün Adı</TableCell>
+                                <TableCell>Başarı Oranı</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -134,8 +135,8 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                     </Table>
                 </TableContainer>
             </CustomModal>
-            <CustomModal text="ERROR" open={errorModalOpen} close={() => {}}>
-                <Alert severity="error">Your token has expired. You are being redirected. Please login again!</Alert>
+            <CustomModal text="HATA" open={errorModalOpen} close={() => {}}>
+                <Alert severity="error">Tokeninizin süresi doldu. Giriş sayfasına yönlendiriliyorsunuz. Tekrar giriş yapın!</Alert>
             </CustomModal>
             {content}
             <DashboardLogicButtons
