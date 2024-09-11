@@ -33,8 +33,8 @@ function FieldItem({ field, setIsLoggedIn }) {
                 </Typography>
             </Box>
             <Box sx={{ flex: '1 1 0', display: 'flex', justifyContent: 'flex-end' }}>
-                <Typography variant="body1">
-                    Mahalle ID: <b><u>{field.neighborhoodId}</u></b>
+                <Typography>
+                    EKİLEBİLİR ARAZİ: <b>{field.availableArea}</b> m<sup>2</sup>
                 </Typography>
             </Box>
         </Box>

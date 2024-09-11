@@ -29,7 +29,7 @@ export * from "./thunks/fetchUser";
 export * from "./thunks/registerUser";
 export * from "./thunks/updateUser";
 export { removeUser };
-export { useAddFieldMutation, useFetchFieldsQuery, useRemoveFieldMutation } from "./apis/fieldApi";
+export { useAddFieldMutation, useFetchFieldsQuery, useRemoveFieldMutation, useFetchFieldTypesQuery, useUpdateFieldMutation } from "./apis/fieldApi";
 export { useFetchHarvestsQuery, useAddHarvestMutation, useRemoveHarvestMutation, useAddFeedBackMutation } from "./apis/harvestApi";
 export { useFetchProvincesQuery, useFetchDistrictsQuery, useFetchNeighborhoodsQuery } from "./apis/locationApi";
 export { useFetchProductsQuery } from "./apis/productApi";

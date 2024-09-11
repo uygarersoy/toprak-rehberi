@@ -55,11 +55,33 @@ public class HarvestServiceImp implements HarvestService {
 
     @Override
     public Harvest addNewHarvestToField(Harvest harvest) {
+        /*System.out.println("check");
+        System.out.println(harvest.getId());
+        System.out.println(harvest.getField().getId());
+        System.out.println(harvest.get().getId());
         Field field = fieldRepository.findById(harvest.getField().getId()).orElse(null);
         harvest.setField(field);
         Harvest newHarvest = this.saveHarvest(harvest);
         field.getHarvests().add(newHarvest);
         fieldRepository.save(field);
         return newHarvest;
+
+        */
+        //Field field = fieldRepository.findById(harvest.getField().getId()).orElse(null);
+        //harvest.setField(field);
+        Harvest check = harvestRepository.checkHarvestExists(harvest.getField().getId(), harvest.getProduct().getId());
+        if ( check != null) {
+            check.setArea(check.getArea() + harvest.getArea());
+            this.saveHarvest(check);
+            return check;
+        }
+        else {
+            Field field = fieldRepository.findById(harvest.getField().getId()).orElse(null);
+            harvest.setField(field);
+            Harvest newHarvest = this.saveHarvest(harvest);
+            field.getHarvests().add(newHarvest);
+            fieldRepository.save(field);
+            return newHarvest;
+        }
     }
 }

@@ -43,11 +43,33 @@ const fieldsApi = createApi({
                     };
                 },
                 invalidatesTags: ["Field"]
-            })
+            }),
+            fetchFieldTypes: builder.query({
+                query: () => {
+                    return {
+                        url: "/field-type",
+                        method: "GET"
+                    };
+                },
+            }),
+            updateField: builder.mutation({
+                query: ({fieldId, sign, area }) => {
+                    return {
+                        url: "/update-field",
+                        method: "PUT",
+                        params: {
+                            sign,
+                            area,
+                            fieldId
+                        },
+                    };
+                },
+                invalidatesTags: ["Field"]
+            }),
         };
     }
 });
 
 
-export const { useAddFieldMutation, useFetchFieldsQuery, useRemoveFieldMutation } = fieldsApi;
+export const { useAddFieldMutation, useFetchFieldsQuery, useRemoveFieldMutation, useFetchFieldTypesQuery, useUpdateFieldMutation } = fieldsApi;
 export { fieldsApi };

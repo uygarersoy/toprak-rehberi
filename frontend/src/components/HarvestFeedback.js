@@ -1,6 +1,8 @@
 import { Box, Typography, Select, MenuItem, TextField, Button } from "@mui/material";
 
-function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, setAmount }) {
+function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, setAmount, harvest, type }) {
+    const amountInfo = (type === "SÜS BİTKİSİ") ? "(adet)" : "(kg)";
+    const maxVal = (type === "SÜS BİTKİSİ") ? (50 * harvest.area) : harvest.area;
     return (
         <>
             <Box
@@ -35,13 +37,13 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                 </Box>
                 
                 <Box>
-                    <Typography variant="body1">Hasat miktarı (kg)</Typography>
+                    <Typography variant="body1">Hasat miktarı {amountInfo}</Typography>
                     <TextField
                         type="number"
                         value={amount || ""}
                         onChange={(event) => setAmount(parseInt(event.target.value))}
                         fullWidth
-                        InputProps={{ inputProps: { min: 1 } }}
+                        InputProps={{ inputProps: { min: 1, max: maxVal } }}
                         disabled={!satisfaction}
                     />
                 </Box>

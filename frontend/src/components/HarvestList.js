@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Box, Grid, CircularProgress, Alert, MenuItem } from '@mui/material';
-import { useAddHarvestMutation, useFetchHarvestsQuery, useFetchProductsQuery } from "../store";
+import { useAddHarvestMutation, useFetchHarvestsQuery, useFetchProductsQuery, useUpdateFieldMutation } from "../store";
 import HarvestListItem from "./HarvestListItem";
 import HarvestForm from "./HarvestForm";
 import CustomModal from "./CustomModal";
@@ -9,6 +9,7 @@ import useTokenValidation from "../hooks/tokenValidation";
 function HarvestList({ field, setIsLoggedIn }) {
     const { data: harvestData, isFetching, error: fetchHarvestError } = useFetchHarvestsQuery(field);
     const [ addHarvest, {error: addHarvestError}] = useAddHarvestMutation();
+    const [ updateField, { error: updataFieldError}] = useUpdateFieldMutation();
     const [visible, setVisible] = useState(false);
     const [formState, setFormState] = useState({
         type: "",
@@ -33,10 +34,10 @@ function HarvestList({ field, setIsLoggedIn }) {
     useTokenValidation(fetchHarvestError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(addHarvestError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(fetchProductsError, setIsLoggedIn, setErrorModalOpen);
-
+    useTokenValidation(updataFieldError, setIsLoggedIn, setErrorModalOpen);
 
     const handleChange = (event) => {
-		setFormState({...formState, [event.target.name]: event.target.value})
+		setFormState({...formState, [event.target.name]: event.target.value});
 	};
 
     const handleSubmit = (event) => {
@@ -47,6 +48,7 @@ function HarvestList({ field, setIsLoggedIn }) {
             field: field
         };
         addHarvest(harvest);
+        updateField({fieldId: field.id, sign: -1, area: formState.area});
         setFormState({type: "", product: "", area: ""});
         setVisible(false);
     };
@@ -68,7 +70,7 @@ function HarvestList({ field, setIsLoggedIn }) {
             <Grid container spacing={2}>
                 {harvestData.map((harvest) => (
                 <Grid item key={harvest.id} xs={12} sm={6} md={4}>
-                    <HarvestListItem harvest={harvest} setIsLoggedIn={setIsLoggedIn}/>
+                    <HarvestListItem harvest={harvest} setIsLoggedIn={setIsLoggedIn} type={formState.type}/>
                 </Grid>
                 ))}
             </Grid>
@@ -84,7 +86,7 @@ function HarvestList({ field, setIsLoggedIn }) {
                     </Button>
                 </Box>
                 <CustomModal text="Yeni Ürün Ekle" open={visible} close={handleHarvestModal}>
-                    <HarvestForm handleSubmit={handleSubmit} formState={formState} handleChange={handleChange} pContent={pContent}/>
+                    <HarvestForm handleSubmit={handleSubmit} formState={formState} handleChange={handleChange} pContent={pContent} field={field}/>
                 </CustomModal>
                 {content}
             </Box>

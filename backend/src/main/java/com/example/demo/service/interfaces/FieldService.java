@@ -1,6 +1,7 @@
 package com.example.demo.service.interfaces;
 
 import com.example.demo.entity.Field;
+
 import java.util.List;
 public interface FieldService {
     Field saveField(Field field);
@@ -9,4 +10,5 @@ public interface FieldService {
     void deleteField(Long id);
     Field addField(Field field);
     List<Field> fetchUserFields(Long userId);
+    List<String> fetchFieldTypes();
 }

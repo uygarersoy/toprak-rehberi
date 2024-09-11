@@ -1,9 +1,12 @@
 package com.example.demo.entity;
 
 import java.util.List;
+import com.example.demo.enums.FieldType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,8 +27,11 @@ public class Field {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    private String type;
+
+    @Enumerated(EnumType.STRING)
+    private FieldType type;
     private Long neighborhoodId;
+    private Long availableArea;
 
     @ManyToOne
     @JoinColumn(name="user_id")

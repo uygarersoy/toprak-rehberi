@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, Typography, IconButton, Button, Link, Alert } from "@mui/material";
-import { useAddFeedBackMutation, useGetFractionQuery, useRemoveHarvestMutation, useUpdateFractionsMutation } from "../store";
+import { useAddFeedBackMutation, useGetFractionQuery, useRemoveHarvestMutation, useUpdateFieldMutation, useUpdateFractionsMutation } from "../store";
 import { useState } from "react";
 import DeleteIcon from '@mui/icons-material/Delete';
 import HelpCenterRoundedIcon from '@mui/icons-material/HelpCenterRounded';
@@ -7,9 +7,10 @@ import HarvestFeedback from "./HarvestFeedback";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
 
-function HarvestListItem({ harvest, setIsLoggedIn }) {
+function HarvestListItem({ harvest, setIsLoggedIn, type }) {
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
     const [removeHarvest, {error: removeHarvestError}] = useRemoveHarvestMutation();
+    const [ updateField, { error: updateFieldError } ] = useUpdateFieldMutation();
     const [satisfaction, setSatisfaction] = useState("");
     const [amount, setAmount] = useState(0);
     const [addFeedback, {error: addFeedbackError}] = useAddFeedBackMutation();
@@ -38,6 +39,7 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
         if (harvestToRemove) {
             removeHarvest(harvestToRemove);
             setHarvestToRemove(null);
+            updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
         }
     };
 
@@ -52,6 +54,11 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
     const handleCloseInformationModal = () => {
         setFormSubmitted(false);
         handleRemoveHarvest();
+    };
+    
+    const handleRemoveWithoutHarvest = () => {
+        removeHarvest(harvest);
+        updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
     };
 
     const handleSubmit = (event) => {
@@ -76,6 +83,7 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
             setFormSubmitted(true);
         } else {
             removeHarvest(harvest);
+            updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
         }
         setAmount(0);
         setSatisfaction("");
@@ -86,7 +94,7 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
     useTokenValidation(addFeedbackError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(updateFractionError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(getFractionError, setIsLoggedIn, setErrorModalOpen);
-    
+    useTokenValidation(updateFieldError, setIsLoggedIn, setErrorModalOpen);
 
     return (
         <>
@@ -105,7 +113,10 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
                     </Box>
                     <Box sx={{ textAlign: 'center', width: '100%', minHeight: '40px' }}>
                         <Typography variant="body1" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                            ÜRÜN: {harvest.product.productName} EKİLİ ALAN: {harvest.area}
+                            <b>ÜRÜN:</b> {harvest.product.productName}
+                        </Typography>
+                        <Typography variant="body1" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <b>EKİLİ ALAN:</b> {harvest.area} m<sup>2</sup>
                         </Typography>
                     </Box>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -114,18 +125,20 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
                         </Button>
                     </Box>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', mt: 1 }}>
-                        <IconButton onClick={() => removeHarvest(harvest)} color="error">
+                        <IconButton onClick={handleRemoveWithoutHarvest} color="error">
                             <DeleteIcon />
                         </IconButton>
                     </Box>
                 </CardContent>
                 <CustomModal text="Geri Dönüş" open={open} close={handleCloseModal}>
                     <HarvestFeedback
+                        type={harvest.product.type}
                         handleSubmit={handleSubmit}
                         satisfaction={satisfaction}
                         setSatisfaction={setSatisfaction}
                         amount={amount}
                         setAmount={setAmount}
+                        harvest={harvest}
                     />
                 </CustomModal>
                 <CustomModal text="TAVSİYE" open={formSubmitted} close={handleCloseInformationModal}>

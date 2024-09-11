@@ -1,6 +1,6 @@
 import { Box, Typography, Select, MenuItem, TextField, Button} from "@mui/material";
 
-function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
+function HarvestForm({ handleSubmit, formState, handleChange, pContent, message, field }) {
     return (
         <>
             <Box
@@ -27,7 +27,6 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                     fullWidth
                     displayEmpty
                     label="Ürün tipi"
-                    autoFocus
                 >
                     <MenuItem value=""><em>Ürün Tipini Seçiniz</em></MenuItem>
                     <MenuItem value="MEYVE">Meyve</MenuItem>
@@ -45,14 +44,13 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                     fullWidth
                     disabled={!formState.type}
                     displayEmpty
-                    autoFocus={formState.type}
                 >
                     <MenuItem value=""><em>Ürün Seçiniz</em></MenuItem>
                     {pContent}
                 </Select>
             </Box>
             <Box>
-                <Typography variant="body1">Ekim alanı (m^2):</Typography>
+                <Typography variant="body1">Ekim alanı (m<sup>2</sup>):</Typography>
                 <TextField
                     type="number"
                     name="area"
@@ -62,7 +60,7 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
                     fullWidth
                     variant="outlined"
                     disabled={!formState.product}
-                    InputProps={{ inputProps: { min: 1 } }}
+                    InputProps={{ inputProps: { min: 1, max: field.availableArea} }}
                 />
             </Box>
             <Button
@@ -74,6 +72,7 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent }) {
             >
                 Gönder
             </Button>
+            {message}
         </Box>
         </>
     );

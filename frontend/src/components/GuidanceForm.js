@@ -1,21 +1,16 @@
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { useAddFieldMutation, useFetchDistrictsQuery, useFetchFieldTypesQuery, useFetchNeighborhoodsQuery, useFetchProvincesQuery } from "../store";
-import { Box, MenuItem, Alert, Button, TextField } from '@mui/material';
+import { useFetchDistrictsQuery, useFetchFieldTypesQuery, useFetchNeighborhoodsQuery, useFetchProvincesQuery } from "../store";
+import { Box, MenuItem, Alert, Button } from '@mui/material';
 import FieldFormController from "./FieldFormController";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
 
-function FieldForm({ setVisibleForm, setIsLoggedIn }) {
+function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, handleGuidanceSubmit }) {
 	const [ errorModalOpen, setErrorModalOpen ] = useState(false);
-	const [ addField , {error: addFieldError}] = useAddFieldMutation();
-	const user = useSelector((state) => state.user);
 	const [formState, setFormState] = useState({
-		type: "",
 		province: "",
 		district: "",
 		neighborhood: "",
-		size: ""
 	});
 
 	const { data: fieldTypeData, error: fieldTypeError } = useFetchFieldTypesQuery();
@@ -25,13 +20,7 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 	const selectedDistrict = districtData?.find(d => d.districtName === formState.district);
 	const {data: neighborhoodData, error: nError} = useFetchNeighborhoodsQuery(selectedDistrict?.id, {skip: !selectedDistrict});
 	const selectedNeighborhood = neighborhoodData?.find(n => n.neighborhoodName === formState.neighborhood);
-	let typeContent, pContent, dContent, nContent;
-
-	if (fieldTypeData) {
-		typeContent = fieldTypeData.map((type, idx) => {
-			return <MenuItem key={idx} value={type}>{type}</MenuItem>
-		})
-	}
+	let pContent, dContent, nContent;
 
 	if (provinceData) {
 		pContent = provinceData.map((province) => {
@@ -44,7 +33,6 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 			return <MenuItem key={district.id} value={district.districtName}>{district.districtName}</MenuItem>;
 		})
 	}
-
 
 	if (neighborhoodData) {
 		nContent = neighborhoodData.map((neighborhood) => {
@@ -71,12 +59,8 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 			updatedFields = {
 				neighborhood: value
 			};
-		} else if (name === "arazi tipi"){
-			updatedFields = { type: value };
-		} else {
-			updatedFields = { [name]: value};
-		}
-	
+		} 
+
 		setFormState((previousState) => ({
 			...previousState,
 			...updatedFields
@@ -86,17 +70,10 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 
 	const handleSubmit = (event) => {
 		event.preventDefault();
-		const field = {
-			type: formState.type,
-			neighborhoodId: selectedNeighborhood.id,
-			user: user.data,
-			availableArea: formState.size
-		};
-		addField(field);
-		setVisibleForm(false);
+		setNeighborhoodId(selectedNeighborhood.id);
+		handleGuidanceSubmit();
 	};
 
-	useTokenValidation(addFieldError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(pError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(dError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(nError, setIsLoggedIn, setErrorModalOpen);
@@ -119,27 +96,15 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 				}}
 				onSubmit={handleSubmit}
 			>
-				<FieldFormController disabled={true} label="Arazi Tipi" value={formState.type} handleChange={handleChange} content={typeContent}/>
-				<FieldFormController disabled={formState.type} label="Il" value={formState.province} handleChange={handleChange} content={pContent}/>
+				<FieldFormController disabled={true} label="Il" value={formState.province} handleChange={handleChange} content={pContent}/>
 				<FieldFormController disabled={formState.province} label="Ilçe" value={formState.district} handleChange={handleChange} content={dContent}/>
 				<FieldFormController disabled={formState.district} label="Mahalle" value={formState.neighborhood} handleChange={handleChange} content={nContent}/>
-
-				<TextField
-					disabled={!formState.neighborhood}
-					label="Arazi boyutu"
-					name="size"
-					type="number"
-                    InputProps={{ inputProps: { min: 1, max: 500000} }}
-					value={formState.size}
-					onChange={handleChange}
-					fullWidth					
-				/>
-
+				
 				<Button
 					type="submit"
 					variant="contained"
 					color="primary"
-					disabled={!(formState.type && formState.province && formState.district && formState.neighborhood)}
+					disabled={!(formState.province && formState.district && formState.neighborhood)}
 				>
 					Gönder
 				</Button>
@@ -151,4 +116,4 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 	)
 }
 
-export default FieldForm;
+export default GuidanceForm;

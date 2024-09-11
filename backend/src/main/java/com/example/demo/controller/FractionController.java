@@ -40,8 +40,6 @@ public class FractionController {
 
     @GetMapping("/get-fraction")
     public ResponseEntity<?> getFractionForNeighborhood(@RequestParam Long neighborhoodId, @RequestParam Long productId) {
-        System.out.println(neighborhoodId);
-        System.out.println(productId);
         Fraction fraction = fractionService.getFraction(neighborhoodId, productId);
         if (fraction != null) {
             return new ResponseEntity<>(fraction, HttpStatus.OK);

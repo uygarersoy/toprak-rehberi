@@ -8,8 +8,9 @@ import { useFetchGuidenessQuery } from "../store";
 import CustomModal from "../components/CustomModal";
 import DashboardLogicButtons from "../components/DashboardLogicButtons";
 import DashboardHeader from "../components/DashboardHeader";
+import useTokenValidation from "../hooks/tokenValidation";
+import GuidanceForm from "../components/GuidanceForm";
 import {
-        Button,
         Skeleton,
         Alert,
         Box,
@@ -19,26 +20,19 @@ import {
         Table,
         TableHead,
         TableBody,
-        Paper, 
-        FormControl,
-        FormGroup,
-        TextField } from '@mui/material';
-import useTokenValidation from "../hooks/tokenValidation";
-
+        Paper } from '@mui/material';
 
 function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     const navigate = useNavigate();
     const [visibleForm, setVisibleForm] = useState(false);
     const [ guidanceModal, setGuidanceModal ] = useState(false);
-    const [ input, setInput ] = useState("");
     const [ neighborhoodId, setNeighborhoodId ] = useState("");
     const [ open, setOpen ] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
-    const { data, isFetching, isLoading, error: fetchFieldError } = useFetchFieldsQuery(user.data);
+    const { data, isFetching, isLoading, error: fetchFieldError } = useFetchFieldsQuery(user.data, {skip: !user});
     const { data: guideData, error: fetchGuidenessError } = useFetchGuidenessQuery(neighborhoodId, {skip: !neighborhoodId});
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
-    
     useTokenValidation(fetchFieldError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(fetchGuidenessError, setIsLoggedIn, setErrorModalOpen);
 
@@ -65,10 +59,7 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
         setVisibleForm(true);
     }
 
-    const handleGuidanceSubmit = (event) => {
-        event.preventDefault();
-        setNeighborhoodId(input);
-        setInput("");
+    const handleGuidanceSubmit = () => {
         setGuidanceModal(false);
         setOpen(true);
     }
@@ -100,25 +91,8 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
             <CustomModal text="Yeni Arazi Ekle" open={visibleForm} close={handleFieldAdditionModal}>
                 <FieldForm setVisibleForm={setVisibleForm} setIsLoggedIn={setIsLoggedIn}/>
             </CustomModal>
-            <CustomModal text="Mahalle ID Girin" open={guidanceModal} close={handleGuidanceModal}>
-                <FormControl fullWidth component="form" onSubmit={handleGuidanceSubmit}>
-                    <FormGroup>
-                        <TextField 
-                        label="Mahalle ID"
-                        variant="outlined"
-                        value={input}
-                        type="number"
-                        onChange={(event) => setInput(parseInt(event.target.value))}
-                        fullWidth
-                        autoFocus
-                        sx={{ mb: 2 }}
-                        InputProps={{ inputProps: { min: 1 } }}
-                        />
-                        <Button variant="contained" color="primary" type="submit" fullWidth disabled={!input}>
-                            Gönder
-                        </Button>
-                    </FormGroup>
-                </FormControl>
+            <CustomModal text="Arazi Konumunu Girin" open={guidanceModal} close={handleGuidanceModal}>
+                <GuidanceForm setIsLoggedIn={setIsLoggedIn} setNeighborhoodId={setNeighborhoodId} handleGuidanceSubmit={handleGuidanceSubmit}/>
             </CustomModal>
             <CustomModal text="Toprak Rehberi" open={open} close={handleRecommendationModal}>
                 <TableContainer component={Paper} sx={{maxHeight: "50vh", boxShadow: "none", borderRadius: 0, overflowY: "auto"}}>
