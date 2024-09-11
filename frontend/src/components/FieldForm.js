@@ -31,6 +31,7 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 		typeContent = fieldTypeData.map((type, idx) => {
 			return <MenuItem key={idx} value={type}>{type}</MenuItem>
 		})
+		typeContent = typeContent.concat(<MenuItem key={typeContent.length} value="DİĞER">DİĞER</MenuItem>)
 	}
 
 	if (provinceData) {

@@ -1,6 +1,9 @@
 package com.example.demo.service.implementations;
 
+import java.text.Collator;
 import java.util.List;
+import java.util.Locale;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.entity.Product;
@@ -39,6 +42,11 @@ public class ProductServiceImp implements ProductService{
 
     @Override
     public List<Product> fetchByType(String type) {
-        return productRepository.fetchByTpe(type);
+        List<Product> products = productRepository.fetchByTpe(type);
+        Collator turkishCollator = Collator.getInstance(new Locale("tr", "TR"));
+        turkishCollator.setStrength(Collator.PRIMARY);
+        turkishCollator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
+        products.sort((p1, p2) -> turkishCollator.compare(p1.getProductName().toLowerCase(), p2.getProductName().toLowerCase()));
+        return products;
     }
 }

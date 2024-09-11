@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import java.text.Collator;
 
 @RestController
 @RequestMapping("/api/location")
@@ -41,6 +43,10 @@ public class LocationController {
         List<ProvinceDTO> provinceDTOs = allProvinces.stream()
             .map(province -> new ProvinceDTO(province.getId(), province.getProvinceName()))
             .collect(Collectors.toList());
+        Collator turkishCollator = Collator.getInstance(new Locale("tr", "TR"));
+        turkishCollator.setStrength(Collator.PRIMARY);
+        turkishCollator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
+        provinceDTOs.sort((p1, p2) -> turkishCollator.compare(p1.getProvinceName().toLowerCase(), p2.getProvinceName().toLowerCase()));
         return new ResponseEntity<>(provinceDTOs, HttpStatus.OK);
     }
 
@@ -52,6 +58,11 @@ public class LocationController {
             List<DistrictDTO> districtDTOs = districts.stream()
                 .map(district -> new DistrictDTO(district.getId(), district.getDistrictName()))
                 .collect(Collectors.toList());
+            Collator turkishCollator = Collator.getInstance(new Locale("tr", "TR"));
+            turkishCollator.setStrength(Collator.PRIMARY);
+            turkishCollator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
+            districtDTOs.sort((d1, d2) -> turkishCollator.compare(d1.getDistrictName().toLowerCase(), d2.getDistrictName().toLowerCase()));
+        
             return new ResponseEntity<>(districtDTOs, HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -65,6 +76,11 @@ public class LocationController {
             List<NeighborhoodDTO> neighborhoodDTOs = neighborhoods.stream()
                 .map(neighborhood -> new NeighborhoodDTO(neighborhood.getId(), neighborhood.getNeigborhoodName()))
                 .collect(Collectors.toList());
+            Collator turkishCollator = Collator.getInstance(new Locale("tr", "TR"));
+            turkishCollator.setStrength(Collator.PRIMARY);
+            turkishCollator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
+            neighborhoodDTOs.sort((n1, n2) -> turkishCollator.compare(n1.getNeighborhoodName().toLowerCase(), n2.getNeighborhoodName().toLowerCase()));
+        
             return new ResponseEntity<>(neighborhoodDTOs, HttpStatus.OK);           
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);

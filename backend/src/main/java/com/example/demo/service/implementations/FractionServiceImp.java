@@ -8,8 +8,8 @@ import com.example.demo.entity.Fraction;
 import com.example.demo.repository.FractionRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.interfaces.FractionService;
-
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -46,8 +46,9 @@ public class FractionServiceImp implements FractionService{
         List<Fraction> fractions = fractionRepository.fetchFractions(neighborhoodId);
         for (Fraction fraction : fractions) {
             String productName = productRepository.findById(fraction.getProductId()).orElse(null).getProductName();
-            fractionDTOs.add(new FractionDTO(fraction.getId(), fraction.getProductId(), productName, fraction.getPercentage()));
+            fractionDTOs.add(new FractionDTO(fraction.getId(), fraction.getProductId(), productName, Math.round(fraction.getPercentage() * 100.0) / 100.0));
         }
+        fractionDTOs.sort(Comparator.comparingDouble(FractionDTO::getPercentage).reversed());
         return fractionDTOs;
     }
 

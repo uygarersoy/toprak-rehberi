@@ -8,7 +8,5 @@ public enum FieldType {
     ÇAYIR,
     ZEYTİNLİK,
     SERA,
-    TAŞLIK,
-    AĞIL,
-    KAVAKLIK    
+    KAVAKLIK
 }

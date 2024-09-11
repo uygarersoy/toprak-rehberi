@@ -23,12 +23,18 @@ function HarvestList({ field, setIsLoggedIn }) {
 
     if (productData) {
         pContent = productData.map((product) => {
-            return (
-                <MenuItem key={product.id} value={product.productName}>
-                    {product.productName}
-                </MenuItem>
-            );
-        });
+            if (product.productName !== "DİĞER") {
+                return (
+                    <MenuItem key={product.id} value={product.productName}>
+                        {product.productName}
+                    </MenuItem>
+                );    
+            }
+            else {
+                return null;
+            }
+        }).filter(menuItem => menuItem !== null);
+        pContent = pContent.concat(<MenuItem key={pContent.length} value="DİĞER">DİĞER</MenuItem>)
     }
 
     useTokenValidation(fetchHarvestError, setIsLoggedIn, setErrorModalOpen);

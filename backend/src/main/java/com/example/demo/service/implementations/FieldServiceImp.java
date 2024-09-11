@@ -8,9 +8,10 @@ import com.example.demo.enums.FieldType;
 import com.example.demo.repository.FieldRepository;
 //import com.example.demo.repository.UserRepository;
 import com.example.demo.service.interfaces.FieldService;
-
+import java.text.Collator;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,6 +57,9 @@ public class FieldServiceImp implements FieldService {
 
     @Override
     public List<String> fetchFieldTypes() {
-        return Arrays.stream(FieldType.values()).map(Enum::name).collect(Collectors.toList());
+        Collator turkishCollator = Collator.getInstance(new Locale("tr", "TR"));
+        turkishCollator.setStrength(Collator.PRIMARY);
+        turkishCollator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
+        return Arrays.stream(FieldType.values()).map(Enum::name).sorted(turkishCollator::compare).collect(Collectors.toList());
     }
 }
