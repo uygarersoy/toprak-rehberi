@@ -89,6 +89,7 @@ const ChangePasswordPage = () => {
                         onChange={(event) => setUserName(event.target.value)}
                         margin="normal"
                         required
+                        autoFocus
                     />
                     <TextField
                         fullWidth

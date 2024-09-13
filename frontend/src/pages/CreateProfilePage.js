@@ -14,8 +14,45 @@ const CreateProfilePage = () => {
 	const [confirmPassword, setConfirmPassword] = useState('');
 	const [message, setMessage] = useState('');
 	const [messageType, setMessageType] = useState('info');
+	const [passwordError, setPasswordError] = useState("");
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+
+	const checkPassword = (typedPassword) => {
+		const minLength = /.{8,16}/;
+		const hasLowerCase = /[a-z]/;
+		const hasUpperCse = /[A-Z]/;
+		const hasADigit = /\d/;
+		const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>/]/;
+		
+		if(!hasLowerCase.test(typedPassword)) {
+			return "Password has to have at least 1 lowercase letter!";
+		}
+		if(!hasUpperCse.test(typedPassword)) {
+			return "Password has to have at least 1 uppercase letter!";
+		}
+		if(!hasADigit.test(typedPassword)) {
+			return "Password has to be have at least 1 digit!";
+		}
+		if(!hasSpecialChar.test(typedPassword)) {
+			return "Password has to have at least 1 special character!";
+		}
+		if(!minLength.test(typedPassword)) {
+			return "Password length has to be between 8 - 16 chars!";
+		}
+		return "";
+	};
+
+	const handleChange = (event, where) => {
+		if (where === "first") {
+			setPassword(event.target.value);
+		}
+		else {
+			setConfirmPassword(event.target.value);
+		}
+		setMessage("");
+		setPasswordError(checkPassword(event.target.value));
+	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -25,9 +62,9 @@ const CreateProfilePage = () => {
 			setMessage("Passwords do not match!");
 			return;
 		}
-		if (!password || !confirmPassword) {
-			setMessageType('error');
-			setMessage("Passwords cannot be empty");
+		if (passwordError) {
+			setMessageType("error");
+			setMessage("Password does not meet the security creteria!");
 			return;
 		}
 
@@ -92,6 +129,7 @@ const CreateProfilePage = () => {
 						onChange={(event) => setUserName(event.target.value)}
 						margin="normal"
 						required
+						autoFocus
 					/>
 					<TextField
 						fullWidth
@@ -107,7 +145,7 @@ const CreateProfilePage = () => {
 						label="Şifre"
 						type="password"
 						value={password}
-						onChange={(event) => setPassword(event.target.value)}
+						onChange={(event) => handleChange(event, "first")}
 						margin="normal"
 						required
 					/>
@@ -116,10 +154,11 @@ const CreateProfilePage = () => {
 						label="Şifreyi Doğrula"
 						type="password"
 						value={confirmPassword}
-						onChange={(event) => setConfirmPassword(event.target.value)}
+						onChange={(event) => handleChange(event, "second")}
 						margin="normal"
 						required
 					/>
+					{passwordError && <Alert severity='warning'>{passwordError}</Alert>}
 					<Button
 						type="submit"
 						variant="contained"
@@ -129,7 +168,7 @@ const CreateProfilePage = () => {
 					>
 						Hesap Oluştur
 					</Button>
-					{message && (
+					{ message && (
 						<Alert severity={messageType} sx={{ marginTop: 2 }}>
 							{message}
 						</Alert>
