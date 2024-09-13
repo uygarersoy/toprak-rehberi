@@ -1,8 +1,9 @@
-import { Box, Typography, Select, MenuItem, TextField, Button } from "@mui/material";
+import { Box, Autocomplete, TextField, Button } from "@mui/material";
 
 function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, setAmount, harvest, type }) {
     const amountInfo = (type === "SÜS BİTKİSİ") ? "(adet)" : "(kg)";
     const maxVal = (type === "SÜS BİTKİSİ") ? (50 * harvest.area) : harvest.area;
+    const feedbackOptions = ["Çok iyi", "Ne iyi, Ne kötü", "Çok kötü"];
     return (
         <>
             <Box
@@ -21,23 +22,18 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                 }}
             >                
                 <Box>
-                    <Typography variant="body1">Memnuniyet:</Typography>
-                    <Select
-                        value={satisfaction}
-                        onChange={(event) => setSatisfaction(parseInt(event.target.value))}
-                        displayEmpty
-                        fullWidth
-                        autoFocus
-                    >
-                        <MenuItem value=""><em>Hasat memnuniyetini seçiniz</em></MenuItem>
-                        <MenuItem value={3}>Çok iyi</MenuItem>
-                        <MenuItem value={2}>Ne iyi, Ne kötü</MenuItem>
-                        <MenuItem value={1}>Çok kötü</MenuItem>
-                    </Select>
+                    <Autocomplete
+                        disableClearable
+                        options={feedbackOptions}
+                        openOnFocus
+                        value={satisfaction ? feedbackOptions[3-satisfaction] : null}
+                        onChange={(event, newValue) => setSatisfaction(3 - feedbackOptions.indexOf(newValue))}
+                        renderInput={(params) => <TextField {...params} autoFocus label="Memnuniyet" />}
+                        isOptionEqualToValue={(option, value) => option === value || value === null}
+                    />
                 </Box>
                 
                 <Box>
-                    <Typography variant="body1">Hasat miktarı {amountInfo}</Typography>
                     <TextField
                         type="number"
                         value={amount || ""}
@@ -45,6 +41,7 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                         fullWidth
                         InputProps={{ inputProps: { min: 1, max: maxVal } }}
                         disabled={!satisfaction}
+                        label={`Hasat miktarı ${amountInfo}`}
                     />
                 </Box>
                 

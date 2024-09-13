@@ -1,6 +1,7 @@
-import { Box, Typography, Select, MenuItem, TextField, Button} from "@mui/material";
+import { Box, Typography, TextField, Button, Autocomplete} from "@mui/material";
 
 function HarvestForm({ handleSubmit, formState, handleChange, pContent, message, field }) {
+    const productTypes = ["MEYVE", "SEBZE", "SÜS BİTKİSİ", "TAHIL"];
     return (
         <>
             <Box
@@ -19,35 +20,27 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent, message,
             }}
         >
             <Box>
-                <Typography variant="body1">Ürün Tipi:</Typography>
-                <Select
-                    name="type"
-                    value={formState.type}
-                    onChange={handleChange}
-                    fullWidth
-                    displayEmpty
-                    label="Ürün tipi"
-                >
-                    <MenuItem value=""><em>Ürün Tipini Seçiniz</em></MenuItem>
-                    <MenuItem value="MEYVE">Meyve</MenuItem>
-                    <MenuItem value="SEBZE">Sebze</MenuItem>
-                    <MenuItem value="SÜS BİTKİSİ">Süs Bitkileri</MenuItem>
-                    <MenuItem value="TAHIL">Tahıl</MenuItem>
-                </Select>
+                <Autocomplete
+                    disableClearable
+                    options={productTypes}
+                    openOnFocus
+                    value={formState.type || null}
+                    onChange={(event, newValue) => handleChange({target: {name: "type", value: newValue}})}
+                    renderInput={(params) => <TextField {...params} autoFocus label="Ürün Tipi" />}
+                    isOptionEqualToValue={(option, value) => option === value || value === null}
+                />
             </Box>
             <Box>
-                <Typography variant="body1">Ürün:</Typography>
-                <Select
-                    name="product"
-                    value={formState.product}
-                    onChange={handleChange}
-                    fullWidth
+                <Autocomplete
+                    disableClearable
                     disabled={!formState.type}
-                    displayEmpty
-                >
-                    <MenuItem value=""><em>Ürün Seçiniz</em></MenuItem>
-                    {pContent}
-                </Select>
+                    options={pContent}
+                    openOnFocus={formState.type && !formState.product}
+                    value={formState.product || null}
+                    onChange={(event, newValue) => handleChange({target: {name: "product", value: newValue}})}
+                    renderInput={(params) => <TextField {...params} autoFocus label="Ürün" />}
+                    isOptionEqualToValue={(option, value) => option === value || value === null}
+                />
             </Box>
             <Box>
                 <Typography variant="body1">Ekim alanı (m<sup>2</sup>):</Typography>
@@ -55,11 +48,11 @@ function HarvestForm({ handleSubmit, formState, handleChange, pContent, message,
                     type="number"
                     name="area"
                     label="Alan"
+                    disabled={!formState.product}
                     value={formState.area}
                     onChange={handleChange}
                     fullWidth
                     variant="outlined"
-                    disabled={!formState.product}
                     InputProps={{ inputProps: { min: 1, max: field.availableArea} }}
                 />
             </Box>

@@ -1,23 +1,17 @@
-import { MenuItem, FormControl, InputLabel, Select } from '@mui/material';
-
+import { Autocomplete, TextField } from "@mui/material";
 function FieldFormController({ disabled, label, value, handleChange, content }) {
-
     return (
         <>
-            <FormControl fullWidth disabled={!disabled}>
-                <InputLabel>{label}</InputLabel>
-                <Select
-                    name={label.toLowerCase()}
-                    value={value}
-                    onChange={handleChange}
-                    label={label}
-                >
-                    <MenuItem value="">
-                        <em>{label} seçin</em>
-                    </MenuItem>
-                    {content}
-                </Select>
-            </FormControl>
+            <Autocomplete
+                disableClearable
+                disabled={!disabled}
+                options={content}
+                openOnFocus
+                value={value || null}
+                onChange={(event, newValue) => handleChange({ target: { name: label.toLowerCase(), value: newValue } })}
+                renderInput={(params) => <TextField {...params} autoFocus label={label} />}
+                isOptionEqualToValue={(option, value) => option === value || value === null}
+            />
         </>
     );
 }

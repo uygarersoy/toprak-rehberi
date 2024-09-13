@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
 import { useAddFieldMutation, useFetchDistrictsQuery, useFetchFieldTypesQuery, useFetchNeighborhoodsQuery, useFetchProvincesQuery } from "../store";
-import { Box, MenuItem, Alert, Button, TextField } from '@mui/material';
+import { Box, Alert, Button, TextField } from '@mui/material';
 import FieldFormController from "./FieldFormController";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
@@ -25,32 +25,26 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 	const selectedDistrict = districtData?.find(d => d.districtName === formState.district);
 	const {data: neighborhoodData, error: nError} = useFetchNeighborhoodsQuery(selectedDistrict?.id, {skip: !selectedDistrict});
 	const selectedNeighborhood = neighborhoodData?.find(n => n.neighborhoodName === formState.neighborhood);
-	let typeContent, pContent, dContent, nContent;
-
+	let typeContent = [];
+	let pContent = [];
+	let dContent = [];
+	let nContent = [];
 	if (fieldTypeData) {
-		typeContent = fieldTypeData.map((type, idx) => {
-			return <MenuItem key={idx} value={type}>{type}</MenuItem>
-		})
-		typeContent = typeContent.concat(<MenuItem key={typeContent.length} value="DİĞER">DİĞER</MenuItem>)
+		typeContent = fieldTypeData.map(data => data);
+		typeContent.push("DİĞER");
 	}
 
 	if (provinceData) {
-		pContent = provinceData.map((province) => {
-			return <MenuItem key={province.id} value={province.provinceName}>{province.provinceName}</MenuItem>;
-		})
+		pContent = provinceData.map(province => province.provinceName);
 	}
 
 	if (districtData) {
-		dContent = districtData.map((district) => {
-			return <MenuItem key={district.id} value={district.districtName}>{district.districtName}</MenuItem>;
-		})
+		dContent = districtData.map(district => district.districtName);
 	}
 
 
 	if (neighborhoodData) {
-		nContent = neighborhoodData.map((neighborhood) => {
-			return <MenuItem key={neighborhood.id} value={neighborhood.neighborhoodName}>{neighborhood.neighborhoodName}</MenuItem>;
-		})
+		nContent = neighborhoodData.map(neighborhood => neighborhood.neighborhoodName)
 	}
 
 	const handleChange = (event) => {

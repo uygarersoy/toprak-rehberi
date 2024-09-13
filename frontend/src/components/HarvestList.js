@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Box, Grid, CircularProgress, Alert, MenuItem } from '@mui/material';
+import { Button, Box, Grid, CircularProgress, Alert } from '@mui/material';
 import { useAddHarvestMutation, useFetchHarvestsQuery, useFetchProductsQuery, useUpdateFieldMutation } from "../store";
 import HarvestListItem from "./HarvestListItem";
 import HarvestForm from "./HarvestForm";
@@ -19,22 +19,18 @@ function HarvestList({ field, setIsLoggedIn }) {
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
 
     const { data: productData, error: fetchProductsError} = useFetchProductsQuery(formState.type, {skip: !formState.type});
-    let pContent;
+    let pContent = [];
 
     if (productData) {
         pContent = productData.map((product) => {
             if (product.productName !== "DİĞER") {
-                return (
-                    <MenuItem key={product.id} value={product.productName}>
-                        {product.productName}
-                    </MenuItem>
-                );    
+                return product.productName;
             }
             else {
                 return null;
             }
-        }).filter(menuItem => menuItem !== null);
-        pContent = pContent.concat(<MenuItem key={pContent.length} value="DİĞER">DİĞER</MenuItem>)
+        }).filter(product => product !== null);
+        pContent = pContent.concat("DİĞER");
     }
 
     useTokenValidation(fetchHarvestError, setIsLoggedIn, setErrorModalOpen);
@@ -42,8 +38,31 @@ function HarvestList({ field, setIsLoggedIn }) {
     useTokenValidation(fetchProductsError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(updataFieldError, setIsLoggedIn, setErrorModalOpen);
 
-    const handleChange = (event) => {
-		setFormState({...formState, [event.target.name]: event.target.value});
+	const handleChange = (event) => {
+		const { name, value } = event.target;
+		let updatedState = {};
+	
+		if (name === "type") {
+			updatedState = {
+				type: value,
+				product: "",
+				area: ""
+			};
+		} else if (name === "product") {
+			updatedState = {
+				product: value,
+				area: ""
+			};
+		} else if (name === "area") {
+			updatedState = {
+				area: value
+			};
+		}
+	
+		setFormState((previousState) => ({
+			...previousState,
+			...updatedState
+		}));
 	};
 
     const handleSubmit = (event) => {
