@@ -12,7 +12,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
     const [removeHarvest, {error: removeHarvestError}] = useRemoveHarvestMutation();
     const [ updateField, { error: updateFieldError } ] = useUpdateFieldMutation();
     const [satisfaction, setSatisfaction] = useState("");
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState(null);
     const [addFeedback, {error: addFeedbackError}] = useAddFeedBackMutation();
     const [updateFraction, {error: updateFractionError}] = useUpdateFractionsMutation();
     const [open, setOpen] = useState(false);
@@ -42,6 +42,10 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
             updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
         }
     };
+
+    const today = new Date();
+    const expectedHarvest = new Date(harvest.expectedHarvestDate);
+    const beforeHarvest = today < expectedHarvest;
 
     const handleOpenModal = () => {
         setOpen(true);
@@ -76,7 +80,6 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
             productName: harvest.product.productName
         };
         addFeedback(result);
-        updateFraction(fraction);
 
         if (data && data.percentage >= 70 && satisfaction === 1) {
             setHarvestToRemove(harvest);
@@ -84,6 +87,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
         } else {
             removeHarvest(harvest);
             updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
+            updateFraction(fraction);
         }
         setAmount(0);
         setSatisfaction("");
@@ -120,7 +124,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
                         </Typography>
                     </Box>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                        <Button variant="contained" color="primary" onClick={handleOpenModal}>
+                        <Button variant="contained" color="primary" onClick={handleOpenModal} disabled={beforeHarvest} >
                             HASAT ET
                         </Button>
                     </Box>

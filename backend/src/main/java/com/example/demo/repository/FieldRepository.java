@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import com.example.demo.entity.Field;
 
 public interface FieldRepository extends JpaRepository<Field, Long> {
-    @Query("SELECT f FROM Field f WHERE f.user.id = :userId")
+    @Query("SELECT f FROM Field f WHERE f.user.id = :userId AND f.isDeleted != true")
     List<Field> fetchUserFields(@Param("userId") Long userId);
 }

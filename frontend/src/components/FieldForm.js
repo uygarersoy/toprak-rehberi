@@ -15,7 +15,10 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 		province: "",
 		district: "",
 		neighborhood: "",
-		size: ""
+		size: "",
+		ada: "",
+		parcel: "",
+		name: ""
 	});
 
 	const { data: fieldTypeData, error: fieldTypeError } = useFetchFieldTypesQuery();
@@ -63,11 +66,11 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 				neighborhood: ""
 			};
 		} else if (name === "mahalle") {
-			updatedFields = {
-				neighborhood: value
-			};
+			updatedFields = { neighborhood: value};
 		} else if (name === "arazi tipi"){
 			updatedFields = { type: value };
+		} else if (name === "name") {
+			updatedFields = { name: value.slice(0,30) }
 		} else {
 			updatedFields = { [name]: value};
 		}
@@ -85,7 +88,11 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 			type: formState.type,
 			neighborhoodId: selectedNeighborhood.id,
 			user: user.data,
-			availableArea: formState.size
+			availableArea: formState.size,
+			adaNo: formState.ada,
+			parcelNo: formState.parcel,
+			fieldName: formState.name,
+			isDeleted: false
 		};
 		addField(field);
 		setVisibleForm(false);
@@ -109,6 +116,8 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 					maxWidth: 500,
 					margin: '0 auto',
 					overflow: 'auto',
+					overflowY: "auto",
+					maxHeight: "75vh",
 					padding: 2,
 					boxSizing: 'border-box',
 				}}
@@ -121,11 +130,40 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 
 				<TextField
 					disabled={!formState.neighborhood}
-					label="Arazi boyutu"
+					label={<span>Arazi Boyutu m<sup>2</sup></span>}
 					name="size"
 					type="number"
                     InputProps={{ inputProps: { min: 1, max: 500000} }}
 					value={formState.size}
+					onChange={handleChange}
+					fullWidth					
+				/>
+				<TextField
+					disabled={!formState.size}
+					label="Ada No"
+					name="ada"
+					type="number"
+                    InputProps={{ inputProps: { min: 1, max: 100000} }}
+					value={formState.ada}
+					onChange={handleChange}
+					fullWidth					
+				/>
+				<TextField
+					disabled={!formState.ada}
+					label="Parsel No"
+					name="parcel"
+					type="number"
+                    InputProps={{ inputProps: { min: 1, max: 100000} }}
+					value={formState.parcel}
+					onChange={handleChange}
+					fullWidth					
+				/>
+				<TextField
+					disabled={!formState.parcel}
+					label="Arazi İsmi"
+					name="name"
+					type="text"
+					value={formState.name}
 					onChange={handleChange}
 					fullWidth					
 				/>
@@ -134,7 +172,9 @@ function FieldForm({ setVisibleForm, setIsLoggedIn }) {
 					type="submit"
 					variant="contained"
 					color="primary"
-					disabled={!(formState.type && formState.province && formState.district && formState.neighborhood)}
+					disabled={!(formState.type && formState.province && 
+								formState.district && formState.neighborhood &&
+								formState.ada && formState.parcel && formState.name)}
 				>
 					Gönder
 				</Button>

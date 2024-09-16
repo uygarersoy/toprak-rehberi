@@ -8,12 +8,14 @@ public class FractionDTO {
     private Long productId;
     private String productName;
     private Double percentage;
+    private String productType;
     
-    public FractionDTO(Long id, Long productId, String productName, Double percentage) {
+    public FractionDTO(Long id, Long productId, String productName, Double percentage, String productType) {
         this.id = id;
         this.productId = productId;
         this.productName = productName;
         this.percentage = percentage;
+        this.productType = productType;
     }
     public Long getId() {
         return this.id;
@@ -29,5 +31,9 @@ public class FractionDTO {
 
     public Double getPercentage() {
         return this.percentage;
+    }
+
+    public String getProductType() {
+        return this.productType;
     }
 }

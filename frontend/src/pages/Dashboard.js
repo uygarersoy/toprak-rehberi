@@ -36,11 +36,26 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     useTokenValidation(fetchFieldError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(fetchGuidenessError, setIsLoggedIn, setErrorModalOpen);
 
+    const imageMap = {
+        "MEYVE": "fruits.png",
+        "SEBZE": "vegetable.png",
+        "SÜS BİTKİSİ": "plant.png",
+        "TAHIL": "barley.png"
+    }
+
     let guideContent = [];
     if (guideData) {
         guideContent = guideData.map((guide) => {
+            const productType = imageMap[guide.productType]
             return (                
                 <TableRow key={guide.id}>
+                    <TableCell>
+                        <img 
+                            src={productType}
+                            alt={guide.productType}
+                            style={{width: "40px", height: "40px", objectFit: "contain"}}
+                        />
+                    </TableCell>
                     <TableCell>{guide.productName}</TableCell>
                     <TableCell>{guide.percentage}</TableCell>
                 </TableRow>
@@ -99,6 +114,7 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                     <Table stickyHeader>
                         <TableHead>
                             <TableRow>
+                                <TableCell></TableCell>
                                 <TableCell>Ürün Adı</TableCell>
                                 <TableCell>Başarı Oranı</TableCell>
                             </TableRow>

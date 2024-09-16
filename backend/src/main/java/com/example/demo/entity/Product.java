@@ -26,6 +26,8 @@ public class Product {
 
     private String type;
     private String productName;
+    private Integer durationTillHarvest;
+    private String unitOfHarvest;
 
     @OneToMany(mappedBy="product")
     @JsonIgnoreProperties("product")

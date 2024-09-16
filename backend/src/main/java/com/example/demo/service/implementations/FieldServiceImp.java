@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 //import com.example.demo.entity.User;
 import com.example.demo.entity.Field;
+import com.example.demo.entity.Harvest;
 import com.example.demo.enums.FieldType;
 import com.example.demo.repository.FieldRepository;
+import com.example.demo.repository.HarvestRepository;
 //import com.example.demo.repository.UserRepository;
 import com.example.demo.service.interfaces.FieldService;
 import java.text.Collator;
@@ -19,6 +21,8 @@ public class FieldServiceImp implements FieldService {
  
     @Autowired
     private FieldRepository fieldRepository;
+    @Autowired
+    private HarvestRepository harvestRepository;
 
     /*@Autowired
     private UserRepository userRepository;
@@ -40,7 +44,14 @@ public class FieldServiceImp implements FieldService {
     
     @Override
     public void deleteField(Long id) {
-        fieldRepository.deleteById(id);
+        //fieldRepository.deleteById(id);
+        Field field = fieldRepository.findById(id).orElse(null);
+        for (Harvest harvest : field.getHarvests()) {
+            harvest.setIsDeleted(true);
+            harvestRepository.save(harvest);
+        }
+        field.setIsDeleted(true);
+        this.saveField(field);
     }
 
     @Override

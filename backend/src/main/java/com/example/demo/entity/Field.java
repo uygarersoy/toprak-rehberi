@@ -32,6 +32,10 @@ public class Field {
     private FieldType type;
     private Long neighborhoodId;
     private Long availableArea;
+    private String fieldName;
+    private Long adaNo;
+    private Long parcelNo;
+    private Boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name="user_id")

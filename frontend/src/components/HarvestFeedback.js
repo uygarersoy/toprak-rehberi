@@ -1,8 +1,8 @@
 import { Box, Autocomplete, TextField, Button } from "@mui/material";
 
-function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, setAmount, harvest, type }) {
-    const amountInfo = (type === "SÜS BİTKİSİ") ? "(adet)" : "(kg)";
-    const maxVal = (type === "SÜS BİTKİSİ") ? (50 * harvest.area) : harvest.area;
+function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, setAmount, harvest }) {
+    //const amountInfo = (type === "SÜS BİTKİSİ") ? "(adet)" : "(kg)";
+    //const maxVal = (type === "SÜS BİTKİSİ") ? (50 * harvest.area) : harvest.area;
     const feedbackOptions = ["Çok iyi", "Ne iyi, Ne kötü", "Çok kötü"];
     return (
         <>
@@ -39,9 +39,9 @@ function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, 
                         value={amount || ""}
                         onChange={(event) => setAmount(parseInt(event.target.value))}
                         fullWidth
-                        InputProps={{ inputProps: { min: 1, max: maxVal } }}
+                        InputProps={{ inputProps: { min: 1, max: harvest.area * harvest.expectedAmountPerMeterSquare } }}
                         disabled={!satisfaction}
-                        label={`Hasat miktarı ${amountInfo}`}
+                        label={`Hasat miktarı (${harvest.product.unitOfHarvest})`}
                     />
                 </Box>
                 

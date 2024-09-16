@@ -5,6 +5,7 @@ import HarvestListItem from "./HarvestListItem";
 import HarvestForm from "./HarvestForm";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
+import dayjs from "dayjs";
 
 function HarvestList({ field, setIsLoggedIn }) {
     const { data: harvestData, isFetching, error: fetchHarvestError } = useFetchHarvestsQuery(field);
@@ -14,7 +15,10 @@ function HarvestList({ field, setIsLoggedIn }) {
     const [formState, setFormState] = useState({
         type: "",
         product: "",
-        area: ""
+        area: "",
+        plantingDate: null,
+        harvestDate: null,
+        amount: ""
     });
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
 
@@ -41,7 +45,6 @@ function HarvestList({ field, setIsLoggedIn }) {
 	const handleChange = (event) => {
 		const { name, value } = event.target;
 		let updatedState = {};
-	
 		if (name === "type") {
 			updatedState = {
 				type: value,
@@ -50,14 +53,16 @@ function HarvestList({ field, setIsLoggedIn }) {
 			};
 		} else if (name === "product") {
 			updatedState = {
-				product: value,
+				product: productData?.find(p => p.productName === value),
 				area: ""
 			};
 		} else if (name === "area") {
 			updatedState = {
 				area: value
 			};
-		}
+		} else {
+            updatedState = { [name] : value}
+        }
 	
 		setFormState((previousState) => ({
 			...previousState,
@@ -69,8 +74,12 @@ function HarvestList({ field, setIsLoggedIn }) {
         event.preventDefault();
         const harvest = {
             area: formState.area,
-            product: productData?.find(p => p.productName === formState.product), 
-            field: field
+            product: formState.product, 
+            field: field,
+            plantingDate: formState.plantingDate,
+            expectedHarvestDate: dayjs(formState.plantingDate).add(formState.product.durationTillHarvest, "day").toDate(),
+            expectedAmountPerMeterSquare: formState.amount,
+            isDeleted: false
         };
         addHarvest(harvest);
         updateField({fieldId: field.id, sign: -1, area: formState.area});

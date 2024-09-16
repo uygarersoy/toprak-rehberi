@@ -3,6 +3,7 @@ package com.example.demo.service.implementations;
 import java.text.Collator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ public class ProductServiceImp implements ProductService{
     @Override
     public void populateProductTable(String type, List<String> productNames) {
         List<Product> allProducts = productRepository.findAll();
-
+        Random random = new Random();
+        String[] unitsOfHarvest = {"kg", "adet", "demet", "kök", "bağ", "baş"};
         for (String productString : productNames) {
             boolean check = false;
             for (Product p : allProducts) {
@@ -36,6 +38,8 @@ public class ProductServiceImp implements ProductService{
             Product product = new Product();
             product.setType(type);
             product.setProductName(productString);
+            product.setDurationTillHarvest(15 + random.nextInt(166));
+            product.setUnitOfHarvest(unitsOfHarvest[random.nextInt(unitsOfHarvest.length)]);
             productRepository.save(product);
         }
     }

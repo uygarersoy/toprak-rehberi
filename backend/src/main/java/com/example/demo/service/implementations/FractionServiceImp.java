@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.demo.dto.FractionDTO;
 import com.example.demo.entity.Fraction;
+import com.example.demo.entity.Product;
 import com.example.demo.repository.FractionRepository;
 import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.interfaces.FractionService;
@@ -45,8 +46,8 @@ public class FractionServiceImp implements FractionService{
         List<FractionDTO> fractionDTOs = new ArrayList<>();
         List<Fraction> fractions = fractionRepository.fetchFractions(neighborhoodId);
         for (Fraction fraction : fractions) {
-            String productName = productRepository.findById(fraction.getProductId()).orElse(null).getProductName();
-            fractionDTOs.add(new FractionDTO(fraction.getId(), fraction.getProductId(), productName, Math.round(fraction.getPercentage() * 100.0) / 100.0));
+            Product product = productRepository.findById(fraction.getProductId()).orElse(null);
+            fractionDTOs.add(new FractionDTO(fraction.getId(), fraction.getProductId(), product.getProductName(), Math.round(fraction.getPercentage() * 100.0) / 100.0, product.getType()));
         }
         fractionDTOs.sort(Comparator.comparingDouble(FractionDTO::getPercentage).reversed());
         return fractionDTOs;

@@ -1,5 +1,7 @@
 package com.example.demo.entity;
 
+
+import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -23,6 +25,10 @@ public class Harvest {
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
     private Long area;
+    private Date plantingDate;
+    private Date expectedHarvestDate;
+    private Long expectedAmountPerMeterSquare;
+    private Boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name="product_id")

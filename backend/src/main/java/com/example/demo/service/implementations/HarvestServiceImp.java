@@ -1,6 +1,7 @@
 package com.example.demo.service.implementations;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,9 +39,11 @@ public class HarvestServiceImp implements HarvestService {
     public void deleteHarvest(Long harvestId ) {
         Harvest harvest = this.findHarvestById(harvestId);
         Field field = fieldRepository.findById(harvest.getField().getId()).orElse(null);
-        field.getHarvests().removeIf(h -> h.getId().equals(harvestId));
+        field.getHarvests().removeIf(h -> h.getId() == harvestId);
         fieldRepository.save(field);
-        harvestRepository.deleteById(harvestId);
+        //harvestRepository.deleteById(harvestId);
+        harvest.setIsDeleted(true);
+        this.saveHarvest(harvest);
     }
 
     @Override
@@ -50,7 +53,7 @@ public class HarvestServiceImp implements HarvestService {
 
     @Override
     public List<Harvest> getHarvestOfField(Field field) {
-        return fieldRepository.findById(field.getId()).orElse(null).getHarvests();
+        return fieldRepository.findById(field.getId()).orElse(null).getHarvests().stream().filter(h -> h.getIsDeleted() != true).collect(Collectors.toList());
     }
 
     @Override
