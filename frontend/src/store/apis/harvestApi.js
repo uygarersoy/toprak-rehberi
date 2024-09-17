@@ -50,19 +50,26 @@ const harvestApi = createApi({
                 ]
             }),
             removeHarvest: builder.mutation({
-                query: (harvest) => {
+                query: ({harvest, harvestedOrDeleted}) => {
                     return {
                         url: `/delete/${harvest.id}`,
-                        method: "DELETE"
+                        method: "DELETE",
+                        params: { harvestedOrDeleted }
                     };
                 },
                 invalidatesTags: (result, error, harvest) => [
                     {type: "Harvest", id: harvest.field_id}
                 ]
-            })
+            }),
         }
     }
 });
 
-export const { useFetchHarvestsQuery, useAddHarvestMutation, useRemoveHarvestMutation, useAddFeedBackMutation } = harvestApi;
+export const { 
+            useFetchHarvestsQuery,
+            useAddHarvestMutation,
+            useRemoveHarvestMutation,
+            useAddFeedBackMutation,
+            } = harvestApi;
+
 export { harvestApi };

@@ -35,7 +35,12 @@ public class FieldController {
     @PostMapping("/add")
     public ResponseEntity<Field> addField(@RequestBody Field field) {
         Field savedField = fieldService.addField(field);
-        return new ResponseEntity<>(savedField, HttpStatus.CREATED);
+        if (savedField != null) {
+            return new ResponseEntity<>(savedField, HttpStatus.CREATED);
+        }
+        else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     @PostMapping("/fetch-user-fields")

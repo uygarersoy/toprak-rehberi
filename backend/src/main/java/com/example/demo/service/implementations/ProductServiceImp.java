@@ -22,6 +22,7 @@ public class ProductServiceImp implements ProductService{
         List<Product> allProducts = productRepository.findAll();
         Random random = new Random();
         String[] unitsOfHarvest = {"kg", "adet", "demet", "kök", "bağ", "baş"};
+        String[] seasons = {"İLKBAHAR", "YAZ", "SONBAHAR", "KIŞ"};
         for (String productString : productNames) {
             boolean check = false;
             for (Product p : allProducts) {
@@ -40,6 +41,7 @@ public class ProductServiceImp implements ProductService{
             product.setProductName(productString);
             product.setDurationTillHarvest(15 + random.nextInt(166));
             product.setUnitOfHarvest(unitsOfHarvest[random.nextInt(unitsOfHarvest.length)]);
+            product.setSuggestedPlantingSeason(seasons[random.nextInt(seasons.length)]);
             productRepository.save(product);
         }
     }

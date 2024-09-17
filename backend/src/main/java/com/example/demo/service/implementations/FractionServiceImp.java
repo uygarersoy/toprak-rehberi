@@ -47,7 +47,13 @@ public class FractionServiceImp implements FractionService{
         List<Fraction> fractions = fractionRepository.fetchFractions(neighborhoodId);
         for (Fraction fraction : fractions) {
             Product product = productRepository.findById(fraction.getProductId()).orElse(null);
-            fractionDTOs.add(new FractionDTO(fraction.getId(), fraction.getProductId(), product.getProductName(), Math.round(fraction.getPercentage() * 100.0) / 100.0, product.getType()));
+            fractionDTOs.add(new FractionDTO(
+                                            fraction.getId(), 
+                                            fraction.getProductId(),
+                                            product.getProductName(),
+                                            Math.round(fraction.getPercentage() * 100.0) / 100.0,
+                                            product.getType(),
+                                            product.getSuggestedPlantingSeason()));
         }
         fractionDTOs.sort(Comparator.comparingDouble(FractionDTO::getPercentage).reversed());
         return fractionDTOs;

@@ -6,6 +6,7 @@ import HelpCenterRoundedIcon from '@mui/icons-material/HelpCenterRounded';
 import HarvestFeedback from "./HarvestFeedback";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
+import dayjs from "dayjs";
 
 function HarvestListItem({ harvest, setIsLoggedIn, type }) {
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
@@ -18,6 +19,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
     const [open, setOpen] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [harvestToRemove, setHarvestToRemove] = useState(null);
+    //const [updateHarvest, {error: updateHarvestError}] = useUpdateHarvestMutation();
 
     const { data, error: getFractionError } = useGetFractionQuery({
         neighborhoodId: harvest.field.neighborhoodId,
@@ -37,14 +39,14 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
 
     const handleRemoveHarvest = () => {
         if (harvestToRemove) {
-            removeHarvest(harvestToRemove);
+            removeHarvest({ harvest: harvestToRemove, harvestedOrDeleted: true});
             setHarvestToRemove(null);
             updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
         }
     };
 
     const today = new Date();
-    const expectedHarvest = new Date(harvest.expectedHarvestDate);
+    const expectedHarvest = dayjs(harvest.plantingDate).add(harvest.product.durationTillHarvest, "day").toDate();
     const beforeHarvest = today < expectedHarvest;
 
     const handleOpenModal = () => {
@@ -61,7 +63,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
     };
     
     const handleRemoveWithoutHarvest = () => {
-        removeHarvest(harvest);
+        removeHarvest({ harvest: harvest, harvestedOrDeleted: false});
         updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
     };
 
@@ -80,12 +82,13 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
             productName: harvest.product.productName
         };
         addFeedback(result);
+        //updateHarvest({harvestId: harvest.id});
 
         if (data && data.percentage >= 70 && satisfaction === 1) {
             setHarvestToRemove(harvest);
             setFormSubmitted(true);
         } else {
-            removeHarvest(harvest);
+            removeHarvest({ harvest: harvest, harvestedOrDeleted: true});
             updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
             updateFraction(fraction);
         }
@@ -99,6 +102,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
     useTokenValidation(updateFractionError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(getFractionError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(updateFieldError, setIsLoggedIn, setErrorModalOpen);
+    //useTokenValidation(updateHarvestError, setIsLoggedIn, setErrorModalOpen);
 
     return (
         <>

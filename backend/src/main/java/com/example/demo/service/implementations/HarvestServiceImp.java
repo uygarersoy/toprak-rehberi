@@ -1,5 +1,6 @@
 package com.example.demo.service.implementations;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,13 +37,16 @@ public class HarvestServiceImp implements HarvestService {
     }
 
     @Override
-    public void deleteHarvest(Long harvestId ) {
+    public void deleteHarvest(Long harvestId, boolean harvestedOrDeleted) {
         Harvest harvest = this.findHarvestById(harvestId);
         Field field = fieldRepository.findById(harvest.getField().getId()).orElse(null);
         field.getHarvests().removeIf(h -> h.getId() == harvestId);
         fieldRepository.save(field);
         //harvestRepository.deleteById(harvestId);
         harvest.setIsDeleted(true);
+        if (harvestedOrDeleted) {
+            harvest.setHarvestDate(new Date());
+        } 
         this.saveHarvest(harvest);
     }
 
@@ -58,10 +62,10 @@ public class HarvestServiceImp implements HarvestService {
 
     @Override
     public Harvest addNewHarvestToField(Harvest harvest) {
-        /*System.out.println("check");
-        System.out.println(harvest.getId());
-        System.out.println(harvest.getField().getId());
-        System.out.println(harvest.get().getId());
+        //System.out.println("check");
+        //System.out.println(harvest.getId());
+        //System.out.println(harvest.getField().getId());
+        //System.out.println(harvest.get().getId());
         Field field = fieldRepository.findById(harvest.getField().getId()).orElse(null);
         harvest.setField(field);
         Harvest newHarvest = this.saveHarvest(harvest);
@@ -69,10 +73,10 @@ public class HarvestServiceImp implements HarvestService {
         fieldRepository.save(field);
         return newHarvest;
 
-        */
+        
         //Field field = fieldRepository.findById(harvest.getField().getId()).orElse(null);
         //harvest.setField(field);
-        Harvest check = harvestRepository.checkHarvestExists(harvest.getField().getId(), harvest.getProduct().getId());
+        /*Harvest check = harvestRepository.checkHarvestExists(harvest.getField().getId(), harvest.getProduct().getId());
         if ( check != null) {
             check.setArea(check.getArea() + harvest.getArea());
             this.saveHarvest(check);
@@ -85,6 +89,6 @@ public class HarvestServiceImp implements HarvestService {
             field.getHarvests().add(newHarvest);
             fieldRepository.save(field);
             return newHarvest;
-        }
+        }*/
     }
 }

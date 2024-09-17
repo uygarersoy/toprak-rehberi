@@ -58,7 +58,11 @@ public class FieldServiceImp implements FieldService {
     public Field addField(Field field) {
         //userRepository.findById(field.getUser().getId()).orElse(null);
         //field.setUser(user);
-        return this.saveField(field);
+        Field checkFieldExists = fieldRepository.checkAdaParcelExists(field.getAdaNo(), field.getParcelNo());
+        if (checkFieldExists == null) {
+            return this.saveField(field);
+        }
+        return null;
     }
 
     @Override

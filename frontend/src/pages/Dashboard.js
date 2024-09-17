@@ -58,6 +58,7 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                     </TableCell>
                     <TableCell>{guide.productName}</TableCell>
                     <TableCell>{guide.percentage}</TableCell>
+                    <TableCell>{guide.suggestedPlantingSeason}</TableCell>
                 </TableRow>
             );
         });
@@ -117,6 +118,7 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                                 <TableCell></TableCell>
                                 <TableCell>Ürün Adı</TableCell>
                                 <TableCell>Başarı Oranı</TableCell>
+                                <TableCell>Ekim Sezonu</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

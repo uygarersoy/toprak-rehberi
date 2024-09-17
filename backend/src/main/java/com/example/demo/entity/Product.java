@@ -28,6 +28,7 @@ public class Product {
     private String productName;
     private Integer durationTillHarvest;
     private String unitOfHarvest;
+    private String suggestedPlantingSeason;
 
     @OneToMany(mappedBy="product")
     @JsonIgnoreProperties("product")

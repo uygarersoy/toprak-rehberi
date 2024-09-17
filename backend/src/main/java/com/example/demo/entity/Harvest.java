@@ -26,7 +26,7 @@ public class Harvest {
     private Long id;
     private Long area;
     private Date plantingDate;
-    private Date expectedHarvestDate;
+    private Date harvestDate;
     private Long expectedAmountPerMeterSquare;
     private Boolean isDeleted;
 

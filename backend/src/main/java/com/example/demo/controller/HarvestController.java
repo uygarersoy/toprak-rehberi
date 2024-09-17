@@ -1,10 +1,12 @@
 package com.example.demo.controller;
 
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import com.example.demo.entity.Harvest;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.example.demo.entity.Field;
+
 
 
 
@@ -47,7 +50,18 @@ public class HarvestController {
     }
 
     @DeleteMapping("/delete/{harvest-id}")
-    public void deleteHarvest(@PathVariable("harvest-id") Long harvestId) {
-        harvestService.deleteHarvest(harvestId);
+    public void deleteHarvest(@PathVariable("harvest-id") Long harvestId, @RequestParam boolean harvestedOrDeleted) {
+        harvestService.deleteHarvest(harvestId, harvestedOrDeleted);
+    }
+
+    @PostMapping("/update-after-harvest")
+    public ResponseEntity<Harvest> updateHarvest(@RequestParam Long harvestId) {
+        Date today = new Date();
+        Harvest harvest = harvestService.findHarvestById(harvestId);
+        harvest.setHarvestDate(today);
+        System.out.println("executed");
+        System.out.println(harvest.getHarvestDate());
+        Harvest updatedHarvest = harvestService.saveHarvest(harvest);
+        return ResponseEntity.ok(updatedHarvest);
     }
 }

@@ -9,4 +9,7 @@ import com.example.demo.entity.Field;
 public interface FieldRepository extends JpaRepository<Field, Long> {
     @Query("SELECT f FROM Field f WHERE f.user.id = :userId AND f.isDeleted != true")
     List<Field> fetchUserFields(@Param("userId") Long userId);
+
+    @Query("SELECT f FROM Field f WHERE f.adaNo = :adaNo AND f.parcelNo = :parcelNo")
+    Field checkAdaParcelExists(@Param("adaNo") Long adaNo, @Param("parcelNo") Long parcelNo);
 }

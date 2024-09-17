@@ -5,7 +5,6 @@ import HarvestListItem from "./HarvestListItem";
 import HarvestForm from "./HarvestForm";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
-import dayjs from "dayjs";
 
 function HarvestList({ field, setIsLoggedIn }) {
     const { data: harvestData, isFetching, error: fetchHarvestError } = useFetchHarvestsQuery(field);
@@ -77,7 +76,7 @@ function HarvestList({ field, setIsLoggedIn }) {
             product: formState.product, 
             field: field,
             plantingDate: formState.plantingDate,
-            expectedHarvestDate: dayjs(formState.plantingDate).add(formState.product.durationTillHarvest, "day").toDate(),
+            //expectedHarvestDate: dayjs(formState.plantingDate).add(formState.product.durationTillHarvest, "day").toDate(),
             expectedAmountPerMeterSquare: formState.amount,
             isDeleted: false
         };
@@ -114,9 +113,12 @@ function HarvestList({ field, setIsLoggedIn }) {
     return (
         <>        
             <Box>
-                <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center' }}>
+                <Box sx={{ mb: 2, display: 'flex', justifyContent: 'center', gap: 2 }}>
                     <Button variant="contained" color="primary" onClick={handleAddHarvest}>
                         Ürün Ekle
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={() => {}}>
+                        Geçmiş Hasatlar
                     </Button>
                 </Box>
                 <CustomModal text="Yeni Ürün Ekle" open={visible} close={handleHarvestModal}>

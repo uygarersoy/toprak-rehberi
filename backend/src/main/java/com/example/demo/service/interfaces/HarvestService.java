@@ -7,7 +7,7 @@ public interface HarvestService {
 
     Harvest saveHarvest(Harvest harvest);
     Harvest findHarvest(Harvest harvest);
-    void deleteHarvest(Long harvestId);
+    void deleteHarvest(Long harvestId, boolean harvestedOrDeleted);
     List<Harvest> findAll();
     Harvest findHarvestById(Long harvestId);
     List<Harvest> getHarvestOfField(Field field);

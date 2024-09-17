@@ -24,7 +24,7 @@ function FieldItem({ field, setIsLoggedIn }) {
                     <DeleteIcon/>
                 </IconButton>
                 <Typography variant="body1" sx={{color: "#077437"}}>
-                    {field.type}
+                    <b>{field.type}:</b> {field.fieldName}<br></br><b>Ada No:</b> {field.adaNo}<br></br><b>Parsel No:</b> {field.parcelNo}<br></br>
                 </Typography>
             </Box>
             <Box sx={{ flex: '1 1 auto', textAlign: 'center' }}>
