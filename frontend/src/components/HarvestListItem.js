@@ -8,6 +8,16 @@ import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
 import dayjs from "dayjs";
 
+function formatDate(rawDate) {
+    const date = new Date(rawDate);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const year = date.getFullYear();
+    const formattedDate = `${day}-${month}-${year}`;
+    return formattedDate;
+}
+
+
 function HarvestListItem({ harvest, setIsLoggedIn, type }) {
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
     const [removeHarvest, {error: removeHarvestError}] = useRemoveHarvestMutation();
@@ -39,7 +49,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
 
     const handleRemoveHarvest = () => {
         if (harvestToRemove) {
-            removeHarvest({ harvest: harvestToRemove, harvestedOrDeleted: true});
+            removeHarvest({ harvest: harvestToRemove, harvestedOrDeleted: true, harvestAmount: amount});
             setHarvestToRemove(null);
             updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
         }
@@ -63,7 +73,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
     };
     
     const handleRemoveWithoutHarvest = () => {
-        removeHarvest({ harvest: harvest, harvestedOrDeleted: false});
+        removeHarvest({ harvest: harvest, harvestedOrDeleted: false, harvestAmount: 0});
         updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
     };
 
@@ -88,7 +98,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
             setHarvestToRemove(harvest);
             setFormSubmitted(true);
         } else {
-            removeHarvest({ harvest: harvest, harvestedOrDeleted: true});
+            removeHarvest({ harvest: harvest, harvestedOrDeleted: true, harvestAmount: amount});
             updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
             updateFraction(fraction);
         }
@@ -106,7 +116,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
 
     return (
         <>
-            <Card sx={{ mb: 2, height: '100%', maxWidth: '300px', mx: "auto", boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.4)' }}>
+            <Card sx={{ mb: 2, height: '100%', maxWidth: '400px', mx: "auto", boxShadow: '0px 8px 16px rgba(0, 0, 0, 0.4)' }}>
                 <CardContent sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 1 }}>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
                         <img 
@@ -125,6 +135,12 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
                         </Typography>
                         <Typography variant="body1" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                             <b>EKİLİ ALAN:</b> {harvest.area} m<sup>2</sup>
+                        </Typography>
+                        <Typography variant="body1" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <b>METREKARE BAŞI BEKLENTİ:</b> {harvest.expectedAmountPerMeterSquare} {harvest.product.unitOfHarvest.toUpperCase()}
+                        </Typography>
+                        <Typography variant="body1" sx={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <b>EKİM TARİHİ:</b> {formatDate(harvest.plantingDate)}
                         </Typography>
                     </Box>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>

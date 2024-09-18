@@ -29,6 +29,7 @@ public class Harvest {
     private Date harvestDate;
     private Long expectedAmountPerMeterSquare;
     private Boolean isDeleted;
+    private Long harvestAmount;
 
     @ManyToOne
     @JoinColumn(name="product_id")

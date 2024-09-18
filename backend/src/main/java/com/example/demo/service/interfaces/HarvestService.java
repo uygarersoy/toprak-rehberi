@@ -7,9 +7,10 @@ public interface HarvestService {
 
     Harvest saveHarvest(Harvest harvest);
     Harvest findHarvest(Harvest harvest);
-    void deleteHarvest(Long harvestId, boolean harvestedOrDeleted);
+    void deleteHarvest(Long harvestId, boolean harvestedOrDeleted, Long harvestAmount);
     List<Harvest> findAll();
     Harvest findHarvestById(Long harvestId);
     List<Harvest> getHarvestOfField(Field field);
     Harvest addNewHarvestToField(Harvest harvest);
+    List<Harvest> getPastHarvests(Long neighborhoodId);
 }

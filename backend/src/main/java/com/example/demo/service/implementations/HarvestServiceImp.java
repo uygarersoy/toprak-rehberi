@@ -37,7 +37,7 @@ public class HarvestServiceImp implements HarvestService {
     }
 
     @Override
-    public void deleteHarvest(Long harvestId, boolean harvestedOrDeleted) {
+    public void deleteHarvest(Long harvestId, boolean harvestedOrDeleted, Long harvestAmount) {
         Harvest harvest = this.findHarvestById(harvestId);
         Field field = fieldRepository.findById(harvest.getField().getId()).orElse(null);
         field.getHarvests().removeIf(h -> h.getId() == harvestId);
@@ -46,7 +46,10 @@ public class HarvestServiceImp implements HarvestService {
         harvest.setIsDeleted(true);
         if (harvestedOrDeleted) {
             harvest.setHarvestDate(new Date());
-        } 
+        }
+        if (harvestAmount != 0) {
+            harvest.setHarvestAmount(harvestAmount);
+        }
         this.saveHarvest(harvest);
     }
 
@@ -90,5 +93,10 @@ public class HarvestServiceImp implements HarvestService {
             fieldRepository.save(field);
             return newHarvest;
         }*/
+    }
+
+    @Override
+    public List<Harvest> getPastHarvests(Long neighborhoodId) {
+        return harvestRepository.getPastHarvests(neighborhoodId);
     }
 }

@@ -16,12 +16,13 @@ const fractionApi = createApi({
     endpoints(builder) {
         return {
             fetchGuideness: builder.query({
-                query: (neighborhoodId) => {
+                query: ({neighborhoodId, season}) => {
                     return {
                         url: "/guide",
                         method: "GET",
                         params: {
-                            neighborhoodId: neighborhoodId
+                            neighborhoodId: neighborhoodId,
+                            season: season
                         }
                     };
                 },

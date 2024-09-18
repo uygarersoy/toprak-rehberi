@@ -50,17 +50,30 @@ const harvestApi = createApi({
                 ]
             }),
             removeHarvest: builder.mutation({
-                query: ({harvest, harvestedOrDeleted}) => {
+                query: ({harvest, harvestedOrDeleted, harvestAmount}) => {
                     return {
                         url: `/delete/${harvest.id}`,
                         method: "DELETE",
-                        params: { harvestedOrDeleted }
+                        params: { harvestedOrDeleted, harvestAmount }
                     };
                 },
                 invalidatesTags: (result, error, harvest) => [
                     {type: "Harvest", id: harvest.field_id}
                 ]
             }),
+            getPastHarvets: builder.query({
+                query: (field) => {
+                    return {
+                        url: "/get-past-harvests",
+                        method: "GET",
+                        params: {neighborhoodId: field.neighborhoodId}
+                    };
+                },
+                invalidatesTags: (result, error, field) => [
+                    {type: "Harvest", id: field.id}
+                ]
+
+            })
         }
     }
 });
@@ -70,6 +83,7 @@ export const {
             useAddHarvestMutation,
             useRemoveHarvestMutation,
             useAddFeedBackMutation,
+            useGetPastHarvetsQuery
             } = harvestApi;
 
 export { harvestApi };

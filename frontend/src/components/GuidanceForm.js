@@ -5,12 +5,13 @@ import FieldFormController from "./FieldFormController";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
 
-function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, handleGuidanceSubmit }) {
+function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, setSeason, handleGuidanceSubmit }) {
 	const [ errorModalOpen, setErrorModalOpen ] = useState(false);
 	const [formState, setFormState] = useState({
 		province: "",
 		district: "",
 		neighborhood: "",
+		season: ""
 	});
 
 	const { data: fieldTypeData, error: fieldTypeError } = useFetchFieldTypesQuery();
@@ -20,30 +21,22 @@ function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, handleGuidanceSubmit }
 	const selectedDistrict = districtData?.find(d => d.districtName === formState.district);
 	const {data: neighborhoodData, error: nError} = useFetchNeighborhoodsQuery(selectedDistrict?.id, {skip: !selectedDistrict});
 	const selectedNeighborhood = neighborhoodData?.find(n => n.neighborhoodName === formState.neighborhood);
-	//let pContent, dContent, nContent;
+
+	const seasons = ["KIŞ", "İLKBAHAR", "YAZ", "SONBAHAR"];
 	let pContent = [];
 	let dContent = [];
 	let nContent = [];
 
 	if (provinceData) {
-		/*pContent = provinceData.map((province) => {
-			return <MenuItem key={province.id} value={province.provinceName}>{province.provinceName}</MenuItem>;
-		})*/
 		pContent = provinceData.map(province => province.provinceName);
 
 	}
 
 	if (districtData) {
-		/*dContent = districtData.map((district) => {
-			return <MenuItem key={district.id} value={district.districtName}>{district.districtName}</MenuItem>;
-		})*/
 		dContent = districtData.map(district => district.districtName);
 	}
 
 	if (neighborhoodData) {
-		/*nContent = neighborhoodData.map((neighborhood) => {
-			return <MenuItem key={neighborhood.id} value={neighborhood.neighborhoodName}>{neighborhood.neighborhoodName}</MenuItem>;
-		})*/
 		nContent = neighborhoodData.map(neighborhood => neighborhood.neighborhoodName)
 
 	}
@@ -67,7 +60,11 @@ function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, handleGuidanceSubmit }
 			updatedFields = {
 				neighborhood: value
 			};
-		} 
+		} else if (name === "mevsim") {
+			updatedFields = {
+				season: value
+			}
+		}
 
 		setFormState((previousState) => ({
 			...previousState,
@@ -79,6 +76,7 @@ function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, handleGuidanceSubmit }
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		setNeighborhoodId(selectedNeighborhood.id);
+		setSeason(formState.season);
 		handleGuidanceSubmit();
 	};
 
@@ -107,12 +105,13 @@ function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, handleGuidanceSubmit }
 				<FieldFormController disabled={true} label="Il" value={formState.province} handleChange={handleChange} content={pContent}/>
 				<FieldFormController disabled={formState.province} label="Ilçe" value={formState.district} handleChange={handleChange} content={dContent}/>
 				<FieldFormController disabled={formState.district} label="Mahalle" value={formState.neighborhood} handleChange={handleChange} content={nContent}/>
-				
+				<FieldFormController disabled={formState.neighborhood} label="Mevsim" value={formState.season} handleChange={handleChange} content={seasons}/>
+
 				<Button
 					type="submit"
 					variant="contained"
 					color="primary"
-					disabled={!(formState.province && formState.district && formState.neighborhood)}
+					disabled={!(formState.province && formState.district && formState.neighborhood && formState.season)}
 				>
 					Gönder
 				</Button>

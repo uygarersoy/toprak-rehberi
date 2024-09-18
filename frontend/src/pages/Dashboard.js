@@ -27,11 +27,12 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     const [visibleForm, setVisibleForm] = useState(false);
     const [ guidanceModal, setGuidanceModal ] = useState(false);
     const [ neighborhoodId, setNeighborhoodId ] = useState("");
+    const [season, setSeason] = useState("");
     const [ open, setOpen ] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
     const { data, isFetching, isLoading, error: fetchFieldError } = useFetchFieldsQuery(user.data, {skip: !user});
-    const { data: guideData, error: fetchGuidenessError } = useFetchGuidenessQuery(neighborhoodId, {skip: !neighborhoodId});
+    const { data: guideData, error: fetchGuidenessError } = useFetchGuidenessQuery({neighborhoodId, season}, {skip: !neighborhoodId});
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
     useTokenValidation(fetchFieldError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(fetchGuidenessError, setIsLoggedIn, setErrorModalOpen);
@@ -108,7 +109,7 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                 <FieldForm setVisibleForm={setVisibleForm} setIsLoggedIn={setIsLoggedIn}/>
             </CustomModal>
             <CustomModal text="Arazi Konumunu Girin" open={guidanceModal} close={handleGuidanceModal}>
-                <GuidanceForm setIsLoggedIn={setIsLoggedIn} setNeighborhoodId={setNeighborhoodId} handleGuidanceSubmit={handleGuidanceSubmit}/>
+                <GuidanceForm setIsLoggedIn={setIsLoggedIn} setNeighborhoodId={setNeighborhoodId} setSeason={setSeason} handleGuidanceSubmit={handleGuidanceSubmit}/>
             </CustomModal>
             <CustomModal text="Toprak Rehberi" open={open} close={handleRecommendationModal}>
                 <TableContainer component={Paper} sx={{maxHeight: "50vh", boxShadow: "none", borderRadius: 0, overflowY: "auto"}}>

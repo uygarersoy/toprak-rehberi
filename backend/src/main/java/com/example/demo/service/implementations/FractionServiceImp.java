@@ -42,18 +42,20 @@ public class FractionServiceImp implements FractionService{
     }
 
     @Override
-    public List<FractionDTO> fetchFractions(Long neighborhoodId) {
+    public List<FractionDTO> fetchFractions(Long neighborhoodId, String season) {
         List<FractionDTO> fractionDTOs = new ArrayList<>();
         List<Fraction> fractions = fractionRepository.fetchFractions(neighborhoodId);
         for (Fraction fraction : fractions) {
             Product product = productRepository.findById(fraction.getProductId()).orElse(null);
-            fractionDTOs.add(new FractionDTO(
-                                            fraction.getId(), 
-                                            fraction.getProductId(),
-                                            product.getProductName(),
-                                            Math.round(fraction.getPercentage() * 100.0) / 100.0,
-                                            product.getType(),
-                                            product.getSuggestedPlantingSeason()));
+            if (product.getSuggestedPlantingSeason().equals(season)) {
+                fractionDTOs.add(new FractionDTO(
+                    fraction.getId(), 
+                    fraction.getProductId(),
+                    product.getProductName(),
+                    Math.round(fraction.getPercentage() * 100.0) / 100.0,
+                    product.getType(),
+                    product.getSuggestedPlantingSeason()));
+            }
         }
         fractionDTOs.sort(Comparator.comparingDouble(FractionDTO::getPercentage).reversed());
         return fractionDTOs;

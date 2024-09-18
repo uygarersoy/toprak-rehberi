@@ -22,8 +22,8 @@ public class FractionController {
 
 
     @GetMapping("/guide")
-    public ResponseEntity<List<FractionDTO>> getGuidenceForField(@RequestParam Long neighborhoodId) {
-        return new ResponseEntity<>(fractionService.fetchFractions(neighborhoodId), HttpStatus.OK);
+    public ResponseEntity<List<FractionDTO>> getGuidenceForField(@RequestParam Long neighborhoodId, @RequestParam String season) {
+        return new ResponseEntity<>(fractionService.fetchFractions(neighborhoodId, season), HttpStatus.OK);
     }
     
     @PutMapping("/update")

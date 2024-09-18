@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.example.demo.entity.Field;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 
 
@@ -50,8 +52,8 @@ public class HarvestController {
     }
 
     @DeleteMapping("/delete/{harvest-id}")
-    public void deleteHarvest(@PathVariable("harvest-id") Long harvestId, @RequestParam boolean harvestedOrDeleted) {
-        harvestService.deleteHarvest(harvestId, harvestedOrDeleted);
+    public void deleteHarvest(@PathVariable("harvest-id") Long harvestId, @RequestParam boolean harvestedOrDeleted, @RequestParam Long harvestAmount) {
+        harvestService.deleteHarvest(harvestId, harvestedOrDeleted, harvestAmount);
     }
 
     @PostMapping("/update-after-harvest")
@@ -63,5 +65,10 @@ public class HarvestController {
         System.out.println(harvest.getHarvestDate());
         Harvest updatedHarvest = harvestService.saveHarvest(harvest);
         return ResponseEntity.ok(updatedHarvest);
+    }
+
+    @GetMapping("/get-past-harvests")
+    public ResponseEntity<List<Harvest>> getPastHarvests(@RequestParam Long neighborhoodId) {
+        return new ResponseEntity<>(harvestService.getPastHarvests(neighborhoodId), HttpStatus.OK);
     }
 }
