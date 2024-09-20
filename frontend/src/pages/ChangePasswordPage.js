@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, NavLink } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { updateUser } from '../store';
 import { Link, Box, Typography, TextField, Alert, Grid, Button } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
-import { NavLink } from 'react-router-dom';
+import { updateUser } from '../store';
 
 const ChangePasswordPage = () => {
     const [userName, setUserName] = useState('');
@@ -19,7 +18,7 @@ const ChangePasswordPage = () => {
         event.preventDefault();
 
         if (currentPassword === newPassword) {
-            setMessage("New password cannot be same as the current password!");
+            setMessage("Yeni şifre eskisi ile aynı olamaz!");
             setMessageType("error");
             return;
         }
@@ -29,13 +28,16 @@ const ChangePasswordPage = () => {
             currentPassword,
             newPassword
         }));
-        
+
         if (response.type === "user/update/fulfilled") {
-            setMessage("Password changed successfully!");
+            setMessage("Şifre başarılı bir şekilde değiştirildi!");
             setMessageType("success");
             navigate('/');
+        } else if(response.type === "user/update/rejected" && response.error.message.includes("400")) {
+            setMessageType("error");
+            setMessage("Zayıf şifre. En az 8 karakter, birer tane küçük, büyük harf ve özel karakter olmalı. Boşluk olmamalı!");
         } else {
-            setMessage("Wrong username or password!");
+            setMessage("Yanlış şifre ya da kullanıcı adı!");
             setMessageType("error");
         }
     };

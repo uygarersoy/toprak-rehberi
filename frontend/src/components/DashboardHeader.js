@@ -2,7 +2,6 @@ import YardIcon from '@mui/icons-material/Yard';
 import { Grid, Typography } from "@mui/material";
 
 function DashboardHeader() {
-    //, backgroundColor: "#f59c17"
     return (
         <>
             <Grid container alignItems="center" spacing={2} sx={{ mb: 2 }}>

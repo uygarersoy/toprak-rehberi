@@ -1,6 +1,5 @@
 package com.example.demo.entity;
 
-
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Entity;
@@ -37,7 +36,7 @@ public class Harvest {
     private Product product;
 
     @ManyToOne()
-    @JoinColumn(name="field_id")
+    @JoinColumn(name="land_id")
     @JsonIgnoreProperties("harvests")
-    private Field field;
+    private Land land;
 }

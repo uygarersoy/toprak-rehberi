@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class UserController {
     private final UserService userService;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     private UserDTO convertToUserDTO(User user) {
         return new UserDTO(user.getId(), user.getUsername(), user.getEmail());
@@ -66,9 +68,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@RequestBody User user) {
         int check = userService.registerCredentials(user);
-        if (check == -1) {
+        if (check == 2) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        else if (check == -1) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         else if (check == 1) {
@@ -85,10 +90,14 @@ public class UserController {
         @RequestParam String newPassword ) {
         
         User user = userService.updateUser(userName, currentPassword, newPassword);
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        if (user != null) {
+            if (passwordEncoder.matches(newPassword, user.getPassword())) {
+                String jwt = jwtService.generateToken(user);
+                return new ResponseEntity<>(convertToUserDTO(user, jwt), HttpStatus.OK);
+            } else if(passwordEncoder.matches(currentPassword, user.getPassword())) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         }
-        String jwt = jwtService.generateToken(user);
-        return new ResponseEntity<>(convertToUserDTO(user, jwt), HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 }

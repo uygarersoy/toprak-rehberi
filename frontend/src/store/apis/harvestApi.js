@@ -34,19 +34,19 @@ const harvestApi = createApi({
                     };
                 },
                 invalidatesTags: (result, error, harvest) => [
-                    {type: "Harvest", id: harvest.field_id}
+                    {type: "Harvest", id: harvest.landId}
                 ]
             }),
             fetchHarvests: builder.query({
-                query: (field) => {
+                query: (land) => {
                     return {
-                        url: "fetch-field-harvest",
+                        url: "/fetch-land-harvest",
                         method: "POST",
-                        body: field
+                        body: land
                     };
                 },
-                providesTags: (result, error, field) => [
-                    {type: "Harvest", id: field.id}
+                providesTags: (result, error, land) => [
+                    {type: "Harvest", id: land.id}
                 ]
             }),
             removeHarvest: builder.mutation({
@@ -58,19 +58,19 @@ const harvestApi = createApi({
                     };
                 },
                 invalidatesTags: (result, error, harvest) => [
-                    {type: "Harvest", id: harvest.field_id}
+                    {type: "Harvest", id: harvest.landId}
                 ]
             }),
             getPastHarvets: builder.query({
-                query: (field) => {
+                query: (land) => {
                     return {
                         url: "/get-past-harvests",
                         method: "GET",
-                        params: {neighborhoodId: field.neighborhoodId}
+                        params: {adaNo: land.adaNo, parcelNo: land.parcelNo}
                     };
                 },
-                invalidatesTags: (result, error, field) => [
-                    {type: "Harvest", id: field.id}
+                invalidatesTags: (result, error, land) => [
+                    {type: "Harvest", id: land.id}
                 ]
 
             })

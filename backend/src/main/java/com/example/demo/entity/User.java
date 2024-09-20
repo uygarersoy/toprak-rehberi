@@ -17,7 +17,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name="user")
@@ -34,7 +33,7 @@ public class User implements UserDetails{
 
     @OneToMany(mappedBy="user", cascade=CascadeType.ALL, orphanRemoval=true)
     @JsonIgnoreProperties("user")
-    private List<Field> fields;
+    private List<Land> lands;
     
 
     @Override

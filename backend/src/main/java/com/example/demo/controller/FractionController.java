@@ -22,7 +22,7 @@ public class FractionController {
 
 
     @GetMapping("/guide")
-    public ResponseEntity<List<FractionDTO>> getGuidenceForField(@RequestParam Long neighborhoodId, @RequestParam String season) {
+    public ResponseEntity<List<FractionDTO>> getGuidenceForLand(@RequestParam Long neighborhoodId, @RequestParam String season) {
         return new ResponseEntity<>(fractionService.fetchFractions(neighborhoodId, season), HttpStatus.OK);
     }
     

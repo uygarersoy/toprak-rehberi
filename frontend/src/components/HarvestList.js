@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button, Box, Grid, CircularProgress, Alert, TableContainer, Table, TableHead, TableRow, TableCell, Paper, TableBody} from '@mui/material';
-import { useAddHarvestMutation, useFetchHarvestsQuery, useFetchProductsQuery, useGetPastHarvetsQuery, useUpdateFieldMutation } from "../store";
+import { useAddHarvestMutation, useFetchHarvestsQuery, useFetchProductsQuery, useGetPastHarvetsQuery, useUpdateLandMutation } from "../store";
 import HarvestListItem from "./HarvestListItem";
 import HarvestForm from "./HarvestForm";
 import CustomModal from "./CustomModal";
@@ -16,11 +16,11 @@ function formatDate(rawDate) {
 }
 
 
-function HarvestList({ field, setIsLoggedIn }) {
-    const { data: harvestData, isFetching, error: fetchHarvestError } = useFetchHarvestsQuery(field);
+function HarvestList({ land, setIsLoggedIn }) {
+    const { data: harvestData, isFetching, error: fetchHarvestError } = useFetchHarvestsQuery(land);
     const [ addHarvest, {error: addHarvestError}] = useAddHarvestMutation();
-    const [ updateField, { error: updataFieldError}] = useUpdateFieldMutation();
-    const [visible, setVisible] = useState(false);
+    const [ updateLand, { error: updateLandError}] = useUpdateLandMutation();
+    const [harvestAdditionForm, setHarvestAdditionForm] = useState(false);
     const [pastHarvests, setPastHarvests] = useState(false);
     const [formState, setFormState] = useState({
         type: "",
@@ -39,8 +39,8 @@ function HarvestList({ field, setIsLoggedIn }) {
     }
 
     const { data: productData, error: fetchProductsError} = useFetchProductsQuery(formState.type, {skip: !formState.type});
-    const { data: pastHarvestsData, error: pastHarvestsError } = useGetPastHarvetsQuery(field);
-    let pContent = [];
+    const { data: pastHarvestsData, error: pastHarvestsError } = useGetPastHarvetsQuery(land);
+    let productContent = [];
     let pastData = [];
 
     if (pastHarvestsData) {
@@ -58,13 +58,14 @@ function HarvestList({ field, setIsLoggedIn }) {
                     <TableCell>{formatDate(harvest.plantingDate)}</TableCell>
                     <TableCell>{formatDate(harvest.harvestDate)}</TableCell>
                     <TableCell>{harvest.harvestAmount} {harvest.product.unitOfHarvest}</TableCell>
+                    <TableCell>{harvest.area}</TableCell>
                 </TableRow>
             );
         });
     }
 
     if (productData) {
-        pContent = productData.map((product) => {
+        productContent = productData.map((product) => {
             if (product.productName !== "DİĞER") {
                 return product.productName;
             }
@@ -72,13 +73,13 @@ function HarvestList({ field, setIsLoggedIn }) {
                 return null;
             }
         }).filter(product => product !== null);
-        pContent = pContent.concat("DİĞER");
+        productContent = productContent.concat("DİĞER");
     }
 
     useTokenValidation(fetchHarvestError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(addHarvestError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(fetchProductsError, setIsLoggedIn, setErrorModalOpen);
-    useTokenValidation(updataFieldError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(updateLandError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(pastHarvestsError, setIsLoggedIn, setErrorModalOpen);
 
 	const handleChange = (event) => {
@@ -114,23 +115,24 @@ function HarvestList({ field, setIsLoggedIn }) {
         const harvest = {
             area: formState.area,
             product: formState.product, 
-            field: field,
+            land: land,
             plantingDate: formState.plantingDate,
             expectedAmountPerMeterSquare: formState.amount,
             isDeleted: false
         };
+
         addHarvest(harvest);
-        updateField({fieldId: field.id, sign: -1, area: formState.area});
+        updateLand({landId: land.id, sign: -1, area: formState.area});
         setFormState({type: "", product: "", area: ""});
-        setVisible(false);
+        setHarvestAdditionForm(false);
     };
 
     const handleAddHarvest = () => {
-        setVisible(true);
+        setHarvestAdditionForm(true);
     };
 
-    const handleHarvestModal = () => {
-        setVisible(false);
+    const handleHarvestModalClose = () => {
+        setHarvestAdditionForm(false);
     };
 
     const handlePastHarvestsOpen = () => {
@@ -150,7 +152,7 @@ function HarvestList({ field, setIsLoggedIn }) {
             <Grid container spacing={2}>
                 {harvestData.map((harvest) => (
                 <Grid item key={harvest.id} xs={12} sm={6} md={4}>
-                    <HarvestListItem harvest={harvest} setIsLoggedIn={setIsLoggedIn} type={formState.type}/>
+                    <HarvestListItem harvest={harvest} setIsLoggedIn={setIsLoggedIn}/>
                 </Grid>
                 ))}
             </Grid>
@@ -168,8 +170,8 @@ function HarvestList({ field, setIsLoggedIn }) {
                         Geçmiş Hasatlar
                     </Button>
                 </Box>
-                <CustomModal text="Yeni Ürün Ekle" open={visible} close={handleHarvestModal}>
-                    <HarvestForm handleSubmit={handleSubmit} formState={formState} handleChange={handleChange} pContent={pContent} field={field}/>
+                <CustomModal text="Yeni Ürün Ekle" open={harvestAdditionForm} close={handleHarvestModalClose}>
+                    <HarvestForm handleSubmit={handleSubmit} formState={formState} handleChange={handleChange} productContent={productContent} land={land}/>
                 </CustomModal>
                 <CustomModal text="Eski Hasatlar" open={pastHarvests} close={handlePastHarvestsClose}>
                     <TableContainer component={Paper} sx={{maxHeight: "50vh", boxShadow: "none", borderRadius: 0, overflowY: "auto"}}>
@@ -181,6 +183,7 @@ function HarvestList({ field, setIsLoggedIn }) {
                                     <TableCell>Ekim Tarihi</TableCell>
                                     <TableCell>Hasat Tarihi</TableCell>
                                     <TableCell>Hasat Miktarı</TableCell>
+                                    <TableCell>Arazi Boyutu (m<sup>2</sup>)</TableCell>
                                 </TableRow>
                             </TableHead>
                             <TableBody>

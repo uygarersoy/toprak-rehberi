@@ -10,4 +10,6 @@ public interface UserService {
     User loginCredentials(String userName);
     int registerCredentials(User user);
     User updateUser(String userName, String password, String newPassword);
+    boolean isStrongPassword(String password);
+
 }

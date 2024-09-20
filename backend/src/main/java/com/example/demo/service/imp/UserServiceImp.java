@@ -1,4 +1,4 @@
-package com.example.demo.service.implementations;
+package com.example.demo.service.imp;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +9,7 @@ import com.example.demo.service.interfaces.UserService;
 import lombok.RequiredArgsConstructor;
 import com.example.demo.entity.User;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +17,7 @@ public class UserServiceImp implements UserService{
     
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private static final String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>\\/?])(?!.*\\s).{8,}$";
     /*@Autowired
     private PasswordEncoder passwordEncoder;*/
 
@@ -44,6 +46,9 @@ public class UserServiceImp implements UserService{
 
     @Override
     public int registerCredentials(User user) {
+        if (!this.isStrongPassword(user.getPassword())) {
+            return 2;
+        }
         User checkUserName = userRepository.checkUserName(user.getUsername());
         if (checkUserName != null) {
             return -1; //userName exists
@@ -59,11 +64,22 @@ public class UserServiceImp implements UserService{
     @Override
     public User updateUser(String userName, String password, String newPassword) {
         //String encodedPassword = passwordEncoder.encode(password);
-        User user =  userRepository.updateUser(userName, password);
+        User user =  userRepository.loginUser(userName);
         if (user != null) {
-            user.setPassword(passwordEncoder.encode(newPassword));
-            this.saveUser(user);
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                return null;
+            } else if (this.isStrongPassword(newPassword)) {
+                user.setPassword(newPassword);
+                return this.saveUser(user);                
+            }
+            return user;
         }
         return user;
+    }
+
+    @Override
+    public boolean isStrongPassword(String password) {
+        Pattern pattern = Pattern.compile(passwordRegex);
+        return pattern.matcher(password).matches();
     }
 }

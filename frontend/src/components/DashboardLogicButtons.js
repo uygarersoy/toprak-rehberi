@@ -1,6 +1,6 @@
 import { Box, Button } from "@mui/material";
 
-function DashboardLogicButtons({ handleFieldCreation, handleLogOut, setGuidanceModal }) {
+function DashboardLogicButtons({ handleLandCreation, handleLogOut, setGuidanceModal }) {
     return (
         <>
             <Box 
@@ -20,7 +20,7 @@ function DashboardLogicButtons({ handleFieldCreation, handleLogOut, setGuidanceM
                 }}
             >
                  <Box sx={{ flex: '1 1 0', display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button variant="contained" color="primary" onClick={handleFieldCreation}>
+                    <Button variant="contained" color="primary" onClick={handleLandCreation}>
                         Arazi Ekle
                     </Button>
                 </Box>

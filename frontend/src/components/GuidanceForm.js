@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useFetchDistrictsQuery, useFetchFieldTypesQuery, useFetchNeighborhoodsQuery, useFetchProvincesQuery } from "../store";
+import { useFetchDistrictsQuery, useFetchNeighborhoodsQuery, useFetchProvincesQuery } from "../store";
 import { Box, Alert, Button } from '@mui/material';
-import FieldFormController from "./FieldFormController";
+import LandAdditionFormController from "./LandAdditionFormController";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
 
@@ -14,61 +14,58 @@ function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, setSeason, handleGuida
 		season: ""
 	});
 
-	const { data: fieldTypeData, error: fieldTypeError } = useFetchFieldTypesQuery();
-	const { data: provinceData, error: pError } = useFetchProvincesQuery({ skip: !fieldTypeData });
-	const selectedProvince = provinceData?.find(p => p.provinceName === formState.province);
-	const { data: districtData, error: dError } = useFetchDistrictsQuery(selectedProvince?.id, {skip: !selectedProvince});
-	const selectedDistrict = districtData?.find(d => d.districtName === formState.district);
-	const {data: neighborhoodData, error: nError} = useFetchNeighborhoodsQuery(selectedDistrict?.id, {skip: !selectedDistrict});
-	const selectedNeighborhood = neighborhoodData?.find(n => n.neighborhoodName === formState.neighborhood);
+	const { data: provinceData, error: provinceError } = useFetchProvincesQuery();
+	const selectedProvince = provinceData?.find(province => province.provinceName === formState.province);
+	const { data: districtData, error: districtError } = useFetchDistrictsQuery(selectedProvince?.id, {skip: !selectedProvince});
+	const selectedDistrict = districtData?.find(district => district.districtName === formState.district);
+	const {data: neighborhoodData, error: neighborhoodError} = useFetchNeighborhoodsQuery(selectedDistrict?.id, {skip: !selectedDistrict});
+	const selectedNeighborhood = neighborhoodData?.find(neighborhood => neighborhood.neighborhoodName === formState.neighborhood);
 
 	const seasons = ["KIŞ", "İLKBAHAR", "YAZ", "SONBAHAR"];
-	let pContent = [];
-	let dContent = [];
-	let nContent = [];
+	let provinceContent = [];
+	let districtContent = [];
+	let neighborhoodContent = [];
 
 	if (provinceData) {
-		pContent = provinceData.map(province => province.provinceName);
-
+		provinceContent = provinceData.map(province => province.provinceName);
 	}
 
 	if (districtData) {
-		dContent = districtData.map(district => district.districtName);
+		districtContent = districtData.map(district => district.districtName);
 	}
 
 	if (neighborhoodData) {
-		nContent = neighborhoodData.map(neighborhood => neighborhood.neighborhoodName)
-
+		neighborhoodContent = neighborhoodData.map(neighborhood => neighborhood.neighborhoodName)
 	}
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
-		let updatedFields = {};
+		let updatedFormState = {};
 	
 		if (name === "il") {
-			updatedFields = {
+			updatedFormState = {
 				province: value,
 				district: "",
 				neighborhood: ""
 			};
 		} else if (name === "ilçe") {
-			updatedFields = {
+			updatedFormState = {
 				district: value,
 				neighborhood: ""
 			};
 		} else if (name === "mahalle") {
-			updatedFields = {
+			updatedFormState = {
 				neighborhood: value
 			};
 		} else if (name === "mevsim") {
-			updatedFields = {
+			updatedFormState = {
 				season: value
 			}
 		}
 
 		setFormState((previousState) => ({
 			...previousState,
-			...updatedFields
+			...updatedFormState
 		}));
 	};
 	
@@ -80,10 +77,9 @@ function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, setSeason, handleGuida
 		handleGuidanceSubmit();
 	};
 
-    useTokenValidation(pError, setIsLoggedIn, setErrorModalOpen);
-    useTokenValidation(dError, setIsLoggedIn, setErrorModalOpen);
-    useTokenValidation(nError, setIsLoggedIn, setErrorModalOpen);
-	useTokenValidation(fieldTypeError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(provinceError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(districtError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(neighborhoodError, setIsLoggedIn, setErrorModalOpen);
 
 	return (
 		<>
@@ -102,10 +98,10 @@ function GuidanceForm({ setIsLoggedIn, setNeighborhoodId, setSeason, handleGuida
 				}}
 				onSubmit={handleSubmit}
 			>
-				<FieldFormController disabled={true} label="Il" value={formState.province} handleChange={handleChange} content={pContent}/>
-				<FieldFormController disabled={formState.province} label="Ilçe" value={formState.district} handleChange={handleChange} content={dContent}/>
-				<FieldFormController disabled={formState.district} label="Mahalle" value={formState.neighborhood} handleChange={handleChange} content={nContent}/>
-				<FieldFormController disabled={formState.neighborhood} label="Mevsim" value={formState.season} handleChange={handleChange} content={seasons}/>
+				<LandAdditionFormController disabled={true} label="Il" value={formState.province} handleChange={handleChange} content={provinceContent}/>
+				<LandAdditionFormController disabled={formState.province} label="Ilçe" value={formState.district} handleChange={handleChange} content={districtContent}/>
+				<LandAdditionFormController disabled={formState.district} label="Mahalle" value={formState.neighborhood} handleChange={handleChange} content={neighborhoodContent}/>
+				<LandAdditionFormController disabled={formState.neighborhood} label="Mevsim" value={formState.season} handleChange={handleChange} content={seasons}/>
 
 				<Button
 					type="submit"

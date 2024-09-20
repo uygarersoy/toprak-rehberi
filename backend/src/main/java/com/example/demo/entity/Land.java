@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import java.util.List;
-import com.example.demo.enums.FieldType;
+import com.example.demo.enums.LandType;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -20,29 +20,29 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="fields")
+@Table(name="lands")
 @Entity
 @Data
-public class Field {
+public class Land {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private FieldType type;
+    private LandType type;
     private Long neighborhoodId;
     private Long availableArea;
-    private String fieldName;
+    private String landName;
     private Long adaNo;
     private Long parcelNo;
     private Boolean isDeleted;
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    @JsonIgnoreProperties("fields")
+    @JsonIgnoreProperties("lands")
     private User user;
 
-    @OneToMany(mappedBy="field", cascade=CascadeType.ALL, orphanRemoval=true)
-    @JsonIgnoreProperties("field")
+    @OneToMany(mappedBy="land", cascade=CascadeType.ALL, orphanRemoval=true)
+    @JsonIgnoreProperties("land")
     private List<Harvest> harvests;
 }

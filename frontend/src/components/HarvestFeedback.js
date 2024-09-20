@@ -1,8 +1,6 @@
 import { Box, Autocomplete, TextField, Button } from "@mui/material";
 
 function HarvestFeedback({ handleSubmit, satisfaction, setSatisfaction, amount, setAmount, harvest }) {
-    //const amountInfo = (type === "SÜS BİTKİSİ") ? "(adet)" : "(kg)";
-    //const maxVal = (type === "SÜS BİTKİSİ") ? (50 * harvest.area) : harvest.area;
     const feedbackOptions = ["Çok iyi", "Ne iyi, Ne kötü", "Çok kötü"];
     return (
         <>

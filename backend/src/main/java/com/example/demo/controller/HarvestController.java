@@ -1,6 +1,6 @@
 package com.example.demo.controller;
 
-import java.util.Date;
+//import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import com.example.demo.service.interfaces.ResultService;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import com.example.demo.entity.Field;
+import com.example.demo.entity.Land;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -41,14 +41,14 @@ public class HarvestController {
     }
     
 
-    @PostMapping("/fetch-field-harvest")
-    public ResponseEntity<List<Harvest>> getHarvestOfField(@RequestBody Field field){
-        return new ResponseEntity<>(harvestService.getHarvestOfField(field), HttpStatus.OK);
+    @PostMapping("/fetch-land-harvest")
+    public ResponseEntity<List<Harvest>> getHarvestOfLand(@RequestBody Land land){
+        return new ResponseEntity<>(harvestService.getHarvestOfLand(land), HttpStatus.OK);
     }
     
     @PostMapping("/add")
     public ResponseEntity<Harvest> addHarvest(@RequestBody Harvest harvest) {
-        return new ResponseEntity<>(harvestService.addNewHarvestToField(harvest), HttpStatus.CREATED);
+        return new ResponseEntity<>(harvestService.addNewHarvestToLand(harvest), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{harvest-id}")
@@ -56,19 +56,8 @@ public class HarvestController {
         harvestService.deleteHarvest(harvestId, harvestedOrDeleted, harvestAmount);
     }
 
-    @PostMapping("/update-after-harvest")
-    public ResponseEntity<Harvest> updateHarvest(@RequestParam Long harvestId) {
-        Date today = new Date();
-        Harvest harvest = harvestService.findHarvestById(harvestId);
-        harvest.setHarvestDate(today);
-        System.out.println("executed");
-        System.out.println(harvest.getHarvestDate());
-        Harvest updatedHarvest = harvestService.saveHarvest(harvest);
-        return ResponseEntity.ok(updatedHarvest);
-    }
-
     @GetMapping("/get-past-harvests")
-    public ResponseEntity<List<Harvest>> getPastHarvests(@RequestParam Long neighborhoodId) {
-        return new ResponseEntity<>(harvestService.getPastHarvests(neighborhoodId), HttpStatus.OK);
+    public ResponseEntity<List<Harvest>> getPastHarvests(@RequestParam Long adaNo, @RequestParam Long parcelNo) {
+        return new ResponseEntity<>(harvestService.getPastHarvests(adaNo, parcelNo), HttpStatus.OK);
     }
 }

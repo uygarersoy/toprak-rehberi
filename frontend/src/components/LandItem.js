@@ -1,30 +1,32 @@
 import { useState } from "react";
+import { Box, Typography, IconButton, Alert } from '@mui/material';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import DeleteIcon from '@mui/icons-material/Delete';
 import ExpandablePanel from "./ExpandablePanel";
 import HarvestList from "./HarvestList";
-import { useRemoveFieldMutation } from "../store";
-import DeleteIcon from '@mui/icons-material/Delete';
-import { useGetLocationInformationQuery } from '../store/apis/locationApi';
-import { Box, Typography, IconButton, Alert } from '@mui/material';
+import { useRemoveLandMutation, useGetLocationInformationQuery } from "../store";
 import CustomModal from "./CustomModal";
-import LocationOnIcon from '@mui/icons-material/LocationOn';
 import useTokenValidation from "../hooks/tokenValidation";
 
-function FieldItem({ field, setIsLoggedIn }) {
+function LandItem({ land, setIsLoggedIn }) {
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
-    const [ removeField, {error: removeFieldError} ] = useRemoveFieldMutation();
-    const handleRemoveField = (event) => {
+    const [ removeLand, {error: removeLandError} ] = useRemoveLandMutation();
+    
+    const handleRemoveLand = (event) => {
         event.stopPropagation();
-        removeField(field.id);
+        removeLand(land.id);
     };
-    const { data: locationData, error: getLocationError } = useGetLocationInformationQuery(field?.neighborhoodId);
+    
+    const { data: locationData, error: getLocationError } = useGetLocationInformationQuery(land?.neighborhoodId);
+    
     const header = (
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: "100%" }}>
             <Box sx={{ flex: '1 1 0', display: 'flex', justifyContent: 'flex-start' }}>
-                <IconButton onClick={handleRemoveField} color= "error">
+                <IconButton onClick={handleRemoveLand} color= "error">
                     <DeleteIcon/>
                 </IconButton>
                 <Typography variant="body1" sx={{color: "#077437"}}>
-                    <b>{field.type}:</b> {field.fieldName}<br></br><b>Ada No:</b> {field.adaNo}<br></br><b>Parsel No:</b> {field.parcelNo}<br></br>
+                    <b>{land.type}:</b> {land.landName}<br></br><b>Ada No:</b> {land.adaNo}<br></br><b>Parsel No:</b> {land.parcelNo}<br></br>
                 </Typography>
             </Box>
             <Box sx={{ flex: '1 1 auto', textAlign: 'center' }}>
@@ -34,20 +36,20 @@ function FieldItem({ field, setIsLoggedIn }) {
             </Box>
             <Box sx={{ flex: '1 1 0', display: 'flex', justifyContent: 'flex-end' }}>
                 <Typography>
-                    EKİLEBİLİR ARAZİ: <b>{field.availableArea}</b> m<sup>2</sup>
+                    EKİLEBİLİR ARAZİ: <b>{land.availableArea}</b> m<sup>2</sup>
                 </Typography>
             </Box>
         </Box>
     );
     
     useTokenValidation(getLocationError, setIsLoggedIn, setErrorModalOpen);
-    useTokenValidation(removeFieldError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(removeLandError, setIsLoggedIn, setErrorModalOpen);
 
     
     return (
         <>
             <ExpandablePanel header={header}>
-                <HarvestList field={field} setIsLoggedIn={setIsLoggedIn}/>
+                <HarvestList land={land} setIsLoggedIn={setIsLoggedIn}/>
             </ExpandablePanel>
             <CustomModal text="HATA" open={errorModalOpen} close={() => {}}>
                 <Alert severity="error">Tokeninizin süresi doldu. Giriş sayfasına yönlendiriliyorsunuz. Tekrar giriş yapın!</Alert>
@@ -57,4 +59,4 @@ function FieldItem({ field, setIsLoggedIn }) {
 }
 
 
-export default FieldItem;
+export default LandItem;

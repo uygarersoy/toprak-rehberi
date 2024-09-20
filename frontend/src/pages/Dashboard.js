@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import FieldForm from "../components/FieldForm";
 import { useDispatch, useSelector } from "react-redux";
-import { removeUser, useFetchFieldsQuery } from "../store";
-import FieldItem from "../components/FieldItem";
-import { useFetchGuidenessQuery } from "../store";
+import LandAdditionForm from "../components/LandAdditionForm";
+import { removeUser, useFetchLandsQuery, useFetchGuidenessQuery } from "../store";
+import LandItem from "../components/LandItem";
 import CustomModal from "../components/CustomModal";
 import DashboardLogicButtons from "../components/DashboardLogicButtons";
 import DashboardHeader from "../components/DashboardHeader";
@@ -24,14 +23,14 @@ import {
 
 function DashBoard({ isLoggedIn, setIsLoggedIn }) {
     const navigate = useNavigate();
-    const [visibleForm, setVisibleForm] = useState(false);
+    const [landAdditionForm, setLandAdditionForm] = useState(false);
     const [ guidanceModal, setGuidanceModal ] = useState(false);
     const [ neighborhoodId, setNeighborhoodId ] = useState("");
     const [season, setSeason] = useState("");
-    const [ open, setOpen ] = useState(false);
+    const [ guidanceResultTable, setGuidanceResultTable ] = useState(false);
     const dispatch = useDispatch();
     const user = useSelector((state) => state.user);
-    const { data, isFetching, isLoading, error: fetchFieldError } = useFetchFieldsQuery(user.data, {skip: !user});
+    const { data, isFetching, isLoading, error: fetchFieldError } = useFetchLandsQuery(user.data, {skip: !user});
     const { data: guideData, error: fetchGuidenessError } = useFetchGuidenessQuery({neighborhoodId, season}, {skip: !neighborhoodId});
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
     useTokenValidation(fetchFieldError, setIsLoggedIn, setErrorModalOpen);
@@ -58,7 +57,7 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
                         />
                     </TableCell>
                     <TableCell>{guide.productName}</TableCell>
-                    <TableCell>{guide.percentage}</TableCell>
+                    <TableCell>%{guide.percentage}</TableCell>
                     <TableCell>{guide.suggestedPlantingSeason}</TableCell>
                 </TableRow>
             );
@@ -72,46 +71,46 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
         navigate("/");
     };  
     
-    const handleFieldCreation = () => {
-        setVisibleForm(true);
+    const handleLandCreation = () => {
+        setLandAdditionForm(true);
     }
 
     const handleGuidanceSubmit = () => {
         setGuidanceModal(false);
-        setOpen(true);
+        setGuidanceResultTable(true);
     }
 
-    const handleFieldAdditionModal = () => {
-        setVisibleForm(false);
+    const handleLandCreationModalClose = () => {
+        setLandAdditionForm(false);
     };
 
-    const handleGuidanceModal = () => {
+    const handleGuidanceModalClose = () => {
         setGuidanceModal(false);
     };
 
-    const handleRecommendationModal = () => {
-        setOpen(false);
+    const handleRecommendationModalClose = () => {
+        setGuidanceResultTable(false);
     };
 
-    let content;
+    let landContent;
     if (isFetching || isLoading) {
-        content = <Skeleton variant="rounded" width="100vw" height={30}/>;
+        landContent = <Skeleton variant="rounded" width="100vw" height={30}/>;
     }
     else if (data) {
-        content = data.map((field) => {
-            return <FieldItem key={field.id} field={field} setIsLoggedIn={setIsLoggedIn}/>;
+        landContent = data.map((land) => {
+            return <LandItem key={land.id} land={land} setIsLoggedIn={setIsLoggedIn}/>;
         });
     }
     return (
         <Box sx={{ padding: 2, minHeight: '100vh', position: 'relative'}}>
             <DashboardHeader />
-            <CustomModal text="Yeni Arazi Ekle" open={visibleForm} close={handleFieldAdditionModal}>
-                <FieldForm setVisibleForm={setVisibleForm} setIsLoggedIn={setIsLoggedIn}/>
+            <CustomModal text="Yeni Arazi Ekle" open={landAdditionForm} close={handleLandCreationModalClose}>
+                <LandAdditionForm setLandAdditionForm={setLandAdditionForm} setIsLoggedIn={setIsLoggedIn}/>
             </CustomModal>
-            <CustomModal text="Arazi Konumunu Girin" open={guidanceModal} close={handleGuidanceModal}>
+            <CustomModal text="Arazi Konumunu Girin" open={guidanceModal} close={handleGuidanceModalClose}>
                 <GuidanceForm setIsLoggedIn={setIsLoggedIn} setNeighborhoodId={setNeighborhoodId} setSeason={setSeason} handleGuidanceSubmit={handleGuidanceSubmit}/>
             </CustomModal>
-            <CustomModal text="Toprak Rehberi" open={open} close={handleRecommendationModal}>
+            <CustomModal text="Toprak Rehberi" open={guidanceResultTable} close={handleRecommendationModalClose}>
                 <TableContainer component={Paper} sx={{maxHeight: "50vh", boxShadow: "none", borderRadius: 0, overflowY: "auto"}}>
                     <Table stickyHeader>
                         <TableHead>
@@ -131,9 +130,9 @@ function DashBoard({ isLoggedIn, setIsLoggedIn }) {
             <CustomModal text="HATA" open={errorModalOpen} close={() => {}}>
                 <Alert severity="error">Tokeninizin süresi doldu. Giriş sayfasına yönlendiriliyorsunuz. Tekrar giriş yapın!</Alert>
             </CustomModal>
-            {content}
+            {landContent}
             <DashboardLogicButtons
-                handleFieldCreation={handleFieldCreation}
+                handleLandCreation={handleLandCreation}
                 handleLogOut={handleLogOut}
                 setGuidanceModal={setGuidanceModal}
             />

@@ -1,4 +1,4 @@
-package com.example.demo.service.implementations;
+package com.example.demo.service.imp;
 
 import java.text.Collator;
 import java.util.List;

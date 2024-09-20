@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const fieldsApi = createApi({
-    reducerPath: "fields",
+const landApi = createApi({
+    reducerPath: "lands",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8080/api/field",
+        baseUrl: "http://localhost:8080/api/land",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {
@@ -12,64 +12,64 @@ const fieldsApi = createApi({
             return headers;
         }
     }),
-    tagTypes: ["Field"],
+    tagTypes: ["Land"],
     endpoints(builder) {
         return {
-            addField: builder.mutation({
-                query: (field) => {
+            addLand: builder.mutation({
+                query: (land) => {
                     return {
                         url: "/add",
                         method: "POST",
-                        body: field
+                        body: land
                     };
                 },
-                invalidatesTags: ["Field"]
+                invalidatesTags: ["Land"]
             }),
-            fetchFields: builder.query({
+            fetchLands: builder.query({
                 query: (user) => {
                     return {
-                        url: "/fetch-user-fields",
+                        url: "/fetch-user-lands",
                         method: "POST",
                         body: user
                     };
                 },
-                providesTags: ["Field"]
+                providesTags: ["Land"]
             }),
-            removeField: builder.mutation({
-                query: (fieldId) => {
+            removeLand: builder.mutation({
+                query: (landId) => {
                     return {
-                        url: `/${fieldId}`,
+                        url: `/${landId}`,
                         method: "DELETE"
                     };
                 },
-                invalidatesTags: ["Field"]
+                invalidatesTags: ["Land"]
             }),
-            fetchFieldTypes: builder.query({
+            fetchLandTypes: builder.query({
                 query: () => {
                     return {
-                        url: "/field-type",
+                        url: "/land-type",
                         method: "GET"
                     };
                 },
             }),
-            updateField: builder.mutation({
-                query: ({fieldId, sign, area }) => {
+            updateLand: builder.mutation({
+                query: ({landId, sign, area }) => {
                     return {
-                        url: "/update-field",
+                        url: "/update-land",
                         method: "PUT",
                         params: {
+                            landId,
                             sign,
-                            area,
-                            fieldId
+                            area
                         },
                     };
                 },
-                invalidatesTags: ["Field"]
+                invalidatesTags: ["Land"]
             }),
         };
     }
 });
 
 
-export const { useAddFieldMutation, useFetchFieldsQuery, useRemoveFieldMutation, useFetchFieldTypesQuery, useUpdateFieldMutation } = fieldsApi;
-export { fieldsApi };
+export const { useAddLandMutation, useFetchLandsQuery, useRemoveLandMutation, useFetchLandTypesQuery, useUpdateLandMutation } = landApi;
+export { landApi };

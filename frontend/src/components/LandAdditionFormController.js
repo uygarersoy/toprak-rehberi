@@ -1,5 +1,5 @@
 import { Autocomplete, TextField } from "@mui/material";
-function FieldFormController({ disabled, label, value, handleChange, content }) {
+function LandAdditionFormController({ disabled, label, value, handleChange, content }) {
     return (
         <>
             <Autocomplete
@@ -16,4 +16,4 @@ function FieldFormController({ disabled, label, value, handleChange, content }) 
     );
 }
 
-export default FieldFormController;
+export default LandAdditionFormController;

@@ -1,6 +1,6 @@
 package com.example.demo.enums;
 
-public enum FieldType {
+public enum LandType {
 	TARLA,
     BAĞ,
     BAHÇE,

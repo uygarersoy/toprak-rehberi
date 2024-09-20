@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { fetchUser } from '../store';
 import { Box, TextField, Typography, Button, Link, Alert, Grid } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
+import { fetchUser } from '../store';
 
 const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
     const [userName, setUserName] = useState('');
@@ -28,12 +28,12 @@ const LoginPage = ({ isLoggedIn, setIsLoggedIn }) => {
         const response = await dispatch(fetchUser({ userName, password }));
         if (response.type === "user/fetch/fulfilled") {
             localStorage.setItem("token", response.payload.token);
-            setMessage("Success!");
+            setMessage("Başarılı!");
             setMessageType("success");
             setIsLoggedIn(!isLoggedIn);
             navigate("/dashboard");
         } else {
-            setMessage("Wrong username or password!");
+            setMessage("Yanlış şifre ya da kullanıcı adı!");
             setMessageType("error");
         }
     };

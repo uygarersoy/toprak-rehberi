@@ -1,12 +1,12 @@
 import { Box, Card, CardContent, Typography, IconButton, Button, Link, Alert } from "@mui/material";
-import { useAddFeedBackMutation, useGetFractionQuery, useRemoveHarvestMutation, useUpdateFieldMutation, useUpdateFractionsMutation } from "../store";
 import { useState } from "react";
+import dayjs from "dayjs";
 import DeleteIcon from '@mui/icons-material/Delete';
 import HelpCenterRoundedIcon from '@mui/icons-material/HelpCenterRounded';
 import HarvestFeedback from "./HarvestFeedback";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
-import dayjs from "dayjs";
+import { useAddFeedBackMutation, useGetFractionQuery, useRemoveHarvestMutation, useUpdateLandMutation, useUpdateFractionsMutation } from "../store";
 
 function formatDate(rawDate) {
     const date = new Date(rawDate);
@@ -18,21 +18,20 @@ function formatDate(rawDate) {
 }
 
 
-function HarvestListItem({ harvest, setIsLoggedIn, type }) {
+function HarvestListItem({ harvest, setIsLoggedIn }) {
     const [ errorModalOpen, setErrorModalOpen ] = useState(false);
     const [removeHarvest, {error: removeHarvestError}] = useRemoveHarvestMutation();
-    const [ updateField, { error: updateFieldError } ] = useUpdateFieldMutation();
+    const [ updateLand, { error: updateLandError } ] = useUpdateLandMutation();
     const [satisfaction, setSatisfaction] = useState("");
     const [amount, setAmount] = useState(null);
     const [addFeedback, {error: addFeedbackError}] = useAddFeedBackMutation();
     const [updateFraction, {error: updateFractionError}] = useUpdateFractionsMutation();
-    const [open, setOpen] = useState(false);
-    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [harvestFeedbackOpen, setHarvestFeedbackOpen] = useState(false);
+    const [adviceModalOpen, setAdviceModalOpen] = useState(false);
     const [harvestToRemove, setHarvestToRemove] = useState(null);
-    //const [updateHarvest, {error: updateHarvestError}] = useUpdateHarvestMutation();
 
     const { data, error: getFractionError } = useGetFractionQuery({
-        neighborhoodId: harvest.field.neighborhoodId,
+        neighborhoodId: harvest.land.neighborhoodId,
         productId: harvest.product.id
     });
 
@@ -51,7 +50,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
         if (harvestToRemove) {
             removeHarvest({ harvest: harvestToRemove, harvestedOrDeleted: true, harvestAmount: amount});
             setHarvestToRemove(null);
-            updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
+            updateLand({landId: harvest.land.id, sign: 1, area: harvest.area});
         }
     };
 
@@ -59,60 +58,58 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
     const expectedHarvest = dayjs(harvest.plantingDate).add(harvest.product.durationTillHarvest, "day").toDate();
     const beforeHarvest = today < expectedHarvest;
 
-    const handleOpenModal = () => {
-        setOpen(true);
+    const handleOpenHarvestFeedbackModal = () => {
+        setHarvestFeedbackOpen(true);
     };
 
-    const handleCloseModal = () => {
-        setOpen(false);
+    const handleCloseHarvestFeedbackModal = () => {
+        setHarvestFeedbackOpen(false);
     };
 
     const handleCloseInformationModal = () => {
-        setFormSubmitted(false);
+        setAdviceModalOpen(false);
         handleRemoveHarvest();
     };
     
     const handleRemoveWithoutHarvest = () => {
         removeHarvest({ harvest: harvest, harvestedOrDeleted: false, harvestAmount: 0});
-        updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
+        updateLand({landId: harvest.land.id, sign: 1, area: harvest.area});
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
         const result = {
-            neighborhoodId: harvest.field.neighborhoodId,
+            neighborhoodId: harvest.land.neighborhoodId,
             yield: amount,
             productId: harvest.product.id
         };
         const fraction = {
-            neighborhoodId: harvest.field.neighborhoodId,
+            neighborhoodId: harvest.land.neighborhoodId,
             productId: harvest.product.id,
             satisfaction: satisfaction,
             area: amount,
             productName: harvest.product.productName
         };
         addFeedback(result);
-        //updateHarvest({harvestId: harvest.id});
 
         if (data && data.percentage >= 70 && satisfaction === 1) {
             setHarvestToRemove(harvest);
-            setFormSubmitted(true);
+            setAdviceModalOpen(true);
         } else {
             removeHarvest({ harvest: harvest, harvestedOrDeleted: true, harvestAmount: amount});
-            updateField({fieldId: harvest.field.id, sign: 1, area: harvest.area});
+            updateLand({landId: harvest.land.id, sign: 1, area: harvest.area});
             updateFraction(fraction);
         }
         setAmount(0);
         setSatisfaction("");
-        setOpen(false);
+        setHarvestFeedbackOpen(false);
     };
 
     useTokenValidation(removeHarvestError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(addFeedbackError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(updateFractionError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(getFractionError, setIsLoggedIn, setErrorModalOpen);
-    useTokenValidation(updateFieldError, setIsLoggedIn, setErrorModalOpen);
-    //useTokenValidation(updateHarvestError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(updateLandError, setIsLoggedIn, setErrorModalOpen);
 
     return (
         <>
@@ -144,7 +141,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
                         </Typography>
                     </Box>
                     <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-                        <Button variant="contained" color="primary" onClick={handleOpenModal} disabled={beforeHarvest} >
+                        <Button variant="contained" color="primary" onClick={handleOpenHarvestFeedbackModal} disabled={beforeHarvest} >
                             HASAT ET
                         </Button>
                     </Box>
@@ -154,7 +151,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
                         </IconButton>
                     </Box>
                 </CardContent>
-                <CustomModal text="Geri Dönüş" open={open} close={handleCloseModal}>
+                <CustomModal text="Geri Dönüş" open={harvestFeedbackOpen} close={handleCloseHarvestFeedbackModal}>
                     <HarvestFeedback
                         type={harvest.product.type}
                         handleSubmit={handleSubmit}
@@ -165,7 +162,7 @@ function HarvestListItem({ harvest, setIsLoggedIn, type }) {
                         harvest={harvest}
                     />
                 </CustomModal>
-                <CustomModal text="TAVSİYE" open={formSubmitted} close={handleCloseInformationModal}>
+                <CustomModal text="TAVSİYE" open={adviceModalOpen} close={handleCloseInformationModal}>
                     <Box
                         sx={{
                             display: "flex",
