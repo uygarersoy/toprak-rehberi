@@ -1,4 +1,4 @@
-package com.example.demo.service.imp;
+package com.example.demo.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.example.demo.repository.HarvestRepository;
 import com.example.demo.service.interfaces.HarvestService;
 
 @Service
-public class HarvestServiceImp implements HarvestService {
+public class HarvestServiceImpl implements HarvestService {
     
     @Autowired
     private HarvestRepository harvestRepository;

@@ -1,4 +1,4 @@
-package com.example.demo.service.imp;
+package com.example.demo.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +15,7 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
-public class LandServiceImp implements LandService {
+public class LandServiceImpl implements LandService {
  
     @Autowired
     private LandRepository landRepository;

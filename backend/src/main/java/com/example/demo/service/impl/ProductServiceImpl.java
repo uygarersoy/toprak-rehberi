@@ -1,4 +1,4 @@
-package com.example.demo.service.imp;
+package com.example.demo.service.impl;
 
 import java.text.Collator;
 import java.util.List;
@@ -12,7 +12,7 @@ import com.example.demo.repository.ProductRepository;
 import com.example.demo.service.interfaces.ProductService;
 
 @Service
-public class ProductServiceImp implements ProductService{
+public class ProductServiceImpl implements ProductService{
     
     @Autowired
     private ProductRepository productRepository;

@@ -69,7 +69,7 @@ const harvestApi = createApi({
                         params: {adaNo: land.adaNo, parcelNo: land.parcelNo}
                     };
                 },
-                invalidatesTags: (result, error, land) => [
+                providesTags: (result, error, land) => [
                     {type: "Harvest", id: land.id}
                 ]
 

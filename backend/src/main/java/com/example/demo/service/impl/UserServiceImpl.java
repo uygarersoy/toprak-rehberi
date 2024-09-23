@@ -1,4 +1,4 @@
-package com.example.demo.service.imp;
+package com.example.demo.service.impl;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImp implements UserService{
+public class UserServiceImpl implements UserService{
     
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

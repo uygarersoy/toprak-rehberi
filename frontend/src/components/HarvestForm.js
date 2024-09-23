@@ -92,7 +92,7 @@ function HarvestForm({ handleSubmit, formState, handleChange, productContent, la
                         variant="contained"
                         color="primary"
                         fullWidth
-                        disabled={!(formState.type && formState.product && formState.area && formState.plantingDate && formState.amount)}
+                        disabled={!(dayjs(formState.plantingDate, "DD/MM/YYYY", true).isValid())}
                     >
                         Gönder
                     </Button>

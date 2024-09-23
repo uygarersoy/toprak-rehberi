@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 @Data
-@Table(name="fraction")
-public class Fraction {
+@Table(name="product_success")
+public class ProductSuccess {
     
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)

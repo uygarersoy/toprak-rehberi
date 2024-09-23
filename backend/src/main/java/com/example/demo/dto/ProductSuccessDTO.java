@@ -3,7 +3,7 @@ package com.example.demo.dto;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class FractionDTO {
+public class ProductSuccessDTO {
     private Long id;
     private Long productId;
     private String productName;
@@ -11,7 +11,7 @@ public class FractionDTO {
     private String productType;
     private String suggestedPlantingSeason;
     
-    public FractionDTO( Long id,
+    public ProductSuccessDTO( Long id,
                         Long productId,
                         String productName,
                         Double percentage,

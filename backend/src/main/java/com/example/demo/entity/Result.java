@@ -18,7 +18,7 @@ public class Result {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
-    private Long yield;
+    private Long harvestAmount;
     private Long productId;
     private Long neighborhoodId;
 }

@@ -1,9 +1,9 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const fractionApi = createApi({
-    reducerPath: "fraction",
+const productSuccessApi = createApi({
+    reducerPath: "productSuccess",
     baseQuery: fetchBaseQuery({
-        baseUrl: "http://localhost:8080/api/fraction",
+        baseUrl: "http://localhost:8080/api/product-success",
         prepareHeaders: (headers) => {
             const token = localStorage.getItem("token");
             if (token) {
@@ -26,9 +26,9 @@ const fractionApi = createApi({
                         }
                     };
                 },
-                providesTags: (result, error, neighborhoodId) => [{type: "Guideness", id: neighborhoodId}]
+                providesTags: (result, error, {neighborhoodId}) => [{type: "Guideness", id: neighborhoodId}]
             }),
-            updateFractions: builder.mutation({
+            updateProductSuccessValues: builder.mutation({
                 query: (parameters) => {
                     return {
                         url: "/update",
@@ -42,23 +42,26 @@ const fractionApi = createApi({
                         }                           
                     };
                 },
-                invalidatesTags: (result, error, parameters) => [{type: "Guideness", id: parameters.neighborhoodId}]
+                invalidatesTags: (result, error, parameters) => [
+                    {type: "Guideness", id: `${parameters.neighborhoodId}:${parameters.productId}`},
+                    {type: "Guideness", id: parameters.neighborhoodId}]
             }),
-            getFraction: builder.query({
+            getProductSuccessValue: builder.query({
                 query: ({ neighborhoodId, productId }) => {
                     return {
-                        url: "/get-fraction",
+                        url: "/get-success-value",
                         method: "GET",
                         params: {
                             neighborhoodId,
                             productId
                         }
                     };
-                }
+                },
+                providesTags: (result, error, {neighborhoodId, productId}) => [{type: "Guideness", id: `${neighborhoodId}:${productId}`}]
             })
         };
     }
 })
 
-export const { useFetchGuidenessQuery, useUpdateFractionsMutation, useGetFractionQuery } = fractionApi;
-export { fractionApi };
+export const { useFetchGuidenessQuery, useUpdateProductSuccessValuesMutation, useGetProductSuccessValueQuery } = productSuccessApi;
+export { productSuccessApi };

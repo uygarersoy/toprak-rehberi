@@ -6,7 +6,7 @@ import HelpCenterRoundedIcon from '@mui/icons-material/HelpCenterRounded';
 import HarvestFeedback from "./HarvestFeedback";
 import CustomModal from "./CustomModal";
 import useTokenValidation from "../hooks/tokenValidation";
-import { useAddFeedBackMutation, useGetFractionQuery, useRemoveHarvestMutation, useUpdateLandMutation, useUpdateFractionsMutation } from "../store";
+import { useAddFeedBackMutation, useGetProductSuccessValueQuery, useRemoveHarvestMutation, useUpdateLandMutation, useUpdateProductSuccessValuesMutation } from "../store";
 
 function formatDate(rawDate) {
     const date = new Date(rawDate);
@@ -25,12 +25,12 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
     const [satisfaction, setSatisfaction] = useState("");
     const [amount, setAmount] = useState(null);
     const [addFeedback, {error: addFeedbackError}] = useAddFeedBackMutation();
-    const [updateFraction, {error: updateFractionError}] = useUpdateFractionsMutation();
+    const [updateProductSuccessValue, {error: updateSuccessValueError}] = useUpdateProductSuccessValuesMutation();
     const [harvestFeedbackOpen, setHarvestFeedbackOpen] = useState(false);
     const [adviceModalOpen, setAdviceModalOpen] = useState(false);
     const [harvestToRemove, setHarvestToRemove] = useState(null);
 
-    const { data, error: getFractionError } = useGetFractionQuery({
+    const { data, error: getProductSuccessValueError } = useGetProductSuccessValueQuery({
         neighborhoodId: harvest.land.neighborhoodId,
         productId: harvest.product.id
     });
@@ -80,10 +80,10 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
         event.preventDefault();
         const result = {
             neighborhoodId: harvest.land.neighborhoodId,
-            yield: amount,
+            harvestAmount: amount,
             productId: harvest.product.id
         };
-        const fraction = {
+        const productSuccess = {
             neighborhoodId: harvest.land.neighborhoodId,
             productId: harvest.product.id,
             satisfaction: satisfaction,
@@ -98,7 +98,7 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
         } else {
             removeHarvest({ harvest: harvest, harvestedOrDeleted: true, harvestAmount: amount});
             updateLand({landId: harvest.land.id, sign: 1, area: harvest.area});
-            updateFraction(fraction);
+            updateProductSuccessValue(productSuccess);
         }
         setAmount(0);
         setSatisfaction("");
@@ -107,8 +107,8 @@ function HarvestListItem({ harvest, setIsLoggedIn }) {
 
     useTokenValidation(removeHarvestError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(addFeedbackError, setIsLoggedIn, setErrorModalOpen);
-    useTokenValidation(updateFractionError, setIsLoggedIn, setErrorModalOpen);
-    useTokenValidation(getFractionError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(updateSuccessValueError, setIsLoggedIn, setErrorModalOpen);
+    useTokenValidation(getProductSuccessValueError, setIsLoggedIn, setErrorModalOpen);
     useTokenValidation(updateLandError, setIsLoggedIn, setErrorModalOpen);
 
     return (
