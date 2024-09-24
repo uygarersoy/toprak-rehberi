@@ -4,6 +4,9 @@ FROM maven:3.8.7-eclipse-temurin-17 AS build
 # Set the working directory
 WORKDIR /app
 
+# Copy .env file
+COPY .env ./
+
 # Copy the pom.xml and download dependencies
 COPY pom.xml .
 RUN mvn dependency:go-offline -B
